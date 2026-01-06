@@ -60,6 +60,7 @@ import com.callonly.launcher.data.model.Contact
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Slider
 import java.text.SimpleDateFormat // For displaying hours sensibly if needed, or just Int
+import kotlinx.coroutines.delay
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.material3.Divider
@@ -99,54 +100,114 @@ fun PinEntryScreen(
 ) {
     var pin by remember { mutableStateOf("") }
     val isError by viewModel.pinError.collectAsState()
-    val focusRequester = remember { FocusRequester() }
-    val focusManager = LocalFocusManager.current
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
-            .imePadding(),
+            .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
         Text(stringResource(id = com.callonly.launcher.R.string.admin_mode), style = MaterialTheme.typography.headlineMedium)
-        Text(stringResource(id = com.callonly.launcher.R.string.enter_pin), style = MaterialTheme.typography.bodyLarge)
+        
+        Spacer(modifier = Modifier.height(32.dp))
 
-        // Show the PIN description above the input field (avoid floating label)
-        Text(stringResource(id = com.callonly.launcher.R.string.pin_label), style = MaterialTheme.typography.labelLarge, modifier = Modifier.padding(top = 8.dp))
-        OutlinedTextField(
-            value = pin,
-            onValueChange = { pin = it },
-            visualTransformation = PasswordVisualTransformation(),
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Number,
-                imeAction = androidx.compose.ui.text.input.ImeAction.Done
-            ),
-            keyboardActions = KeyboardActions(
-                onDone = { viewModel.verifyPin(pin); focusManager.clearFocus() }
-            ),
-            isError = isError,
-            singleLine = true,
-            modifier = Modifier.padding(vertical = 8.dp).fillMaxWidth().focusRequester(focusRequester)
-        )
-
+        // PIN Display
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center
+        ) {
+            repeat(4) { index ->
+                Box(
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .size(24.dp)
+                        .background(
+                            color = if (index < pin.length) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceVariant,
+                            shape = CircleShape
+                        )
+                )
+            }
+        }
+        
         if (isError) {
+            Spacer(modifier = Modifier.height(8.dp))
             Text(stringResource(id = com.callonly.launcher.R.string.incorrect_pin), color = MaterialTheme.colorScheme.error)
         }
 
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            Button(onClick = { viewModel.verifyPin(pin); focusManager.clearFocus() }) {
-                Text(stringResource(id = com.callonly.launcher.R.string.validate))
-            }
-            TextButton(onClick = onExit) {
-                Text(stringResource(id = com.callonly.launcher.R.string.back))
+        Spacer(modifier = Modifier.height(32.dp))
+
+        // Custom Keypad
+        val keys = listOf(
+            listOf("1", "2", "3"),
+            listOf("4", "5", "6"),
+            listOf("7", "8", "9"),
+            listOf("", "0", "DEL")
+        )
+
+        Column(
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            keys.forEach { row ->
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(24.dp)
+                ) {
+                    row.forEach { key ->
+                        if (key.isEmpty()) {
+                            Spacer(modifier = Modifier.size(72.dp))
+                        } else if (key == "DEL") {
+                            IconButton(
+                                onClick = {
+                                    if (pin.isNotEmpty()) {
+                                        pin = pin.dropLast(1)
+                                    }
+                                },
+                                modifier = Modifier.size(72.dp)
+                            ) {
+                                Icon(
+                                    imageVector = com.callonly.launcher.ui.theme.StatusIcons.ArrowBack, // Or appropriate delete icon
+                                    contentDescription = "Delete"
+                                )
+                            }
+                        } else {
+                            Button(
+                                onClick = {
+                                    if (pin.length < 4) {
+                                        pin += key
+                                        if (pin.length == 4) {
+                                            viewModel.verifyPin(pin)
+                                            // Reset if error (optional, logic inside verifyPin updates error state)
+                                            // But if successful, it moves to AdminContent. If failed, pin stays? 
+                                            // Ideally clear pin on error? logic: verifyPin sets isError.
+                                        }
+                                    }
+                                },
+                                modifier = Modifier.size(72.dp),
+                                shape = CircleShape
+                            ) {
+                                Text(key, style = MaterialTheme.typography.titleLarge)
+                            }
+                        }
+                    }
+                }
             }
         }
+        
+        Spacer(modifier = Modifier.height(32.dp))
+        
+        TextButton(onClick = onExit) {
+            Text(stringResource(id = com.callonly.launcher.R.string.back))
+        }
     }
-
-    LaunchedEffect(Unit) {
-        focusRequester.requestFocus()
+    
+    // Clear pin on error change if needed, or keep it to let user fix.
+    // If error, maybe shake or clear? For now basic.
+    LaunchedEffect(isError) {
+        if (isError) {
+            kotlinx.coroutines.delay(500)
+            pin = "" // Auto clear on error after delay
+        }
     }
 }
 
@@ -724,6 +785,19 @@ fun SettingsSection(viewModel: AdminViewModel) {
                 onCheckedChange = { viewModel.setAllowAllCalls(it) }
             )
         }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        val autoRejectSeconds by viewModel.autoRejectTimeSeconds.collectAsState()
+        Text(stringResource(id = com.callonly.launcher.R.string.auto_reject_title), style = MaterialTheme.typography.titleMedium)
+        Text(stringResource(id = com.callonly.launcher.R.string.auto_reject_desc).replace("X", autoRejectSeconds.toString()), style = MaterialTheme.typography.bodySmall)
+        Text("${autoRejectSeconds}s", style = MaterialTheme.typography.bodyMedium)
+        Slider(
+            value = autoRejectSeconds.toFloat(),
+            onValueChange = { viewModel.setAutoRejectTimeSeconds(it.toInt()) },
+            valueRange = 0f..300f, // 0 to 5 minutes
+            steps = 59 // Step roughly every 5 seconds (300/60 = 5) - actually steps = (range / step) - 1. If we want step=5, (300/5)-1 = 59.
+        )
 
         // Language selection removed from here; use bottom Langue button in AdminSettingsScreen
 

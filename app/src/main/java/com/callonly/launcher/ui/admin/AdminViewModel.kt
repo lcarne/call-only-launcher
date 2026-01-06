@@ -145,6 +145,11 @@ class AdminViewModel @Inject constructor(
         settingsRepository.setTimeFormat(format)
     }
 
+    val autoRejectTimeSeconds = settingsRepository.autoRejectTimeSeconds
+    fun setAutoRejectTimeSeconds(seconds: Int) {
+        settingsRepository.setAutoRejectTimeSeconds(seconds)
+    }
+
     val clockColor = settingsRepository.clockColor
     fun setClockColor(color: Int) {
         settingsRepository.setClockColor(color)

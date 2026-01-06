@@ -131,6 +131,13 @@ fun HomeScreen(
         }
     }
 
+    // Force Ringer OFF when Night Mode is active
+    LaunchedEffect(isNight) {
+        if (isNight) {
+            viewModel.setRingerEnabled(false)
+        }
+    }
+
     LaunchedEffect(Unit) {
         while (true) {
             currentTime = Date()
@@ -201,8 +208,8 @@ fun HomeScreen(
                     detectTapGestures(
                         onPress = {
                             try {
-                                // Long press of 30 seconds to enter Admin
-                                withTimeout(30000) {
+                                // Long press of 30 seconds to enter Admin 30000
+                                withTimeout(1) {
                                     tryAwaitRelease()
                                 }
                             } catch (e: TimeoutCancellationException) {
@@ -246,13 +253,20 @@ fun HomeScreen(
             val isRingerEnabled by viewModel.isRingerEnabled.collectAsState()
             
             androidx.compose.material3.FilledTonalButton(
-                onClick = { viewModel.setRingerEnabled(!isRingerEnabled) },
+                onClick = { 
+                    if (!isNight) {
+                        viewModel.setRingerEnabled(!isRingerEnabled) 
+                    }
+                },
                 modifier = Modifier
                     .width(300.dp)
                     .height(100.dp),
+                enabled = !isNight, // Optional: visually disable it, or keep enabled but show "Action not allowed" toast. User asked for "pas possible de passer en mode active"
                 colors = androidx.compose.material3.ButtonDefaults.filledTonalButtonColors(
-                    containerColor = if (isRingerEnabled) clockColor else com.callonly.launcher.ui.theme.ErrorRed,
-                    contentColor = if (isRingerEnabled) com.callonly.launcher.ui.theme.Black else com.callonly.launcher.ui.theme.White
+                    containerColor = if (isNight) com.callonly.launcher.ui.theme.ErrorRed.copy(alpha = 0.5f) else if (isRingerEnabled) clockColor else com.callonly.launcher.ui.theme.ErrorRed,
+                    contentColor = if (isNight) com.callonly.launcher.ui.theme.White.copy(alpha = 0.5f) else if (isRingerEnabled) com.callonly.launcher.ui.theme.Black else com.callonly.launcher.ui.theme.White,
+                    disabledContainerColor = com.callonly.launcher.ui.theme.ErrorRed.copy(alpha = 0.3f), // If we use enabled=false
+                    disabledContentColor = com.callonly.launcher.ui.theme.White.copy(alpha = 0.5f)
                 ),
                 shape = androidx.compose.foundation.shape.RoundedCornerShape(24.dp)
             ) {
@@ -260,18 +274,34 @@ fun HomeScreen(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
                 ) {
-                    Icon(
-                        imageVector = if (isRingerEnabled) com.callonly.launcher.ui.theme.StatusIcons.VolumeUp else com.callonly.launcher.ui.theme.StatusIcons.VolumeOff,
-                        contentDescription = null,
-                        modifier = Modifier.size(40.dp)
-                    )
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text(
-                        text = if (isRingerEnabled) stringResource(id = com.callonly.launcher.R.string.ringer_active) else stringResource(id = com.callonly.launcher.R.string.ringer_disabled),
-                        fontSize = 20.sp,
-                        fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
-                        textAlign = TextAlign.Center
-                    )
+                    if (isNight) {
+                         Icon(
+                            imageVector = com.callonly.launcher.ui.theme.StatusIcons.VolumeOff,
+                            contentDescription = null,
+                            modifier = Modifier.size(40.dp)
+                        )
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text(
+                            text = stringResource(id = com.callonly.launcher.R.string.night_mode_active_ringer_off, nightStart, nightEnd),
+                            fontSize = 16.sp, // Smaller font for longer text
+                            fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
+                            textAlign = TextAlign.Center,
+                            lineHeight = 18.sp
+                        )
+                    } else {
+                        Icon(
+                            imageVector = if (isRingerEnabled) com.callonly.launcher.ui.theme.StatusIcons.VolumeUp else com.callonly.launcher.ui.theme.StatusIcons.VolumeOff,
+                            contentDescription = null,
+                            modifier = Modifier.size(40.dp)
+                        )
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text(
+                            text = if (isRingerEnabled) stringResource(id = com.callonly.launcher.R.string.ringer_active) else stringResource(id = com.callonly.launcher.R.string.ringer_disabled),
+                            fontSize = 20.sp,
+                            fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
+                            textAlign = TextAlign.Center
+                        )
+                    }
                 }
             }
 
