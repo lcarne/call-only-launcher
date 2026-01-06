@@ -45,6 +45,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.callonly.launcher.data.model.Contact
@@ -293,6 +294,7 @@ fun ContactManagementScreen(
     val contacts by viewModel.contacts.collectAsState()
     var showAddDialog by remember { mutableStateOf(false) }
     var contactToEdit by remember { mutableStateOf<Contact?>(null) }
+    var contactToDelete by remember { mutableStateOf<Contact?>(null) }
 
     Scaffold(
         topBar = {
@@ -320,9 +322,33 @@ fun ContactManagementScreen(
                 ContactListItem(
                     contact = contact,
                     onClick = { contactToEdit = contact },
-                    onDelete = { viewModel.deleteContact(contact) }
+                    onDelete = { contactToDelete = contact }
                 )
             }
+        }
+
+        if (contactToDelete != null) {
+            AlertDialog(
+                onDismissRequest = { contactToDelete = null },
+                title = { Text("Supprimer le contact") },
+                text = { Text("Êtes-vous sûr de vouloir supprimer le contact ${contactToDelete?.name} ?") },
+                confirmButton = {
+                    Button(
+                        onClick = {
+                            contactToDelete?.let { viewModel.deleteContact(it) }
+                            contactToDelete = null
+                        },
+                        colors = androidx.compose.material3.ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
+                    ) {
+                        Text("Supprimer")
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = { contactToDelete = null }) {
+                        Text("Annuler")
+            }
+                }
+            )
         }
 
         if (showAddDialog) {
@@ -678,6 +704,36 @@ fun SettingsSection(viewModel: AdminViewModel) {
             )
         }
 
+        Spacer(modifier = Modifier.height(16.dp))
+        
+        val ringerVolume by viewModel.ringerVolume.collectAsState()
+        Text("Volume de la sonnerie", style = MaterialTheme.typography.titleMedium)
+        Text("${ringerVolume}%", style = MaterialTheme.typography.bodyMedium)
+        Slider(
+            value = ringerVolume.toFloat(),
+            onValueChange = { viewModel.setRingerVolume(it.toInt()) },
+            valueRange = 0f..100f,
+            steps = 100
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+        
+        val isVibrateEnabled by viewModel.isVibrateEnabled.collectAsState()
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(modifier = Modifier.weight(1f)) {
+                Text("Vibreur", style = MaterialTheme.typography.titleMedium)
+                Text("Vibration lors des appels entrants", style = MaterialTheme.typography.bodySmall)
+            }
+            Switch(
+                checked = isVibrateEnabled,
+                onCheckedChange = { viewModel.setVibrateEnabled(it) }
+            )
+        }
+
         Divider(modifier = Modifier.padding(vertical = 16.dp))
         Text("Paramètres d'écran", style = MaterialTheme.typography.titleLarge)
         
@@ -766,6 +822,68 @@ fun SettingsSection(viewModel: AdminViewModel) {
                                 .background(if (color == Color.White) MaterialTheme.colorScheme.primary else Color.White)
                         )
                     }
+                }
+            }
+        }
+        
+        Divider(modifier = Modifier.padding(vertical = 16.dp))
+        Text("Taille du bouton décrocher", style = MaterialTheme.typography.titleLarge)
+        
+        val answerButtonSize by viewModel.answerButtonSize.collectAsState()
+        Text("Taille bouton décrocher : ${answerButtonSize.toInt()} dp", style = MaterialTheme.typography.bodyMedium)
+        Slider(
+            value = answerButtonSize,
+            onValueChange = { viewModel.setAnswerButtonSize(it) },
+            valueRange = 80f..200f,
+            steps = 120
+        )
+
+        Spacer(modifier = Modifier.height(24.dp))
+        
+        var showPreview by remember { mutableStateOf(false) }
+        
+        Button(
+            onClick = { showPreview = true },
+            modifier = Modifier.fillMaxWidth().height(72.dp),
+            colors = androidx.compose.material3.ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.tertiaryContainer, contentColor = MaterialTheme.colorScheme.onTertiaryContainer)
+        ) {
+            Text(
+                text = "Aperçu de l'écran d'appel 📱",
+                maxLines = 2,
+                softWrap = true,
+                textAlign = TextAlign.Left
+            )
+        }
+
+        if (showPreview) {
+            androidx.compose.ui.window.Dialog(
+                onDismissRequest = { showPreview = false },
+                properties = androidx.compose.ui.window.DialogProperties(
+                    usePlatformDefaultWidth = false,
+                    dismissOnBackPress = true,
+                    dismissOnClickOutside = true
+                )
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(Color.Black)
+                        .clickable { showPreview = false }
+                ) {
+                    com.callonly.launcher.ui.call.CallLayout(
+                        number = "06 12 34 56 78",
+                        contact = Contact(name = "Aperçu Contact", phoneNumber = "06 12 34 56 78", photoUri = null),
+                        state = com.callonly.launcher.ui.call.IncomingCallUiState.Ringing("06 12 34 56 78", null),
+                        duration = 0,
+                        answerButtonSize = answerButtonSize
+                    )
+                    
+                    Text(
+                        text = "(Cliquez n'importe où pour fermer)",
+                        color = Color.Gray.copy(alpha = 0.5f),
+                        style = MaterialTheme.typography.bodySmall,
+                        modifier = Modifier.align(Alignment.TopCenter).padding(top = 16.dp)
+                    )
                 }
             }
         }

@@ -32,6 +32,10 @@ class AdminViewModel @Inject constructor(
     val nightModeStartHour = settingsRepository.nightModeStartHour
     val nightModeEndHour = settingsRepository.nightModeEndHour
     val allowAllCalls = settingsRepository.allowAllCalls
+    val answerButtonSize = settingsRepository.answerButtonSize
+    val ringerVolume = settingsRepository.ringerVolume
+    val isRingerEnabled = settingsRepository.isRingerEnabled
+    val isVibrateEnabled = settingsRepository.isVibrateEnabled
 
     val callLogs = callLogRepository.getAllCallLogs()
         .stateIn(
@@ -113,6 +117,22 @@ class AdminViewModel @Inject constructor(
 
     fun setAllowAllCalls(enabled: Boolean) {
         settingsRepository.setAllowAllCalls(enabled)
+    }
+
+    fun setAnswerButtonSize(size: Float) {
+        settingsRepository.setAnswerButtonSize(size)
+    }
+
+    fun setRingerVolume(volume: Int) {
+        settingsRepository.setRingerVolume(volume)
+    }
+
+    fun setRingerEnabled(enabled: Boolean) {
+        settingsRepository.setRingerEnabled(enabled)
+    }
+
+    fun setVibrateEnabled(enabled: Boolean) {
+        settingsRepository.setVibrateEnabled(enabled)
     }
 
     val clockColor = settingsRepository.clockColor

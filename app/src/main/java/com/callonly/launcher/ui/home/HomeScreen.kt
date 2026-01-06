@@ -59,7 +59,6 @@ import android.os.BatteryManager
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.platform.LocalContext
 
-import android.telephony.PhoneStateListener
 import android.telephony.SignalStrength
 import android.telephony.TelephonyCallback
 import android.telephony.TelephonyManager
@@ -93,10 +92,10 @@ fun HomeScreen(
     // Screen Keep On Logic
     // Helper to find Activity from Context (handles Hilt/Compose wrappers)
     fun android.content.Context.findActivity(): android.app.Activity? {
-        var context = this
-        while (context is android.content.ContextWrapper) {
-            if (context is android.app.Activity) return context
-            context = context.baseContext
+        var currentContext = this
+        while (currentContext is android.content.ContextWrapper) {
+            if (currentContext is android.app.Activity) return currentContext
+            currentContext = currentContext.baseContext
         }
         return null
     }
@@ -214,10 +213,44 @@ fun HomeScreen(
                 textAlign = TextAlign.Center
             )
 
+            Spacer(modifier = Modifier.height(24.dp))
+            
+            // Ringer Toggle Button
+            val isRingerEnabled by viewModel.isRingerEnabled.collectAsState()
+            
+            androidx.compose.material3.FilledTonalButton(
+                onClick = { viewModel.setRingerEnabled(!isRingerEnabled) },
+                modifier = Modifier
+                    .width(300.dp)
+                    .height(100.dp),
+                colors = androidx.compose.material3.ButtonDefaults.filledTonalButtonColors(
+                    containerColor = if (isRingerEnabled) clockColor else com.callonly.launcher.ui.theme.ErrorRed,
+                    contentColor = if (isRingerEnabled) com.callonly.launcher.ui.theme.Black else com.callonly.launcher.ui.theme.White
+                ),
+                shape = androidx.compose.foundation.shape.RoundedCornerShape(24.dp)
+            ) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Icon(
+                        imageVector = if (isRingerEnabled) com.callonly.launcher.ui.theme.StatusIcons.VolumeUp else com.callonly.launcher.ui.theme.StatusIcons.VolumeOff,
+                        contentDescription = null,
+                        modifier = Modifier.size(40.dp)
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = if (isRingerEnabled) "SONNERIE ACTIVE" else "SONNERIE DÉSACTIVÉE",
+                        fontSize = 20.sp,
+                        fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
+                        textAlign = TextAlign.Center
+                    )
+                }
+            }
+
             Spacer(modifier = Modifier.height(32.dp))
 
             // Default Dialer Check
-            val telephonyManager = context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
             val roleManager = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
                 context.getSystemService(Context.ROLE_SERVICE) as android.app.role.RoleManager
             } else null
@@ -396,7 +429,7 @@ fun NetworkSignalDisplay() {
 
     val multiplePermissionsLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestMultiplePermissions(),
-        onResult = { permissions ->
+        onResult = { _ ->
             // Update hasPermission if needed, or just let it happen
         }
     )

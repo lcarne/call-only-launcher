@@ -51,6 +51,7 @@ fun IncomingCallScreen(
 ) {
     val uiState by viewModel.incomingCallState.collectAsState()
     val callDuration by viewModel.callDuration.collectAsState()
+    val answerButtonSize by viewModel.answerButtonSize.collectAsState()
 
     var hasSeenCall by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(false) }
     
@@ -79,6 +80,7 @@ fun IncomingCallScreen(
                     contact = state.contact,
                     state = state,
                     duration = callDuration,
+                    answerButtonSize = answerButtonSize,
                     viewModel = viewModel,
                     onCallRejected = onCallRejected
                 )
@@ -89,6 +91,7 @@ fun IncomingCallScreen(
                     contact = state.contact,
                     state = state,
                     duration = callDuration,
+                    answerButtonSize = answerButtonSize,
                     viewModel = viewModel,
                     onCallRejected = onCallRejected
                 )
@@ -109,17 +112,20 @@ private fun formatDuration(seconds: Long): String {
 }
 
 @Composable
-private fun CallLayout(
+fun CallLayout(
     number: String,
     contact: Contact?,
     state: IncomingCallUiState,
     duration: Long,
-    viewModel: IncomingCallViewModel,
-    onCallRejected: () -> Unit
+    answerButtonSize: Float,
+    viewModel: IncomingCallViewModel? = null,
+    onCallRejected: (() -> Unit)? = null
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
-            modifier = Modifier.align(Alignment.Center),
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .padding(top = 80.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             // Contact Photo
@@ -197,8 +203,8 @@ private fun CallLayout(
                 // Decline Button (Small Red)
                 Button(
                     onClick = {
-                        viewModel.rejectCall()
-                        onCallRejected()
+                        viewModel?.rejectCall()
+                        onCallRejected?.invoke()
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
                     shape = CircleShape,
@@ -215,24 +221,24 @@ private fun CallLayout(
                 // Answer Button (Large Green)
                 Button(
                     onClick = {
-                        viewModel.acceptCall()
+                        viewModel?.acceptCall()
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = Color.Green),
                     shape = CircleShape,
-                    modifier = Modifier.size(120.dp)
+                    modifier = Modifier.size(answerButtonSize.dp)
                 ) {
                     Icon(
                         imageVector = Icons.Default.Call,
                         contentDescription = "Answer",
                         tint = Color.White,
-                        modifier = Modifier.size(64.dp)
+                        modifier = Modifier.size((answerButtonSize * 0.53f).dp)
                     )
                 }
             } else {
                 // Active Call - Show End Call Button
                 Button(
                     onClick = {
-                        viewModel.endCall()
+                        viewModel?.endCall()
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
                     shape = CircleShape,

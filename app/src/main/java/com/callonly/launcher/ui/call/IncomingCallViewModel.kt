@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.callonly.launcher.data.model.Contact
 import com.callonly.launcher.data.repository.ContactRepository
+import com.callonly.launcher.data.repository.SettingsRepository
 import com.callonly.launcher.manager.CallManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
@@ -20,7 +21,8 @@ import javax.inject.Inject
 @HiltViewModel
 class IncomingCallViewModel @Inject constructor(
     private val callManager: CallManager,
-    private val contactRepository: ContactRepository
+    private val contactRepository: ContactRepository,
+    private val settingsRepository: SettingsRepository
 ) : ViewModel() {
 
     val incomingCallState = combine(
@@ -50,6 +52,12 @@ class IncomingCallViewModel @Inject constructor(
 
     private val _callDuration = MutableStateFlow(0L)
     val callDuration: StateFlow<Long> = _callDuration.asStateFlow()
+
+    val answerButtonSize = settingsRepository.answerButtonSize
+
+    fun setAnswerButtonSize(size: Float) {
+        settingsRepository.setAnswerButtonSize(size)
+    }
 
     init {
         viewModelScope.launch {

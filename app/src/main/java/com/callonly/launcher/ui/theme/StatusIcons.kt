@@ -399,6 +399,89 @@ object StatusIcons {
                 verticalLineToRelative(-4.59f)
                 lineToRelative(7.0f, 7.0f)
                 lineToRelative(9.0f, -9.0f)
+            }
+        }.build()
+
+    val VolumeUp: ImageVector
+        get() = ImageVector.Builder(
+            name = "VolumeUp",
+            defaultWidth = 24.0.dp,
+            defaultHeight = 24.0.dp,
+            viewportWidth = 24.0f,
+            viewportHeight = 24.0f
+        ).apply {
+            path(fill = SolidColor(Color.Black), fillAlpha = 1.0f, stroke = null, strokeAlpha = 1.0f,
+                strokeLineWidth = 1.0f, strokeLineCap = StrokeCap.Butt, strokeLineJoin = StrokeJoin.Miter,
+                strokeLineMiter = 1.0f, pathFillType = PathFillType.NonZero) {
+                moveTo(3.0f, 9.0f)
+                verticalLineTo(15.0f)
+                horizontalLineTo(7.0f)
+                lineTo(12.0f, 20.0f)
+                verticalLineTo(4.0f)
+                lineTo(7.0f, 9.0f)
+                horizontalLineTo(3.0f)
+                close()
+                moveTo(16.5f, 12.0f)
+                curveToRelative(0.0f, -1.77f, -1.02f, -3.29f, -2.5f, -4.03f)
+                verticalLineTo(16.03f)
+                curveToRelative(1.48f, -0.74f, 2.5f, -2.26f, 2.5f, -4.03f)
+                close()
+                moveTo(14.0f, 3.23f)
+                verticalLineTo(5.29f)
+                curveToRelative(2.89f, 0.86f, 5.0f, 3.54f, 5.0f, 6.71f)
+                reflectiveCurveToRelative(-2.11f, 5.85f, -5.0f, 6.71f)
+                verticalLineTo(20.77f)
+                curveToRelative(4.01f, -0.91f, 7.0f, -4.49f, 7.0f, -8.77f)
+                reflectiveCurveToRelative(-2.99f, -7.86f, -7.0f, -8.77f)
+                close()
+            }
+        }.build()
+
+    val VolumeOff: ImageVector
+        get() = ImageVector.Builder(
+            name = "VolumeOff",
+            defaultWidth = 24.0.dp,
+            defaultHeight = 24.0.dp,
+            viewportWidth = 24.0f,
+            viewportHeight = 24.0f
+        ).apply {
+            path(fill = SolidColor(Color.Black), fillAlpha = 1.0f, stroke = null, strokeAlpha = 1.0f,
+                strokeLineWidth = 1.0f, strokeLineCap = StrokeCap.Butt, strokeLineJoin = StrokeJoin.Miter,
+                strokeLineMiter = 1.0f, pathFillType = PathFillType.NonZero) {
+                moveTo(16.5f, 12.0f)
+                curveToRelative(0.0f, -1.77f, -1.02f, -3.29f, -2.5f, -4.03f)
+                verticalLineToRelative(2.21f)
+                lineToRelative(2.45f, 2.45f)
+                curveToRelative(0.03f, -0.2f, 0.05f, -0.41f, 0.05f, -0.63f)
+                close()
+                moveTo(19.0f, 12.0f)
+                curveToRelative(0.0f, 0.94f, -0.2f, 1.82f, -0.54f, 2.64f)
+                lineToRelative(1.51f, 1.51f)
+                curveTo(20.63f, 14.91f, 21.0f, 13.5f, 21.0f, 12.0f)
+                curveToRelative(0.0f, -4.28f, -2.99f, -7.86f, -7.0f, -8.77f)
+                verticalLineToRelative(2.06f)
+                curveToRelative(2.89f, 0.86f, 5.0f, 3.54f, 5.0f, 6.71f)
+                close()
+                moveTo(4.27f, 3.0f)
+                lineTo(3.0f, 4.27f)
+                lineTo(7.73f, 9.0f)
+                horizontalLineTo(3.0f)
+                verticalLineTo(15.0f)
+                horizontalLineTo(7.0f)
+                lineTo(12.0f, 20.0f)
+                verticalLineTo(13.27f)
+                lineToRelative(4.66f, 4.66f)
+                curveToRelative(-0.8f, 0.62f, -1.69f, 1.09f, -2.66f, 1.35f)
+                verticalLineTo(21.36f)
+                curveToRelative(1.53f, -0.32f, 2.91f, -1.01f, 4.09f, -1.97f)
+                lineTo(20.73f, 22.0f)
+                lineTo(22.0f, 20.73f)
+                lineTo(4.27f, 3.0f)
+                close()
+                moveTo(12.0f, 4.0f)
+                lineTo(9.91f, 6.09f)
+                lineTo(12.0f, 8.18f)
+                verticalLineTo(4.0f)
                 close()
             }
         }.build()
