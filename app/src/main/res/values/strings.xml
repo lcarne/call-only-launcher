@@ -59,7 +59,7 @@
     <string name="time_format_title">Time format</string>
     <string name="time_format_12">AM/PM</string>
     <string name="time_format_24">24h</string>
-    <string name="night_mode_active_ringer_off">Ringer disabled\n(Night Mode from %1$d h to %2$d h)</string>
+    <string name="night_mode_active_ringer_off">Ringer disabled\n(Night Mode\nfrom %1$dh to %2$dh)</string>
     <string name="hang_up">HANG UP</string>
     <string name="speaker">SPEAKER</string>
     <string name="earpiece">EARPIECE</string>

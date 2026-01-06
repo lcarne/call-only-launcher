@@ -227,7 +227,7 @@ fun HomeScreen(
                 },
                 modifier = Modifier
                     .width(300.dp)
-                    .height(140.dp), // Increased from 100.dp
+                    .height(160.dp), // Increased to 160.dp to accommodate 3-line English text
                 enabled = !isNight, // Optional: visually disable it, or keep enabled but show "Action not allowed" toast. User asked for "pas possible de passer en mode active"
                 colors = androidx.compose.material3.ButtonDefaults.filledTonalButtonColors(
                     containerColor = if (isNight) com.callonly.launcher.ui.theme.ErrorRed.copy(alpha = 0.5f) else if (isRingerEnabled) clockColor else com.callonly.launcher.ui.theme.ErrorRed,
@@ -245,7 +245,7 @@ fun HomeScreen(
                          Icon(
                             imageVector = com.callonly.launcher.ui.theme.StatusIcons.VolumeOff,
                             contentDescription = null,
-                            modifier = Modifier.size(56.dp) // Increased from 40.dp
+                            modifier = Modifier.size(48.dp) // Reduced from 56.dp to save vertical space
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
