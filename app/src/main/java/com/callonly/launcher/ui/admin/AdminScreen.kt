@@ -104,17 +104,19 @@ fun PinEntryScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .padding(16.dp)
+            .imePadding(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
         Text(stringResource(id = com.callonly.launcher.R.string.admin_mode), style = MaterialTheme.typography.headlineMedium)
         Text(stringResource(id = com.callonly.launcher.R.string.enter_pin), style = MaterialTheme.typography.bodyLarge)
 
+        // Show the PIN description above the input field (avoid floating label)
+        Text(stringResource(id = com.callonly.launcher.R.string.pin_label), style = MaterialTheme.typography.labelLarge, modifier = Modifier.padding(top = 8.dp))
         OutlinedTextField(
             value = pin,
             onValueChange = { pin = it },
-            label = { Text(stringResource(id = com.callonly.launcher.R.string.pin_label)) },
             visualTransformation = PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Number,
@@ -125,7 +127,7 @@ fun PinEntryScreen(
             ),
             isError = isError,
             singleLine = true,
-            modifier = Modifier.padding(vertical = 16.dp).focusRequester(focusRequester)
+            modifier = Modifier.padding(vertical = 8.dp).fillMaxWidth().focusRequester(focusRequester)
         )
 
         if (isError) {
