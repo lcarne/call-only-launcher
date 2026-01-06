@@ -35,7 +35,7 @@ class AdminViewModel @Inject constructor(
     val answerButtonSize = settingsRepository.answerButtonSize
     val ringerVolume = settingsRepository.ringerVolume
     val isRingerEnabled = settingsRepository.isRingerEnabled
-    val isVibrateEnabled = settingsRepository.isVibrateEnabled
+
     val language = settingsRepository.language
     val timeFormat = settingsRepository.timeFormat
 
@@ -133,9 +133,7 @@ class AdminViewModel @Inject constructor(
         settingsRepository.setRingerEnabled(enabled)
     }
 
-    fun setVibrateEnabled(enabled: Boolean) {
-        settingsRepository.setVibrateEnabled(enabled)
-    }
+
 
     fun setLanguage(lang: String) {
         settingsRepository.setLanguage(lang)

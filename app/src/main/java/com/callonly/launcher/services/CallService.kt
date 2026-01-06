@@ -10,12 +10,31 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class CallService : InCallService() {
+class CallService : InCallService(), CallManager.AudioController {
 
     @Inject
     lateinit var callManager: CallManager
 
     private val serviceScope = kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.Main)
+
+    override fun onCreate() {
+        super.onCreate()
+        callManager.registerAudioController(this)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        callManager.unregisterAudioController()
+    }
+
+    override fun onCallAudioStateChanged(audioState: android.telecom.CallAudioState) {
+        callManager.onAudioStateChanged(audioState)
+    }
+
+    @Suppress("DEPRECATION")
+    override fun requestAudioRoute(route: Int) {
+        setAudioRoute(route)
+    }
 
     override fun onCallAdded(call: Call) {
         super.onCallAdded(call)

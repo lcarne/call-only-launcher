@@ -1,6 +1,7 @@
 package com.callonly.launcher.manager
 
 import android.telecom.Call
+import android.telecom.CallAudioState
 import com.callonly.launcher.data.model.CallLog
 import com.callonly.launcher.data.model.CallLogType
 import com.callonly.launcher.data.repository.CallLogRepository
@@ -20,7 +21,8 @@ import javax.inject.Singleton
 class CallManager @Inject constructor(
     private val callLogRepository: CallLogRepository,
     private val contactRepository: ContactRepository,
-    private val settingsRepository: SettingsRepository
+    private val settingsRepository: SettingsRepository,
+    @dagger.hilt.android.qualifiers.ApplicationContext private val context: android.content.Context
 ) {
 
     private var currentCall: Call? = null
@@ -33,11 +35,30 @@ class CallManager @Inject constructor(
     private val _callState = MutableStateFlow<CallState>(CallState.Idle)
     val callState: StateFlow<CallState> = _callState.asStateFlow()
 
+
+
     private val _incomingNumber = MutableStateFlow<String?>(null)
     val incomingNumber: StateFlow<String?> = _incomingNumber.asStateFlow()
 
     private val _isCallAllowed = MutableStateFlow(false)
     val isCallAllowed: StateFlow<Boolean> = _isCallAllowed.asStateFlow()
+
+    private val _isSpeakerOn = MutableStateFlow(false)
+    val isSpeakerOn: StateFlow<Boolean> = _isSpeakerOn.asStateFlow()
+
+    interface AudioController {
+        fun requestAudioRoute(route: Int)
+    }
+
+    private var audioController: AudioController? = null
+
+    fun registerAudioController(controller: AudioController) {
+        this.audioController = controller
+    }
+
+    fun unregisterAudioController() {
+        this.audioController = null
+    }
 
     private val callCallback = object : Call.Callback() {
         override fun onStateChanged(call: Call, state: Int) {
@@ -45,6 +66,17 @@ class CallManager @Inject constructor(
                 updateState(state)
             }
         }
+        // Listener for Audio State changes needs to be provided by InCallService via separate mechanism
+        // or we rely on polling/updates if Call object supports it.
+        // Actually Call.Callback DOES have onCallAudioStateChanged in documentation, but maybe dependency is old?
+        // Let's assume InCallService forwards it.
+    }
+
+    private var currentAudioState: CallAudioState? = null
+
+    fun onAudioStateChanged(audioState: CallAudioState?) {
+        currentAudioState = audioState
+        _isSpeakerOn.value = audioState?.route == CallAudioState.ROUTE_SPEAKER
     }
 
     fun setCall(call: Call) {
@@ -106,6 +138,8 @@ class CallManager @Inject constructor(
                 if (!wasAnswered) {
                     wasAnswered = true
                     answerTime = System.currentTimeMillis()
+                    // Set speaker on by default for seniors
+                    setSpeakerOn(true)
                 }
                 _callState.value = CallState.Active
             }
@@ -142,6 +176,22 @@ class CallManager @Inject constructor(
         _incomingNumber.value = null
         _callState.value = CallState.Idle
         _isCallAllowed.value = false
+        _isSpeakerOn.value = false
+    }
+
+    fun toggleSpeaker() {
+        val currentRoute = currentAudioState?.route ?: CallAudioState.ROUTE_WIRED_OR_EARPIECE
+        val newRoute = if (currentRoute == CallAudioState.ROUTE_SPEAKER) {
+            CallAudioState.ROUTE_WIRED_OR_EARPIECE
+        } else {
+            CallAudioState.ROUTE_SPEAKER
+        }
+        audioController?.requestAudioRoute(newRoute)
+    }
+
+    fun setSpeakerOn(on: Boolean) {
+        val route = if (on) CallAudioState.ROUTE_SPEAKER else CallAudioState.ROUTE_WIRED_OR_EARPIECE
+        audioController?.requestAudioRoute(route)
     }
 
     private fun logCall() {

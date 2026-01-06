@@ -99,6 +99,16 @@ class IncomingCallViewModel @Inject constructor(
     fun endCall() {
         callManager.reject() // reject() in CallManager already calls disconnect()
     }
+
+    val isSpeakerOn = callManager.isSpeakerOn
+
+    fun toggleSpeaker() {
+        callManager.toggleSpeaker()
+    }
+
+    fun setSpeakerOn(on: Boolean) {
+        callManager.setSpeakerOn(on)
+    }
 }
 
 sealed class IncomingCallUiState {

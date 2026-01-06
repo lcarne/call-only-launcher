@@ -1,47 +1,28 @@
 package com.callonly.launcher.ui.call
-
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Call
-import androidx.compose.material.icons.filled.Clear
+import com.callonly.launcher.ui.theme.StatusIcons
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.res.stringResource
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.callonly.launcher.data.model.Contact
 import coil.compose.AsyncImage
-// import com.callonly.launcher.R // Assuming resource for placeholder if needed, otherwise using vector
+import com.callonly.launcher.data.model.Contact
+import kotlinx.coroutines.delay
 
 @Composable
 fun IncomingCallScreen(
@@ -50,10 +31,9 @@ fun IncomingCallScreen(
     onCallEnded: () -> Unit
 ) {
     val uiState by viewModel.incomingCallState.collectAsState()
-    val callDuration by viewModel.callDuration.collectAsState()
-    val answerButtonSize by viewModel.answerButtonSize.collectAsState()
+    val isSpeakerOn by viewModel.isSpeakerOn.collectAsState()
 
-    var hasSeenCall by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(false) }
+    var hasSeenCall by remember { mutableStateOf(false) }
     
     // Automatic finish when call ends
     LaunchedEffect(uiState) {
@@ -67,20 +47,19 @@ fun IncomingCallScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Black) // Dark background for call screen
+            .background(Color.Black)
             .padding(16.dp)
     ) {
         when (val state = uiState) {
             is IncomingCallUiState.Empty -> {
-                // Should probably not happen while activity is active and call is ringing
+                // Idle state
             }
             is IncomingCallUiState.Ringing -> {
                 CallLayout(
                     number = state.number,
                     contact = state.contact,
                     state = state,
-                    duration = callDuration,
-                    answerButtonSize = answerButtonSize,
+                    isSpeakerOn = false,
                     viewModel = viewModel,
                     onCallRejected = onCallRejected
                 )
@@ -90,8 +69,7 @@ fun IncomingCallScreen(
                     number = state.number,
                     contact = state.contact,
                     state = state,
-                    duration = callDuration,
-                    answerButtonSize = answerButtonSize,
+                    isSpeakerOn = isSpeakerOn,
                     viewModel = viewModel,
                     onCallRejected = onCallRejected
                 )
@@ -100,40 +78,43 @@ fun IncomingCallScreen(
     }
 }
 
-private fun formatDuration(seconds: Long): String {
-    val h = seconds / 3600
-    val m = (seconds % 3600) / 60
-    val s = seconds % 60
-    return if (h > 0) {
-        String.format(java.util.Locale.getDefault(), "%02d:%02d:%02d", h, m, s)
-    } else {
-        String.format(java.util.Locale.getDefault(), "%02d:%02d", m, s)
-    }
-}
-
 @Composable
 fun CallLayout(
     number: String,
     contact: Contact?,
     state: IncomingCallUiState,
-    duration: Long,
-    answerButtonSize: Float,
+    isSpeakerOn: Boolean,
     viewModel: IncomingCallViewModel? = null,
     onCallRejected: (() -> Unit)? = null
 ) {
-    Box(modifier = Modifier.fillMaxSize()) {
+    val isRinging = state is IncomingCallUiState.Ringing
+    var tapsRemaining by remember { mutableIntStateOf(2) }
+    
+    LaunchedEffect(tapsRemaining) {
+        if (tapsRemaining < 2) {
+            delay(3000)
+            tapsRemaining = 2
+        }
+    }
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(24.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.SpaceBetween
+    ) {
+        // --- ZONE HAUTE : Information (Non cliquable) ---
         Column(
-            modifier = Modifier
-                .align(Alignment.TopCenter)
-                .padding(top = 80.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.padding(top = if (isRinging) 48.dp else 16.dp)
         ) {
-            // Contact Photo
+            // Photo de l'appelant
             Box(
                 modifier = Modifier
-                    .size(350.dp) // Significantly larger
-                    .clip(androidx.compose.foundation.shape.RoundedCornerShape(32.dp)) // Increased corner radius for aesthetics
-                    .background(Color.Gray)
+                    .size(if (isRinging) 300.dp else 220.dp)
+                    .clip(if (isRinging) CircleShape else RoundedCornerShape(32.dp))
+                    .background(Color.DarkGray)
             ) {
                 if (contact?.photoUri != null) {
                     AsyncImage(
@@ -148,158 +129,226 @@ fun CallLayout(
                         imageVector = Icons.Default.Person,
                         contentDescription = null,
                         modifier = Modifier
-                            .size(200.dp)
+                            .size(if (isRinging) 180.dp else 120.dp)
                             .align(Alignment.Center),
                         tint = Color.White
                     )
                 }
             }
 
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(24.dp))
 
-            // Name
+            // Nom de l'appelant (Très gros caractères)
             Text(
-                text = contact?.name ?: "Inconnu",
-                style = MaterialTheme.typography.headlineLarge,
+                text = contact?.name ?: number,
+                style = MaterialTheme.typography.displayMedium, // Extra large
                 color = Color.White,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Black,
+                textAlign = TextAlign.Center,
+                lineHeight = androidx.compose.ui.unit.TextUnit.Unspecified
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Number
-            Text(
-                text = number,
-                style = MaterialTheme.typography.titleMedium,
-                color = Color.LightGray
-            )
-
-            if (state is IncomingCallUiState.Active) {
-                Spacer(modifier = Modifier.height(16.dp))
+            if (isRinging) {
+                Spacer(modifier = Modifier.height(12.dp))
                 Text(
-                    text = formatDuration(duration),
+                    text = stringResource(id = com.callonly.launcher.R.string.incoming_call),
                     style = MaterialTheme.typography.headlineMedium,
-                    color = Color.Green,
-                    fontWeight = FontWeight.Bold
-                )
-                Text(
-                    text = "Appel en cours",
-                    style = MaterialTheme.typography.titleMedium,
-                    color = Color.Green
-                )
-            }
-        }
-
-        // 3-Tap Logic State
-        var tapsRemaining by androidx.compose.runtime.remember { androidx.compose.runtime.mutableIntStateOf(3) }
-        
-        // Reset taps after 3 seconds of inactivity
-        LaunchedEffect(tapsRemaining) {
-            if (tapsRemaining < 3) {
-                kotlinx.coroutines.delay(3000)
-                tapsRemaining = 3
-            }
-        }
-
-        // Buttons
-        Column(
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .fillMaxWidth()
-                .padding(bottom = 64.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            
-            // Taps feedback text
-            if (tapsRemaining < 3) {
-                Text(
-                    text = if (state is IncomingCallUiState.Ringing) 
-                        "Appuyez encore $tapsRemaining fois pour refuser"
-                    else 
-                        "Appuyez encore $tapsRemaining fois pour raccrocher",
-                    color = Color.White,
-                    style = MaterialTheme.typography.titleMedium,
+                    color = Color.LightGray,
                     fontWeight = FontWeight.Bold,
-                    modifier = Modifier
-                        .background(Color.Red.copy(alpha = 0.7f), androidx.compose.foundation.shape.RoundedCornerShape(8.dp))
-                        .padding(horizontal = 16.dp, vertical = 8.dp)
+                    textAlign = TextAlign.Center
                 )
-            } else {
-                Spacer(modifier = Modifier.height(34.dp)) // Spacer to prevent layout jump
             }
+        }
 
+        // --- ZONE CENTRALE : Action principale ---
+        if (isRinging) {
+            Spacer(modifier = Modifier.height(32.dp))
+            // Ringing state: Refuse (left) and Answer (right)
             Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly,
-                verticalAlignment = Alignment.CenterVertically
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 8.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.Bottom
             ) {
-                if (state is IncomingCallUiState.Ringing) {
-                    // Decline Button (Small Red)
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Button(
-                            onClick = {
-                                tapsRemaining--
-                                if (tapsRemaining <= 0) {
-                                    viewModel?.rejectCall()
-                                    onCallRejected?.invoke()
-                                    tapsRemaining = 3
-                                }
-                            },
-                            colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
-                            shape = CircleShape,
-                            modifier = Modifier.size(80.dp)
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Clear,
-                                contentDescription = "Decline",
-                                tint = Color.White,
-                                modifier = Modifier.size(32.dp)
-                            )
-                        }
+                // Left Column: Refuse
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    if (tapsRemaining < 2) {
+                        Text(
+                            text = "Encore $tapsRemaining",
+                            color = Color.White,
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier
+                                .background(Color.Red, RoundedCornerShape(8.dp))
+                                .padding(horizontal = 12.dp, vertical = 4.dp)
+                        )
+                        Spacer(Modifier.height(8.dp))
                     }
-
-                    // Answer Button (Large Green)
                     Button(
                         onClick = {
-                            viewModel?.acceptCall()
+                            tapsRemaining--
+                            if (tapsRemaining <= 0) {
+                                viewModel?.rejectCall()
+                                onCallRejected?.invoke()
+                                tapsRemaining = 2
+                            }
                         },
-                        colors = ButtonDefaults.buttonColors(containerColor = Color.Green),
+                        colors = ButtonDefaults.buttonColors(containerColor = Color.Red), // More vibrant red
                         shape = CircleShape,
-                        modifier = Modifier.size(answerButtonSize.dp)
+                        modifier = Modifier.size(110.dp)
+                    ) {
+                        Icon(
+                            imageVector = StatusIcons.CallEnd,
+                            contentDescription = "Refuse",
+                            tint = Color.White,
+                            modifier = Modifier.size(56.dp)
+                        )
+                    }
+                    Spacer(Modifier.height(12.dp))
+                    Text(
+                        text = stringResource(id = com.callonly.launcher.R.string.refuse),
+                        style = MaterialTheme.typography.titleLarge,
+                        color = Color.Red,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+
+                // Right Column: Answer
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Button(
+                        onClick = { viewModel?.acceptCall() },
+                        colors = ButtonDefaults.buttonColors(containerColor = Color.Green), // More vibrant green
+                        shape = CircleShape,
+                        modifier = Modifier.size(160.dp)
                     ) {
                         Icon(
                             imageVector = Icons.Default.Call,
                             contentDescription = "Answer",
                             tint = Color.White,
-                            modifier = Modifier.size((answerButtonSize * 0.53f).dp)
+                            modifier = Modifier.size(90.dp)
                         )
                     }
-                } else {
-                    // Active Call - Show End Call Button
-                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Button(
-                            onClick = {
-                                tapsRemaining--
-                                if (tapsRemaining <= 0) {
-                                    viewModel?.endCall()
-                                    tapsRemaining = 3
-                                }
-                            },
-                            colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
-                            shape = CircleShape,
-                            modifier = Modifier.size(100.dp)
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Clear,
-                                contentDescription = "End Call",
-                                tint = Color.White,
-                                modifier = Modifier.size(48.dp)
-                            )
-                        }
-                    }
+                    Spacer(Modifier.height(12.dp))
+                    Text(
+                        text = stringResource(id = com.callonly.launcher.R.string.answer),
+                        style = MaterialTheme.typography.headlineMedium,
+                        color = Color.Green,
+                        fontWeight = FontWeight.Black
+                    )
                 }
             }
+        } else {
+            // Active state: ONE HUGE RED HANGUP BUTTON
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                if (tapsRemaining < 2) {
+                    Text(
+                        text = "Appuyez encore $tapsRemaining fois",
+                        color = Color.White,
+                        style = MaterialTheme.typography.headlineSmall,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier
+                            .background(Color.Red.copy(alpha = 0.8f), RoundedCornerShape(8.dp))
+                            .padding(horizontal = 16.dp, vertical = 8.dp)
+                    )
+                    Spacer(Modifier.height(16.dp))
+                }
+
+                Button(
+                    onClick = {
+                        tapsRemaining--
+                        if (tapsRemaining <= 0) {
+                            viewModel?.endCall()
+                            tapsRemaining = 2
+                        }
+                    },
+                    modifier = Modifier.size(140.dp), // Reduced from 180.dp
+                    colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
+                    shape = CircleShape,
+                    elevation = ButtonDefaults.buttonElevation(defaultElevation = 8.dp)
+                ) {
+                    Icon(
+                        imageVector = StatusIcons.CallEnd,
+                        contentDescription = "End Call",
+                        tint = Color.White,
+                        modifier = Modifier.size(80.dp) // Reduced from 100.dp
+                    )
+                }
+                Spacer(Modifier.height(16.dp))
+                Text(
+                    text = stringResource(id = com.callonly.launcher.R.string.hang_up),
+                    style = MaterialTheme.typography.displaySmall,
+                    color = Color.Red,
+                    fontWeight = FontWeight.ExtraBold
+                )
+            }
+        }
+
+
+        // --- ZONE BASSE : Options audio (Active state only) ---
+        if (!isRinging) {
+            Row(
+                modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp),
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                // Earpiece Button (Oreille - Left)
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Button(
+                        onClick = { viewModel?.setSpeakerOn(false) },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = if (!isSpeakerOn) Color(0xFF2196F3) else Color.DarkGray
+                        ),
+                        shape = RoundedCornerShape(24.dp),
+                        modifier = Modifier.size(110.dp)
+                    ) {
+                        Icon(
+                            imageVector = StatusIcons.Hearing,
+                            contentDescription = "Earpiece",
+                            tint = if (!isSpeakerOn) Color.White else Color.Gray,
+                            modifier = Modifier.size(56.dp)
+                        )
+                    }
+                    Spacer(Modifier.height(8.dp))
+                    Text(
+                        text = stringResource(id = com.callonly.launcher.R.string.earpiece),
+                        style = MaterialTheme.typography.titleLarge,
+                        color = if (!isSpeakerOn) Color(0xFF2196F3) else Color.White,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center
+                    )
+                }
+
+                // Speaker Button (Parleur - Right)
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Button(
+                        onClick = { viewModel?.setSpeakerOn(true) },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = if (isSpeakerOn) Color.Green else Color.DarkGray
+                        ),
+                        shape = RoundedCornerShape(24.dp),
+                        modifier = Modifier.size(110.dp)
+                    ) {
+                        Icon(
+                            imageVector = StatusIcons.Speaker,
+                            contentDescription = "Speaker",
+                            tint = if (isSpeakerOn) Color.Black else Color.White,
+                            modifier = Modifier.size(56.dp)
+                        )
+                    }
+                    Spacer(Modifier.height(8.dp))
+                    Text(
+                        text = stringResource(id = com.callonly.launcher.R.string.speaker),
+                        style = MaterialTheme.typography.titleLarge,
+                        color = if (isSpeakerOn) Color.Green else Color.White,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center
+                    )
+                }
+            }
+        } else {
+            // Empty space for ringing mode to keep layout stable if needed, but Arrange.SpaceBetween handles it
+            Spacer(Modifier.height(48.dp))
         }
     }
 }

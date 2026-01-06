@@ -485,4 +485,143 @@ object StatusIcons {
                 close()
             }
         }.build()
+
+    val CallEnd: ImageVector
+        get() = ImageVector.Builder(
+            name = "CallEnd",
+            defaultWidth = 24.0.dp,
+            defaultHeight = 24.0.dp,
+            viewportWidth = 24.0f,
+            viewportHeight = 24.0f
+        ).apply {
+            path(fill = SolidColor(Color.Black), fillAlpha = 1.0f, stroke = null, strokeAlpha = 1.0f,
+                strokeLineWidth = 1.0f, strokeLineCap = StrokeCap.Butt, strokeLineJoin = StrokeJoin.Miter,
+                strokeLineMiter = 1.0f, pathFillType = PathFillType.NonZero) {
+                moveTo(12.0f, 9.0f)
+                curveToRelative(-1.6f, 0.0f, -3.15f, 0.25f, -4.6f, 0.72f)
+                verticalLineToRelative(3.1f)
+                curveToRelative(0.0f, 0.39f, -0.23f, 0.74f, -0.56f, 0.9f)
+                curveToRelative(-0.98f, 0.49f, -1.87f, 1.12f, -2.66f, 1.85f)
+                curveToRelative(-0.18f, 0.18f, -0.43f, 0.28f, -0.7f, 0.28f)
+                curveToRelative(-0.28f, 0.0f, -0.53f, -0.11f, -0.71f, -0.29f)
+                lineTo(0.29f, 13.08f)
+                curveToRelative(-0.18f, -0.17f, -0.29f, -0.42f, -0.29f, -0.7f)
+                curveToRelative(0.0f, -0.28f, 0.11f, -0.53f, 0.29f, -0.71f)
+                curveToRelative(3.05f, -2.89f, 7.17f, -4.67f, 11.71f, -4.67f)
+                reflectiveCurveToRelative(8.66f, 1.78f, 11.71f, 4.67f)
+                curveToRelative(0.18f, 0.18f, 0.29f, 0.43f, 0.29f, 0.71f)
+                curveToRelative(0.0f, 0.28f, -0.11f, 0.53f, -0.29f, 0.71f)
+                lineToRelative(-2.48f, 2.48f)
+                curveToRelative(-0.18f, 0.18f, -0.43f, 0.29f, -0.71f, 0.29f)
+                curveToRelative(-0.27f, 0.0f, -0.52f, -0.11f, -0.7f, -0.28f)
+                curveToRelative(-0.79f, -0.74f, -1.69f, -1.36f, -2.67f, -1.85f)
+                curveToRelative(-0.33f, -0.16f, -0.56f, -0.5f, -0.56f, -0.9f)
+                verticalLineToRelative(-3.1f)
+                curveToRelative(-1.45f, -0.47f, -3.0f, -0.72f, -4.6f, -0.72f)
+                close()
+            }
+        }.build()
+
+    val Hearing: ImageVector
+        get() = ImageVector.Builder(
+            name = "Hearing",
+            defaultWidth = 24.dp,
+            defaultHeight = 24.dp,
+            viewportWidth = 20f,
+            viewportHeight = 20f
+        ).apply {
+
+            path(
+                fill = SolidColor(Color.Black),
+                stroke = null,
+                pathFillType = PathFillType.NonZero
+            ) {
+                moveTo(17.256f, 12.253f)
+                curveTo(17.16f, 11.586f, 16.645f, 11.066f, 15.982f, 10.911f)
+                curveTo(13.405f, 10.307f, 12.759f, 8.823f, 12.65f, 7.177f)
+                curveTo(12.193f, 7.092f, 11.38f, 7f, 10f, 7f)
+                curveTo(8.62f, 7f, 7.807f, 7.092f, 7.35f, 7.177f)
+                curveTo(7.241f, 8.823f, 6.595f, 10.307f, 4.018f, 10.911f)
+                curveTo(3.355f, 11.067f, 2.84f, 11.586f, 2.744f, 12.253f)
+                lineTo(2.247f, 15.695f)
+                curveTo(2.072f, 16.907f, 2.962f, 18f, 4.2f, 18f)
+                horizontalLineTo(15.8f)
+                curveTo(17.037f, 18f, 17.928f, 16.907f, 17.753f, 15.695f)
+                lineTo(17.256f, 12.253f)
+                close()
+
+                moveTo(10f, 15.492f)
+                curveTo(8.605f, 15.492f, 7.474f, 14.372f, 7.474f, 12.992f)
+                curveTo(7.474f, 11.612f, 8.605f, 10.492f, 10f, 10.492f)
+                curveTo(11.395f, 10.492f, 12.526f, 11.612f, 12.526f, 12.992f)
+                curveTo(12.526f, 14.372f, 11.395f, 15.492f, 10f, 15.492f)
+                close()
+
+                moveTo(19.95f, 6f)
+                curveTo(19.926f, 4.5f, 16.108f, 2.001f, 10f, 2f)
+                curveTo(3.891f, 2.001f, 0.073f, 4.5f, 0.05f, 6f)
+                curveTo(0.027f, 7.5f, 0.071f, 9.452f, 2.585f, 9.127f)
+                curveTo(5.526f, 8.746f, 5.345f, 7.719f, 5.345f, 6.251f)
+                curveTo(5.345f, 5.227f, 7.737f, 4.98f, 10f, 4.98f)
+                curveTo(12.263f, 4.98f, 14.655f, 5.227f, 14.655f, 6.251f)
+                curveTo(14.655f, 7.719f, 14.474f, 8.746f, 17.415f, 9.127f)
+                curveTo(19.928f, 9.452f, 19.973f, 7.5f, 19.95f, 6f)
+                close()
+            }
+        }.build()
+
+    val Speaker: ImageVector
+        get() = ImageVector.Builder(
+            name = "Speaker",
+            defaultWidth = 24.dp,
+            defaultHeight = 24.dp,
+            viewportWidth = 28f,
+            viewportHeight = 28f
+        ).apply {
+
+            path(
+                fill = SolidColor(Color.Black),
+                stroke = SolidColor(Color.Black),
+                strokeLineWidth = 1.5f,
+                strokeLineCap = StrokeCap.Round,
+                strokeLineJoin = StrokeJoin.Round
+            ) {
+                moveTo(16.5f, 4.81425f)
+                curveTo(16.5f, 3.71986f, 15.1932f, 3.15384f, 14.395f, 3.90244f)
+                lineTo(9.45826f, 8.53182f)
+                curveTo(9.13388f, 8.836f, 8.70587f, 9.00529f, 8.26119f, 9.00529f)
+                horizontalLineTo(5.25f)
+                curveTo(3.45508f, 9.00529f, 2f, 10.4604f, 2f, 12.2553f)
+                verticalLineTo(15.7473f)
+                curveTo(2f, 17.5422f, 3.45507f, 18.9973f, 5.25f, 18.9973f)
+                horizontalLineTo(8.26174f)
+                curveTo(8.70619f, 18.9973f, 9.134f, 19.1664f, 9.45832f, 19.4703f)
+                lineTo(14.3953f, 24.0964f)
+                curveTo(15.1937f, 24.8446f, 16.5f, 24.2785f, 16.5f, 23.1843f)
+                close()
+            }
+
+            // Ondes (plus épaisses)
+            path(
+                fill = null,
+                stroke = SolidColor(Color.Black),
+                strokeLineWidth = 2f,
+                strokeLineCap = StrokeCap.Round
+            ) {
+                moveTo(22.7f, 5.25f)
+                curveTo(24.75f, 7.58f, 26f, 10.65f, 26f, 14f)
+                curveTo(26f, 17.35f, 24.75f, 20.41f, 22.7f, 22.75f)
+            }
+
+            path(
+                fill = null,
+                stroke = SolidColor(Color.Black),
+                strokeLineWidth = 2f,
+                strokeLineCap = StrokeCap.Round
+            ) {
+                moveTo(20.35f, 8.3f)
+                curveTo(21.54f, 9.89f, 22.25f, 11.86f, 22.25f, 14f)
+                curveTo(22.25f, 16.14f, 21.54f, 18.11f, 20.35f, 19.7f)
+            }
+        }.build()
 }

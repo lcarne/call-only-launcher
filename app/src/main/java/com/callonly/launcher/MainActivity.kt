@@ -201,11 +201,10 @@ class MainActivity : ComponentActivity() {
         lifecycleScope.launch {
             combine(
                 settingsRepository.isRingerEnabled,
-                settingsRepository.ringerVolume,
-                settingsRepository.isVibrateEnabled
-            ) { enabled, volumePercent, vibrateEnabled ->
-                Triple(enabled, volumePercent, vibrateEnabled)
-            }.collect { (enabled, volumePercent, vibrateEnabled) ->
+                settingsRepository.ringerVolume
+            ) { enabled, volumePercent ->
+                Pair(enabled, volumePercent)
+            }.collect { (enabled, volumePercent) ->
                 try {
                     val hasDndAccess = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
                         notificationManager.isNotificationPolicyAccessGranted
@@ -224,11 +223,7 @@ class MainActivity : ComponentActivity() {
                     } else {
                         // Ringer is OFF (Gray Button)
                         if (hasDndAccess) {
-                            if (vibrateEnabled) {
-                                audioManager.ringerMode = AudioManager.RINGER_MODE_VIBRATE
-                            } else {
-                                audioManager.ringerMode = AudioManager.RINGER_MODE_SILENT
-                            }
+                            audioManager.ringerMode = AudioManager.RINGER_MODE_SILENT
                         } else {
                             // Fallback: set volume to 0
                             audioManager.setStreamVolume(AudioManager.STREAM_RING, 0, 0)

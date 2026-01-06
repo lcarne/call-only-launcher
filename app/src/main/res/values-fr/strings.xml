@@ -67,4 +67,10 @@
     <string name="time_format_24">24h</string>
     <string name="preview_contact_name">Aperçu Contact</string>
     <string name="night_mode_active_ringer_off">Sonnerie désactivée\n(Mode Nuit de %1$d h à %2$d h)</string>
+    <string name="hang_up">RACCROCHER</string>
+    <string name="speaker">HAUT\nPARLEUR</string>
+    <string name="earpiece">À\nL\'OREILLE</string>
+    <string name="incoming_call">Appel entrant</string>
+    <string name="answer">RÉPONDRE</string>
+    <string name="refuse">REFUSER</string>
 </resources>

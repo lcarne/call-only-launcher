@@ -800,23 +800,7 @@ fun SettingsSection(viewModel: AdminViewModel) {
             steps = 100
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
-        
-        val isVibrateEnabled by viewModel.isVibrateEnabled.collectAsState()
-        Row(
-            modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-                Column(modifier = Modifier.weight(1f)) {
-                Text(stringResource(id = com.callonly.launcher.R.string.vibrate), style = MaterialTheme.typography.titleMedium)
-                Text(stringResource(id = com.callonly.launcher.R.string.vibrate_desc), style = MaterialTheme.typography.bodySmall)
-            }
-            Switch(
-                checked = isVibrateEnabled,
-                onCheckedChange = { viewModel.setVibrateEnabled(it) }
-            )
-        }
+
 
         Divider(modifier = Modifier.padding(vertical = 16.dp))
         Text(stringResource(id = com.callonly.launcher.R.string.screen_settings), style = MaterialTheme.typography.titleLarge)
@@ -959,8 +943,7 @@ fun SettingsSection(viewModel: AdminViewModel) {
                         number = "06 12 34 56 78",
                         contact = Contact(name = stringResource(id = com.callonly.launcher.R.string.preview_contact_name), phoneNumber = "06 12 34 56 78", photoUri = null),
                         state = com.callonly.launcher.ui.call.IncomingCallUiState.Ringing("06 12 34 56 78", null),
-                        duration = 0,
-                        answerButtonSize = answerButtonSize
+                        isSpeakerOn = false
                     )
                     
                     Text(
