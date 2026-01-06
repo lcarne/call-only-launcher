@@ -25,12 +25,16 @@ Other system features (notifications, outgoing dialer, settings, system UI) are 
 
 ## Key Features
 
-- **Minimal UI**  
-  Large digital clock, full date, and high-contrast theme for maximum readability.
+- **Senior-Centric UI**  
+  Large digital clock, full date, and high-contrast theme. Redesigned call screens with extra-large text, vibrant action buttons, and a reassuring visual style.
 
-- **Secure call handling**  
-  Incoming calls ring only for contacts marked as Favorites.  
-  Unknown callers can be silenced or rejected automatically.
+- **Intelligent Audio Routing**  
+  Incoming calls automatically start on **speakerphone** by default to assist users with hearing or dexterity challenges. Easily toggle between speaker and earpiece with large, clear buttons.
+
+- **Safe Call Handling**  
+  - Incoming calls ring only for contacts marked as Favorites.
+  - unknown callers are silenced or rejected automatically.
+  - **2-Tap Safety**: Hang-up and Refuse actions require two taps to prevent accidental termination of calls.
 
 - **Kiosk / Device Owner support**  
   When set as Device Owner, the app can:
@@ -174,6 +178,7 @@ The Admin interface is intentionally hidden to prevent accidental access by the 
 
 From the Admin interface you can:
 - Add or remove Favorites (trusted contacts).
+- Configure device state (Night mode, Clock color, Ringer volume).
 - Temporarily unpin/unlock the device (an "Unlock" button is available in Admin Settings to exit Kiosk mode).
 
 ## Emergency Unlock / Remove Device Owner
