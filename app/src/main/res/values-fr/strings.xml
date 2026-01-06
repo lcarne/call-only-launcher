@@ -33,8 +33,6 @@
     <string name="accept_all_calls">Accepter tous les appels</string>
     <string name="accept_all_calls_desc">Si désactivé, seuls les contacts sont autorisés</string>
     <string name="ringer_volume">Volume de la sonnerie</string>
-    <string name="vibrate">Vibreur</string>
-    <string name="vibrate_desc">Vibration lors des appels entrants</string>
     <string name="screen_settings">Paramètres d\'écran</string>
     <string name="always_on_screen">Écran toujours allumé</string>
     <string name="always_on_desc">Sauf la nuit (voir ci-dessous)</string>
@@ -42,10 +40,6 @@
     <string name="night_start">Début nuit: %1$d h</string>
     <string name="night_end">Fin nuit: %1$d h</string>
     <string name="clock_color">Couleur de l\'horloge</string>
-    <string name="answer_button_size">Taille du bouton décrocher</string>
-    <string name="answer_button_size_value">Taille bouton décrocher : %1$d dp</string>
-    <string name="preview_call_screen">Aperçu de l\'écran d\'appel 📱</string>
-    <string name="click_anywhere_close">(Cliquez n\'importe où pour fermer)</string>
     <string name="ringer_active">SONNERIE ACTIVE</string>
     <string name="ringer_disabled">SONNERIE DÉSACTIVÉE</string>
     <string name="activate_calls">ACTIVER LES APPELS</string>
@@ -65,7 +59,6 @@
     <string name="time_format_title">Format de l\'heure</string>
     <string name="time_format_12">AM/PM</string>
     <string name="time_format_24">24h</string>
-    <string name="preview_contact_name">Aperçu Contact</string>
     <string name="night_mode_active_ringer_off">Sonnerie désactivée\n(Mode Nuit de %1$d h à %2$d h)</string>
     <string name="hang_up">RACCROCHER</string>
     <string name="speaker">HAUT\nPARLEUR</string>

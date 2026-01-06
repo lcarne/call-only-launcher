@@ -21,8 +21,7 @@ import javax.inject.Singleton
 class CallManager @Inject constructor(
     private val callLogRepository: CallLogRepository,
     private val contactRepository: ContactRepository,
-    private val settingsRepository: SettingsRepository,
-    @dagger.hilt.android.qualifiers.ApplicationContext private val context: android.content.Context
+    private val settingsRepository: SettingsRepository
 ) {
 
     private var currentCall: Call? = null
@@ -179,15 +178,6 @@ class CallManager @Inject constructor(
         _isSpeakerOn.value = false
     }
 
-    fun toggleSpeaker() {
-        val currentRoute = currentAudioState?.route ?: CallAudioState.ROUTE_WIRED_OR_EARPIECE
-        val newRoute = if (currentRoute == CallAudioState.ROUTE_SPEAKER) {
-            CallAudioState.ROUTE_WIRED_OR_EARPIECE
-        } else {
-            CallAudioState.ROUTE_SPEAKER
-        }
-        audioController?.requestAudioRoute(newRoute)
-    }
 
     fun setSpeakerOn(on: Boolean) {
         val route = if (on) CallAudioState.ROUTE_SPEAKER else CallAudioState.ROUTE_WIRED_OR_EARPIECE

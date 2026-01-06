@@ -40,10 +40,6 @@
     <string name="night_start">Night start: %1$d h</string>
     <string name="night_end">Night end: %1$d h</string>
     <string name="clock_color">Clock color</string>
-    <string name="answer_button_size">Answer button size</string>
-    <string name="answer_button_size_value">Answer button size: %1$d dp</string>
-    <string name="preview_call_screen">Call screen preview 📱</string>
-    <string name="click_anywhere_close">(Click anywhere to close)</string>
     <string name="ringer_active">RINGER ON</string>
     <string name="ringer_disabled">RINGER OFF</string>
     <string name="activate_calls">ENABLE CALLS</string>
@@ -63,7 +59,6 @@
     <string name="time_format_title">Time format</string>
     <string name="time_format_12">AM/PM</string>
     <string name="time_format_24">24h</string>
-    <string name="preview_contact_name">Preview Contact</string>
     <string name="night_mode_active_ringer_off">Ringer disabled\n(Night Mode from %1$d h to %2$d h)</string>
     <string name="hang_up">HANG UP</string>
     <string name="speaker">SPEAKER</string>

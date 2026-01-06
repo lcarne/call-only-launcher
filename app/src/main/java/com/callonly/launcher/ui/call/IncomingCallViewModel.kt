@@ -21,8 +21,7 @@ import javax.inject.Inject
 @HiltViewModel
 class IncomingCallViewModel @Inject constructor(
     private val callManager: CallManager,
-    private val contactRepository: ContactRepository,
-    private val settingsRepository: SettingsRepository
+    private val contactRepository: ContactRepository
 ) : ViewModel() {
 
     val incomingCallState = combine(
@@ -50,37 +49,8 @@ class IncomingCallViewModel @Inject constructor(
         initialValue = IncomingCallUiState.Empty
     )
 
-    private val _callDuration = MutableStateFlow(0L)
-    val callDuration: StateFlow<Long> = _callDuration.asStateFlow()
-
-
     init {
-        viewModelScope.launch {
-            incomingCallState.collect { state ->
-                if (state is IncomingCallUiState.Active) {
-                    startTimer()
-                } else {
-                    stopTimer()
-                }
-            }
-        }
-    }
-
-    private var timerJob: kotlinx.coroutines.Job? = null
-    private fun startTimer() {
-        if (timerJob?.isActive == true) return
-        val startTime = System.currentTimeMillis()
-        timerJob = viewModelScope.launch {
-            while (true) {
-                _callDuration.value = (System.currentTimeMillis() - startTime) / 1000
-                delay(1000)
-            }
-        }
-    }
-
-    private fun stopTimer() {
-        timerJob?.cancel()
-        _callDuration.value = 0
+        // Initialization if needed
     }
 
     fun acceptCall() {
@@ -97,9 +67,6 @@ class IncomingCallViewModel @Inject constructor(
 
     val isSpeakerOn = callManager.isSpeakerOn
 
-    fun toggleSpeaker() {
-        callManager.toggleSpeaker()
-    }
 
     fun setSpeakerOn(on: Boolean) {
         callManager.setSpeakerOn(on)

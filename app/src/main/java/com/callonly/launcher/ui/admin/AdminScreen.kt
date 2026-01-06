@@ -50,7 +50,6 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -59,10 +58,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.callonly.launcher.data.model.Contact
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Slider
-import java.text.SimpleDateFormat // For displaying hours sensibly if needed, or just Int
 import kotlinx.coroutines.delay
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.material3.Divider
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -799,9 +796,6 @@ fun SettingsSection(viewModel: AdminViewModel) {
             valueRange = 0f..100f,
             steps = 100
         )
-
-
-
         Divider(modifier = Modifier.padding(vertical = 16.dp))
         Text(stringResource(id = com.callonly.launcher.R.string.screen_settings), style = MaterialTheme.typography.titleLarge)
         

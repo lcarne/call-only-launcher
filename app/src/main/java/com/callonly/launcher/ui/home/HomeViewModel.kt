@@ -10,16 +10,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    repository: ContactRepository,
     private val settingsRepository: com.callonly.launcher.data.repository.SettingsRepository
 ) : ViewModel() {
-
-    val contacts = repository.getAllContacts()
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
-            initialValue = emptyList()
-        )
 
     val isAlwaysOnEnabled = settingsRepository.isAlwaysOnEnabled
     val nightModeStartHour = settingsRepository.nightModeStartHour
