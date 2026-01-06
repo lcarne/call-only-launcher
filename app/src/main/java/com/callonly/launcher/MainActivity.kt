@@ -264,7 +264,7 @@ class MainActivity : ComponentActivity() {
                 // but user wants "only calls can ring". 
                 // We'll trust our ringer management for the sound, 
                 // and the overlay for the UI.
-                notificationManager.setInterruptionFilter(NotificationManager.INTERRUPTION_FILTER_PRIORITY)
+                notificationManager.setInterruptionFilter(NotificationManager.INTERRUPTION_FILTER_ALL)
             }
         }
         

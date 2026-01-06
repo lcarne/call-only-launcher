@@ -190,66 +190,114 @@ fun CallLayout(
             }
         }
 
+        // 3-Tap Logic State
+        var tapsRemaining by androidx.compose.runtime.remember { androidx.compose.runtime.mutableIntStateOf(3) }
+        
+        // Reset taps after 3 seconds of inactivity
+        LaunchedEffect(tapsRemaining) {
+            if (tapsRemaining < 3) {
+                kotlinx.coroutines.delay(3000)
+                tapsRemaining = 3
+            }
+        }
+
         // Buttons
-        Row(
+        Column(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .fillMaxWidth()
                 .padding(bottom = 64.dp),
-            horizontalArrangement = Arrangement.SpaceEvenly,
-            verticalAlignment = Alignment.CenterVertically
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            if (state is IncomingCallUiState.Ringing) {
-                // Decline Button (Small Red)
-                Button(
-                    onClick = {
-                        viewModel?.rejectCall()
-                        onCallRejected?.invoke()
-                    },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
-                    shape = CircleShape,
-                    modifier = Modifier.size(80.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Clear,
-                        contentDescription = "Decline",
-                        tint = Color.White,
-                        modifier = Modifier.size(32.dp)
-                    )
-                }
-
-                // Answer Button (Large Green)
-                Button(
-                    onClick = {
-                        viewModel?.acceptCall()
-                    },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color.Green),
-                    shape = CircleShape,
-                    modifier = Modifier.size(answerButtonSize.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Call,
-                        contentDescription = "Answer",
-                        tint = Color.White,
-                        modifier = Modifier.size((answerButtonSize * 0.53f).dp)
-                    )
-                }
+            
+            // Taps feedback text
+            if (tapsRemaining < 3) {
+                Text(
+                    text = if (state is IncomingCallUiState.Ringing) 
+                        "Appuyez encore $tapsRemaining fois pour refuser"
+                    else 
+                        "Appuyez encore $tapsRemaining fois pour raccrocher",
+                    color = Color.White,
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier
+                        .background(Color.Red.copy(alpha = 0.7f), androidx.compose.foundation.shape.RoundedCornerShape(8.dp))
+                        .padding(horizontal = 16.dp, vertical = 8.dp)
+                )
             } else {
-                // Active Call - Show End Call Button
-                Button(
-                    onClick = {
-                        viewModel?.endCall()
-                    },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
-                    shape = CircleShape,
-                    modifier = Modifier.size(100.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Clear,
-                        contentDescription = "End Call",
-                        tint = Color.White,
-                        modifier = Modifier.size(48.dp)
-                    )
+                Spacer(modifier = Modifier.height(34.dp)) // Spacer to prevent layout jump
+            }
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                if (state is IncomingCallUiState.Ringing) {
+                    // Decline Button (Small Red)
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Button(
+                            onClick = {
+                                tapsRemaining--
+                                if (tapsRemaining <= 0) {
+                                    viewModel?.rejectCall()
+                                    onCallRejected?.invoke()
+                                    tapsRemaining = 3
+                                }
+                            },
+                            colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
+                            shape = CircleShape,
+                            modifier = Modifier.size(80.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Clear,
+                                contentDescription = "Decline",
+                                tint = Color.White,
+                                modifier = Modifier.size(32.dp)
+                            )
+                        }
+                    }
+
+                    // Answer Button (Large Green)
+                    Button(
+                        onClick = {
+                            viewModel?.acceptCall()
+                        },
+                        colors = ButtonDefaults.buttonColors(containerColor = Color.Green),
+                        shape = CircleShape,
+                        modifier = Modifier.size(answerButtonSize.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Call,
+                            contentDescription = "Answer",
+                            tint = Color.White,
+                            modifier = Modifier.size((answerButtonSize * 0.53f).dp)
+                        )
+                    }
+                } else {
+                    // Active Call - Show End Call Button
+                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Button(
+                            onClick = {
+                                tapsRemaining--
+                                if (tapsRemaining <= 0) {
+                                    viewModel?.endCall()
+                                    tapsRemaining = 3
+                                }
+                            },
+                            colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
+                            shape = CircleShape,
+                            modifier = Modifier.size(100.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Clear,
+                                contentDescription = "End Call",
+                                tint = Color.White,
+                                modifier = Modifier.size(48.dp)
+                            )
+                        }
+                    }
                 }
             }
         }
