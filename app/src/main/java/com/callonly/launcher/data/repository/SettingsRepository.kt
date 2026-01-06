@@ -42,6 +42,12 @@ class SettingsRepository @Inject constructor(
     private val _isVibrateEnabled = MutableStateFlow(prefs.getBoolean(KEY_VIBRATE_ENABLED, true))
     val isVibrateEnabled: StateFlow<Boolean> = _isVibrateEnabled.asStateFlow()
 
+    private val _language = MutableStateFlow(prefs.getString(KEY_LANGUAGE, "fr") ?: "fr")
+    val language: StateFlow<String> = _language.asStateFlow()
+
+    private val _timeFormat = MutableStateFlow(prefs.getString(KEY_TIME_FORMAT, "24") ?: "24")
+    val timeFormat: StateFlow<String> = _timeFormat.asStateFlow()
+
     fun setAlwaysOnEnabled(enabled: Boolean) {
         prefs.edit().putBoolean(KEY_ALWAYS_ON, enabled).apply()
         _isAlwaysOnEnabled.value = enabled
@@ -87,6 +93,16 @@ class SettingsRepository @Inject constructor(
         prefs.edit().putBoolean(KEY_VIBRATE_ENABLED, enabled).apply()
     }
 
+    fun setLanguage(lang: String) {
+        prefs.edit().putString(KEY_LANGUAGE, lang).apply()
+        _language.value = lang
+    }
+
+    fun setTimeFormat(format: String) {
+        prefs.edit().putString(KEY_TIME_FORMAT, format).apply()
+        _timeFormat.value = format
+    }
+
     companion object {
         private const val KEY_ALWAYS_ON = "always_on_enabled"
         private const val KEY_NIGHT_START = "night_mode_start"
@@ -97,5 +113,7 @@ class SettingsRepository @Inject constructor(
         private const val KEY_RINGER_ENABLED = "ringer_enabled"
         private const val KEY_RINGER_VOLUME = "ringer_volume"
         private const val KEY_VIBRATE_ENABLED = "vibrate_enabled"
+        private const val KEY_LANGUAGE = "language"
+        private const val KEY_TIME_FORMAT = "time_format"
     }
 }

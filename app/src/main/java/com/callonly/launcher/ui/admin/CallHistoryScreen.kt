@@ -28,6 +28,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.AlertDialog
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -50,15 +51,15 @@ fun CallHistoryScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Historique des appels") },
+                title = { Text(stringResource(id = com.callonly.launcher.R.string.call_history)) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(com.callonly.launcher.ui.theme.StatusIcons.ArrowBack, contentDescription = "Back")
+                        Icon(com.callonly.launcher.ui.theme.StatusIcons.ArrowBack, contentDescription = stringResource(id = com.callonly.launcher.R.string.back))
                     }
                 },
                 actions = {
                     IconButton(onClick = { showDeleteConfirmation = true }) {
-                        Icon(Icons.Default.Delete, contentDescription = "Clear all", tint = MaterialTheme.colorScheme.error)
+                        Icon(Icons.Default.Delete, contentDescription = stringResource(id = com.callonly.launcher.R.string.clear_history_title), tint = MaterialTheme.colorScheme.error)
                     }
                 }
             )
@@ -72,7 +73,7 @@ fun CallHistoryScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-                Text("Aucun appel dans l'historique", style = MaterialTheme.typography.bodyLarge)
+                Text(stringResource(id = com.callonly.launcher.R.string.no_call_history), style = MaterialTheme.typography.bodyLarge)
             }
         } else {
             LazyColumn(
@@ -89,8 +90,8 @@ fun CallHistoryScreen(
         if (showDeleteConfirmation) {
             AlertDialog(
                 onDismissRequest = { showDeleteConfirmation = false },
-                title = { Text("Supprimer l'historique") },
-                text = { Text("Êtes-vous sûr de vouloir supprimer tout l'historique des appels ? Cette action est irréversible.") },
+                title = { Text(stringResource(id = com.callonly.launcher.R.string.clear_history_title)) },
+                text = { Text(stringResource(id = com.callonly.launcher.R.string.clear_history_confirm)) },
                 confirmButton = {
                     TextButton(
                         onClick = {
@@ -98,12 +99,12 @@ fun CallHistoryScreen(
                             showDeleteConfirmation = false
                         }
                     ) {
-                        Text("Supprimer", color = MaterialTheme.colorScheme.error)
+                        Text(stringResource(id = com.callonly.launcher.R.string.delete), color = MaterialTheme.colorScheme.error)
                     }
                 },
                 dismissButton = {
                     TextButton(onClick = { showDeleteConfirmation = false }) {
-                        Text("Annuler")
+                        Text(stringResource(id = com.callonly.launcher.R.string.cancel))
                     }
                 }
             )
@@ -117,10 +118,10 @@ fun CallLogItem(log: CallLog) {
     val dateStr = sdf.format(Date(log.timestamp))
 
     val (icon, color, label) = when (log.type) {
-        CallLogType.INCOMING_ANSWERED -> Triple(com.callonly.launcher.ui.theme.StatusIcons.Call, Color(0xFF4CAF50), "Reçu")
-        CallLogType.INCOMING_MISSED -> Triple(com.callonly.launcher.ui.theme.StatusIcons.CallMissed, Color(0xFFF44336), "Manqué")
-        CallLogType.INCOMING_REJECTED -> Triple(com.callonly.launcher.ui.theme.StatusIcons.Block, Color(0xFFE91E63), "Refusé")
-        CallLogType.BLOCKED -> Triple(com.callonly.launcher.ui.theme.StatusIcons.Block, Color.Gray, "Refusé (auto)")
+        CallLogType.INCOMING_ANSWERED -> Triple(com.callonly.launcher.ui.theme.StatusIcons.Call, Color(0xFF4CAF50), stringResource(id = com.callonly.launcher.R.string.call_received_label))
+        CallLogType.INCOMING_MISSED -> Triple(com.callonly.launcher.ui.theme.StatusIcons.CallMissed, Color(0xFFF44336), stringResource(id = com.callonly.launcher.R.string.call_missed_label))
+        CallLogType.INCOMING_REJECTED -> Triple(com.callonly.launcher.ui.theme.StatusIcons.Block, Color(0xFFE91E63), stringResource(id = com.callonly.launcher.R.string.call_rejected_label))
+        CallLogType.BLOCKED -> Triple(com.callonly.launcher.ui.theme.StatusIcons.Block, Color.Gray, stringResource(id = com.callonly.launcher.R.string.call_rejected_auto_label))
     }
 
     Row(

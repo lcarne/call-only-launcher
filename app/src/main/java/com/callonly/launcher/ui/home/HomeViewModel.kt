@@ -26,6 +26,7 @@ class HomeViewModel @Inject constructor(
     val nightModeEndHour = settingsRepository.nightModeEndHour
     val clockColor = settingsRepository.clockColor
     val isRingerEnabled = settingsRepository.isRingerEnabled
+    val timeFormat = settingsRepository.timeFormat
 
     fun setRingerEnabled(enabled: Boolean) {
         settingsRepository.setRingerEnabled(enabled)

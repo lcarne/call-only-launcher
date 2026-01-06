@@ -36,6 +36,8 @@ class AdminViewModel @Inject constructor(
     val ringerVolume = settingsRepository.ringerVolume
     val isRingerEnabled = settingsRepository.isRingerEnabled
     val isVibrateEnabled = settingsRepository.isVibrateEnabled
+    val language = settingsRepository.language
+    val timeFormat = settingsRepository.timeFormat
 
     val callLogs = callLogRepository.getAllCallLogs()
         .stateIn(
@@ -133,6 +135,14 @@ class AdminViewModel @Inject constructor(
 
     fun setVibrateEnabled(enabled: Boolean) {
         settingsRepository.setVibrateEnabled(enabled)
+    }
+
+    fun setLanguage(lang: String) {
+        settingsRepository.setLanguage(lang)
+    }
+
+    fun setTimeFormat(format: String) {
+        settingsRepository.setTimeFormat(format)
     }
 
     val clockColor = settingsRepository.clockColor

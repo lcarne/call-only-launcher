@@ -39,6 +39,9 @@ import android.media.AudioManager
 import android.provider.Settings
 import android.app.NotificationManager
 import android.content.Context
+import android.content.ContextWrapper
+import java.util.Locale
+import android.content.res.Configuration
 import android.view.KeyEvent
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.flow.combine
@@ -119,6 +122,23 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    override fun attachBaseContext(newBase: Context) {
+        // Read saved language directly from prefs to apply before UI is created
+        val prefs = newBase.getSharedPreferences("callonly_prefs", Context.MODE_PRIVATE)
+        val lang = prefs.getString("language", "fr") ?: "fr"
+        val locale = if (lang == "en") Locale.ENGLISH else Locale("fr")
+        val context = updateLocale(newBase, locale)
+        super.attachBaseContext(context)
+    }
+
+    private fun updateLocale(context: Context, locale: Locale): ContextWrapper {
+        val config = Configuration(context.resources.configuration)
+        Locale.setDefault(locale)
+        config.setLocale(locale)
+        val updated = context.createConfigurationContext(config)
+        return ContextWrapper(updated)
     }
 
     @Composable

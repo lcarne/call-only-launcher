@@ -33,6 +33,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.ui.res.stringResource
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -41,12 +42,19 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.callonly.launcher.data.model.Contact
 import androidx.compose.material3.Switch
@@ -80,6 +88,62 @@ fun AdminScreen(
             onExit = onExit,
             onUnpin = onUnpin
         )
+    }
+}
+
+@Composable
+fun PinEntryScreen(
+    viewModel: AdminViewModel,
+    onExit: () -> Unit
+) {
+    var pin by remember { mutableStateOf("") }
+    val isError by viewModel.pinError.collectAsState()
+    val focusRequester = remember { FocusRequester() }
+    val focusManager = LocalFocusManager.current
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text(stringResource(id = com.callonly.launcher.R.string.admin_mode), style = MaterialTheme.typography.headlineMedium)
+        Text(stringResource(id = com.callonly.launcher.R.string.enter_pin), style = MaterialTheme.typography.bodyLarge)
+
+        OutlinedTextField(
+            value = pin,
+            onValueChange = { pin = it },
+            label = { Text(stringResource(id = com.callonly.launcher.R.string.pin_label)) },
+            visualTransformation = PasswordVisualTransformation(),
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Number,
+                imeAction = androidx.compose.ui.text.input.ImeAction.Done
+            ),
+            keyboardActions = KeyboardActions(
+                onDone = { viewModel.verifyPin(pin); focusManager.clearFocus() }
+            ),
+            isError = isError,
+            singleLine = true,
+            modifier = Modifier.padding(vertical = 16.dp).focusRequester(focusRequester)
+        )
+
+        if (isError) {
+            Text(stringResource(id = com.callonly.launcher.R.string.incorrect_pin), color = MaterialTheme.colorScheme.error)
+        }
+
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            Button(onClick = { viewModel.verifyPin(pin); focusManager.clearFocus() }) {
+                Text(stringResource(id = com.callonly.launcher.R.string.validate))
+            }
+            TextButton(onClick = onExit) {
+                Text(stringResource(id = com.callonly.launcher.R.string.back))
+            }
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        focusRequester.requestFocus()
     }
 }
 
@@ -124,7 +188,7 @@ fun AdminContent(
 
         if (isCameraOpen) {
             androidx.compose.ui.window.Dialog(
-                onDismissRequest = { 
+                onDismissRequest = {
                     isCameraOpen = false
                     pendingPhotoCaptured = null
                 },
@@ -150,55 +214,6 @@ fun AdminContent(
     }
 }
 
-@Composable
-fun PinEntryScreen(
-    viewModel: AdminViewModel,
-    onExit: () -> Unit
-) {
-    var pin by remember { mutableStateOf("") }
-    val isError by viewModel.pinError.collectAsState()
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Text("Mode Administrateur", style = MaterialTheme.typography.headlineMedium)
-        Text("Entrez le PIN (1234)", style = MaterialTheme.typography.bodyLarge)
-        
-        OutlinedTextField(
-            value = pin,
-            onValueChange = { pin = it },
-            label = { Text("PIN") },
-            visualTransformation = PasswordVisualTransformation(),
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Number,
-                imeAction = androidx.compose.ui.text.input.ImeAction.Done
-            ),
-            keyboardActions = androidx.compose.foundation.text.KeyboardActions(
-                onDone = { viewModel.verifyPin(pin) }
-            ),
-            isError = isError,
-            modifier = Modifier.padding(vertical = 16.dp)
-        )
-        
-        if (isError) {
-            Text("Code incorrect", color = MaterialTheme.colorScheme.error)
-        }
-
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            Button(onClick = { viewModel.verifyPin(pin) }) {
-                Text("Valider")
-            }
-            TextButton(onClick = onExit) {
-                Text("Retour")
-            }
-        }
-    }
-}
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AdminSettingsScreen(
@@ -213,73 +228,76 @@ fun AdminSettingsScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Paramètres") }
+                title = { Text(stringResource(id = com.callonly.launcher.R.string.settings)) }
             )
         }
     ) { padding ->
-        Column(
-            modifier = Modifier
-                .padding(padding)
-                .fillMaxSize()
-                .verticalScroll(scrollState)
-                .padding(16.dp)
-        ) {
-            Text(
-                text = "Paramètres",
-                style = MaterialTheme.typography.headlineMedium,
-                modifier = Modifier.padding(bottom = 16.dp)
-            )
-
+        Box(modifier = Modifier.padding(padding).fillMaxSize()) {
             Column(
-                modifier = Modifier.fillMaxWidth().padding(bottom = 24.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(scrollState)
+                    .padding(16.dp)
             ) {
-                Button(
-                    onClick = {
-                        onUnpin()
-                        viewModel.logout()
-                        onExit()
-                    },
-                    modifier = Modifier.fillMaxWidth().height(56.dp),
-                    colors = androidx.compose.material3.ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.errorContainer, contentColor = MaterialTheme.colorScheme.onErrorContainer)
+                Text(
+                    text = stringResource(id = com.callonly.launcher.R.string.settings),
+                    style = MaterialTheme.typography.headlineMedium,
+                    modifier = Modifier.padding(bottom = 16.dp)
+                )
+
+                Column(
+                    modifier = Modifier.fillMaxWidth().padding(bottom = 24.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    Text("Déverrouiller 🔓")
+                    Button(
+                        onClick = {
+                            onUnpin()
+                            viewModel.logout()
+                            onExit()
+                        },
+                        modifier = Modifier.fillMaxWidth().height(56.dp),
+                        colors = androidx.compose.material3.ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.errorContainer, contentColor = MaterialTheme.colorScheme.onErrorContainer)
+                    ) {
+                        Text(stringResource(id = com.callonly.launcher.R.string.unlock))
+                    }
+                    
+                    Button(
+                        onClick = {
+                            viewModel.logout()
+                            onExit()
+                        },
+                        modifier = Modifier.fillMaxWidth().height(56.dp)
+                    ) {
+                        Text(stringResource(id = com.callonly.launcher.R.string.back_arrow))
+                    }
+                }
+
+                Button(
+                    onClick = onManageContacts,
+                    modifier = Modifier.fillMaxWidth().height(64.dp),
+                     colors = androidx.compose.material3.ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
+                ) {
+                     Icon(com.callonly.launcher.ui.theme.StatusIcons.List, contentDescription = null, tint = MaterialTheme.colorScheme.onPrimaryContainer)
+                     Spacer(modifier = Modifier.width(16.dp))
+                     Text(stringResource(id = com.callonly.launcher.R.string.manage_contacts), style = MaterialTheme.typography.titleLarge, color = MaterialTheme.colorScheme.onPrimaryContainer)
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Button(
+                    onClick = onShowHistory,
+                    modifier = Modifier.fillMaxWidth().height(64.dp),
+                    colors = androidx.compose.material3.ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
+                ) {
+                    Icon(com.callonly.launcher.ui.theme.StatusIcons.Call, contentDescription = null, tint = MaterialTheme.colorScheme.onSecondaryContainer)
+                    Spacer(modifier = Modifier.width(16.dp))
+                    Text(stringResource(id = com.callonly.launcher.R.string.call_history), style = MaterialTheme.typography.titleLarge, color = MaterialTheme.colorScheme.onSecondaryContainer)
                 }
                 
-                Button(
-                    onClick = {
-                        viewModel.logout()
-                        onExit()
-                    },
-                    modifier = Modifier.fillMaxWidth().height(56.dp)
-                ) {
-                    Text("Retour ⬅️")
-                }
-            }
+                SettingsSection(viewModel)
 
-            Button(
-                onClick = onManageContacts,
-                modifier = Modifier.fillMaxWidth().height(64.dp),
-                 colors = androidx.compose.material3.ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
-            ) {
-                 Icon(com.callonly.launcher.ui.theme.StatusIcons.List, contentDescription = null, tint = MaterialTheme.colorScheme.onPrimaryContainer)
-                 Spacer(modifier = Modifier.width(16.dp))
-                 Text("Gérer les contacts", style = MaterialTheme.typography.titleLarge, color = MaterialTheme.colorScheme.onPrimaryContainer)
+                Spacer(modifier = Modifier.height(88.dp))
             }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Button(
-                onClick = onShowHistory,
-                modifier = Modifier.fillMaxWidth().height(64.dp),
-                colors = androidx.compose.material3.ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
-            ) {
-                Icon(com.callonly.launcher.ui.theme.StatusIcons.Call, contentDescription = null, tint = MaterialTheme.colorScheme.onSecondaryContainer)
-                Spacer(modifier = Modifier.width(16.dp))
-                Text("Historique des appels", style = MaterialTheme.typography.titleLarge, color = MaterialTheme.colorScheme.onSecondaryContainer)
-            }
-            
-            SettingsSection(viewModel)
         }
     }
 }
@@ -299,17 +317,17 @@ fun ContactManagementScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Contacts") },
+                title = { Text(stringResource(id = com.callonly.launcher.R.string.contacts)) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(com.callonly.launcher.ui.theme.StatusIcons.ArrowBack, contentDescription = "Back")
+                        Icon(com.callonly.launcher.ui.theme.StatusIcons.ArrowBack, contentDescription = stringResource(id = com.callonly.launcher.R.string.back))
                     }
                 }
             )
         },
         floatingActionButton = {
             FloatingActionButton(onClick = { showAddDialog = true }) {
-                Icon(Icons.Default.Add, contentDescription = "Add Contact")
+                Icon(Icons.Default.Add, contentDescription = stringResource(id = com.callonly.launcher.R.string.add_contact))
             }
         }
     ) { padding ->
@@ -330,8 +348,8 @@ fun ContactManagementScreen(
         if (contactToDelete != null) {
             AlertDialog(
                 onDismissRequest = { contactToDelete = null },
-                title = { Text("Supprimer le contact") },
-                text = { Text("Êtes-vous sûr de vouloir supprimer le contact ${contactToDelete?.name} ?") },
+                title = { Text(stringResource(id = com.callonly.launcher.R.string.delete_contact)) },
+                text = { Text(stringResource(id = com.callonly.launcher.R.string.confirm_delete_contact, contactToDelete?.name ?: "")) },
                 confirmButton = {
                     Button(
                         onClick = {
@@ -340,13 +358,13 @@ fun ContactManagementScreen(
                         },
                         colors = androidx.compose.material3.ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
                     ) {
-                        Text("Supprimer")
+                        Text(stringResource(id = com.callonly.launcher.R.string.delete))
                     }
                 },
                 dismissButton = {
                     TextButton(onClick = { contactToDelete = null }) {
-                        Text("Annuler")
-            }
+                        Text(stringResource(id = com.callonly.launcher.R.string.cancel))
+                    }
                 }
             )
         }
@@ -416,7 +434,7 @@ fun ContactListItem(
             }
         }
         IconButton(onClick = onDelete) {
-            Icon(Icons.Default.Delete, contentDescription = "Delete")
+            Icon(Icons.Default.Delete, contentDescription = stringResource(id = com.callonly.launcher.R.string.delete))
         }
     }
 }
@@ -539,7 +557,7 @@ fun ContactDialog(
         onDismissRequest = onDismiss,
         title = { 
             Column {
-                Text(if (contactToEdit == null) "Nouveau Contact" else "Modifier Contact")
+                Text(if (contactToEdit == null) stringResource(id = com.callonly.launcher.R.string.new_contact) else stringResource(id = com.callonly.launcher.R.string.edit_contact))
                 if (contactToEdit == null) {
                     TextButton(
                         onClick = { 
@@ -554,7 +572,7 @@ fun ContactDialog(
                     ) {
                         Icon(androidx.compose.material.icons.Icons.Default.Add, contentDescription = null, modifier = Modifier.size(16.dp))
                         Spacer(modifier = Modifier.width(4.dp))
-                        Text("Importer du répertoire")
+                        Text(stringResource(id = com.callonly.launcher.R.string.import_from_directory))
                     }
                 }
             }
@@ -563,42 +581,42 @@ fun ContactDialog(
             Column {
                 val focusManager = androidx.compose.ui.platform.LocalFocusManager.current
                 
+                Text(stringResource(id = com.callonly.launcher.R.string.first_name), style = MaterialTheme.typography.labelLarge)
                 OutlinedTextField(
                     value = firstName,
                     onValueChange = { firstName = it },
-                    label = { Text("Prénom") },
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(
                         imeAction = androidx.compose.ui.text.input.ImeAction.Next
                     ),
-                    keyboardActions = androidx.compose.foundation.text.KeyboardActions(
+                    keyboardActions = KeyboardActions(
                         onNext = { focusManager.moveFocus(androidx.compose.ui.focus.FocusDirection.Down) }
                     ),
                     modifier = Modifier.padding(vertical = 4.dp).fillMaxWidth()
                 )
+                Text(stringResource(id = com.callonly.launcher.R.string.last_name), style = MaterialTheme.typography.labelLarge)
                 OutlinedTextField(
                     value = lastName,
                     onValueChange = { lastName = it },
-                    label = { Text("Nom") },
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(
                         imeAction = androidx.compose.ui.text.input.ImeAction.Next
                     ),
-                    keyboardActions = androidx.compose.foundation.text.KeyboardActions(
+                    keyboardActions = KeyboardActions(
                         onNext = { focusManager.moveFocus(androidx.compose.ui.focus.FocusDirection.Down) }
                     ),
                     modifier = Modifier.padding(vertical = 4.dp).fillMaxWidth()
                 )
+                Text(stringResource(id = com.callonly.launcher.R.string.number), style = MaterialTheme.typography.labelLarge)
                 OutlinedTextField(
                     value = number,
                     onValueChange = { number = it },
-                    label = { Text("Numéro") },
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Phone,
                         imeAction = androidx.compose.ui.text.input.ImeAction.Done
                     ),
-                    keyboardActions = androidx.compose.foundation.text.KeyboardActions(
+                    keyboardActions = KeyboardActions(
                         onDone = { focusManager.clearFocus() }
                     ),
                     modifier = Modifier.padding(vertical = 4.dp).fillMaxWidth()
@@ -607,13 +625,13 @@ fun ContactDialog(
                     onClick = { showPhotoSourceDialog = true },
                     modifier = Modifier.fillMaxWidth().padding(top = 8.dp)
                 ) {
-                    Text(if (photoUri != null) "📸 Photo sélectionnée" else "Ajouter une photo")
+                    Text(if (photoUri != null) stringResource(id = com.callonly.launcher.R.string.photo_selected) else stringResource(id = com.callonly.launcher.R.string.add_photo))
                 }
                 
                 if (showPhotoSourceDialog) {
                     AlertDialog(
                         onDismissRequest = { showPhotoSourceDialog = false },
-                        title = { Text("Source de la photo") },
+                        title = { Text(stringResource(id = com.callonly.launcher.R.string.photo_source)) },
                         text = {
                             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                                 Button(
@@ -627,7 +645,7 @@ fun ContactDialog(
                                     },
                                     modifier = Modifier.fillMaxWidth()
                                 ) {
-                                    Text("🖼️ Galerie")
+                                    Text(stringResource(id = com.callonly.launcher.R.string.gallery))
                                 }
                                 Button(
                                     onClick = {
@@ -643,14 +661,14 @@ fun ContactDialog(
                                     },
                                     modifier = Modifier.fillMaxWidth()
                                 ) {
-                                    Text("📸 Appareil photo")
+                                    Text(stringResource(id = com.callonly.launcher.R.string.camera))
                                 }
                             }
                         },
                         confirmButton = {},
                         dismissButton = {
                             TextButton(onClick = { showPhotoSourceDialog = false }) {
-                                Text("Annuler")
+                                Text(stringResource(id = com.callonly.launcher.R.string.cancel))
                             }
                         }
                     )
@@ -666,12 +684,12 @@ fun ContactDialog(
                     }
                 }
             ) {
-                Text(if (contactToEdit == null) "Ajouter" else "Modifier")
+                Text(if (contactToEdit == null) stringResource(id = com.callonly.launcher.R.string.add) else stringResource(id = com.callonly.launcher.R.string.edit))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Annuler")
+                Text(stringResource(id = com.callonly.launcher.R.string.cancel))
             }
         }
     )
@@ -686,7 +704,7 @@ fun SettingsSection(viewModel: AdminViewModel) {
 
     Column(modifier = Modifier.padding(16.dp)) {
         Divider(modifier = Modifier.padding(vertical = 16.dp))
-        Text("Sécurité des appels", style = MaterialTheme.typography.titleLarge)
+        Text(stringResource(id = com.callonly.launcher.R.string.call_security), style = MaterialTheme.typography.titleLarge)
         
         val allowAllCalls by viewModel.allowAllCalls.collectAsState()
         Row(
@@ -694,9 +712,9 @@ fun SettingsSection(viewModel: AdminViewModel) {
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Column(modifier = Modifier.weight(1f)) {
-                Text("Accepter tous les appels", style = MaterialTheme.typography.titleMedium)
-                Text("Si désactivé, seuls les contacts sont autorisés", style = MaterialTheme.typography.bodySmall)
+                Column(modifier = Modifier.weight(1f)) {
+                Text(stringResource(id = com.callonly.launcher.R.string.accept_all_calls), style = MaterialTheme.typography.titleMedium)
+                Text(stringResource(id = com.callonly.launcher.R.string.accept_all_calls_desc), style = MaterialTheme.typography.bodySmall)
             }
             Switch(
                 checked = allowAllCalls,
@@ -704,10 +722,12 @@ fun SettingsSection(viewModel: AdminViewModel) {
             )
         }
 
+        // Language selection removed from here; use bottom Langue button in AdminSettingsScreen
+
         Spacer(modifier = Modifier.height(16.dp))
         
         val ringerVolume by viewModel.ringerVolume.collectAsState()
-        Text("Volume de la sonnerie", style = MaterialTheme.typography.titleMedium)
+        Text(stringResource(id = com.callonly.launcher.R.string.ringer_volume), style = MaterialTheme.typography.titleMedium)
         Text("${ringerVolume}%", style = MaterialTheme.typography.bodyMedium)
         Slider(
             value = ringerVolume.toFloat(),
@@ -724,9 +744,9 @@ fun SettingsSection(viewModel: AdminViewModel) {
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Column(modifier = Modifier.weight(1f)) {
-                Text("Vibreur", style = MaterialTheme.typography.titleMedium)
-                Text("Vibration lors des appels entrants", style = MaterialTheme.typography.bodySmall)
+                Column(modifier = Modifier.weight(1f)) {
+                Text(stringResource(id = com.callonly.launcher.R.string.vibrate), style = MaterialTheme.typography.titleMedium)
+                Text(stringResource(id = com.callonly.launcher.R.string.vibrate_desc), style = MaterialTheme.typography.bodySmall)
             }
             Switch(
                 checked = isVibrateEnabled,
@@ -735,16 +755,16 @@ fun SettingsSection(viewModel: AdminViewModel) {
         }
 
         Divider(modifier = Modifier.padding(vertical = 16.dp))
-        Text("Paramètres d'écran", style = MaterialTheme.typography.titleLarge)
+        Text(stringResource(id = com.callonly.launcher.R.string.screen_settings), style = MaterialTheme.typography.titleLarge)
         
         Row(
             modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Column(modifier = Modifier.weight(1f)) {
-                Text("Écran toujours allumé", style = MaterialTheme.typography.titleMedium)
-                Text("Sauf la nuit (voir ci-dessous)", style = MaterialTheme.typography.bodySmall)
+                Column(modifier = Modifier.weight(1f)) {
+                Text(stringResource(id = com.callonly.launcher.R.string.always_on_screen), style = MaterialTheme.typography.titleMedium)
+                Text(stringResource(id = com.callonly.launcher.R.string.always_on_desc), style = MaterialTheme.typography.bodySmall)
             }
             Switch(
                 checked = isAlwaysOn,
@@ -754,9 +774,9 @@ fun SettingsSection(viewModel: AdminViewModel) {
 
         if (isAlwaysOn) {
             Spacer(modifier = Modifier.height(16.dp))
-            Text("Mode Nuit (Écran éteint)", style = MaterialTheme.typography.titleMedium)
+            Text(stringResource(id = com.callonly.launcher.R.string.night_mode), style = MaterialTheme.typography.titleMedium)
             
-            Text("Début nuit: ${nightStart}h", style = MaterialTheme.typography.bodyMedium)
+            Text(stringResource(id = com.callonly.launcher.R.string.night_start, nightStart), style = MaterialTheme.typography.bodyMedium)
             Slider(
                 value = nightStart.toFloat(),
                 onValueChange = { viewModel.setNightModeStartHour(it.toInt()) },
@@ -764,7 +784,7 @@ fun SettingsSection(viewModel: AdminViewModel) {
                 steps = 22
             )
             
-            Text("Fin nuit: ${nightEnd}h", style = MaterialTheme.typography.bodyMedium)
+            Text(stringResource(id = com.callonly.launcher.R.string.night_end, nightEnd), style = MaterialTheme.typography.bodyMedium)
             Slider(
                 value = nightEnd.toFloat(),
                 onValueChange = { viewModel.setNightModeEndHour(it.toInt()) },
@@ -774,7 +794,7 @@ fun SettingsSection(viewModel: AdminViewModel) {
         }
         
         Divider(modifier = Modifier.padding(vertical = 16.dp))
-        Text("Couleur de l'horloge", style = MaterialTheme.typography.titleLarge)
+        Text(stringResource(id = com.callonly.launcher.R.string.clock_color), style = MaterialTheme.typography.titleLarge)
         
         val colors = listOf(
             HighContrastButtonBg, // Default Blue/Yellow
@@ -827,10 +847,10 @@ fun SettingsSection(viewModel: AdminViewModel) {
         }
         
         Divider(modifier = Modifier.padding(vertical = 16.dp))
-        Text("Taille du bouton décrocher", style = MaterialTheme.typography.titleLarge)
+        Text(stringResource(id = com.callonly.launcher.R.string.answer_button_size), style = MaterialTheme.typography.titleLarge)
         
         val answerButtonSize by viewModel.answerButtonSize.collectAsState()
-        Text("Taille bouton décrocher : ${answerButtonSize.toInt()} dp", style = MaterialTheme.typography.bodyMedium)
+        Text(stringResource(id = com.callonly.launcher.R.string.answer_button_size_value, answerButtonSize.toInt()), style = MaterialTheme.typography.bodyMedium)
         Slider(
             value = answerButtonSize,
             onValueChange = { viewModel.setAnswerButtonSize(it) },
@@ -841,6 +861,7 @@ fun SettingsSection(viewModel: AdminViewModel) {
         Spacer(modifier = Modifier.height(24.dp))
         
         var showPreview by remember { mutableStateOf(false) }
+        var showLangDialog by remember { mutableStateOf(false) }
         
         Button(
             onClick = { showPreview = true },
@@ -848,7 +869,7 @@ fun SettingsSection(viewModel: AdminViewModel) {
             colors = androidx.compose.material3.ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.tertiaryContainer, contentColor = MaterialTheme.colorScheme.onTertiaryContainer)
         ) {
             Text(
-                text = "Aperçu de l'écran d'appel 📱",
+                text = stringResource(id = com.callonly.launcher.R.string.preview_call_screen),
                 maxLines = 2,
                 softWrap = true,
                 textAlign = TextAlign.Center
@@ -872,20 +893,109 @@ fun SettingsSection(viewModel: AdminViewModel) {
                 ) {
                     com.callonly.launcher.ui.call.CallLayout(
                         number = "06 12 34 56 78",
-                        contact = Contact(name = "Aperçu Contact", phoneNumber = "06 12 34 56 78", photoUri = null),
+                        contact = Contact(name = stringResource(id = com.callonly.launcher.R.string.preview_contact_name), phoneNumber = "06 12 34 56 78", photoUri = null),
                         state = com.callonly.launcher.ui.call.IncomingCallUiState.Ringing("06 12 34 56 78", null),
                         duration = 0,
                         answerButtonSize = answerButtonSize
                     )
                     
                     Text(
-                        text = "(Cliquez n'importe où pour fermer)",
+                        text = stringResource(id = com.callonly.launcher.R.string.click_anywhere_close),
                         color = Color.Gray.copy(alpha = 0.5f),
                         style = MaterialTheme.typography.bodySmall,
                         modifier = Modifier.align(Alignment.TopCenter).padding(top = 16.dp)
                     )
                 }
             }
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+        Divider(modifier = Modifier.padding(vertical = 8.dp))
+        // Language section under preview
+        Text(
+            text = stringResource(id = com.callonly.launcher.R.string.settings_language_section_title),
+            style = MaterialTheme.typography.titleMedium,
+            modifier = Modifier.padding(bottom = 8.dp)
+        )
+        Button(
+            onClick = { showLangDialog = true },
+            modifier = Modifier.fillMaxWidth().height(64.dp)
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text("文", fontSize = 20.sp)
+                Spacer(modifier = Modifier.width(8.dp))
+                Text("A", fontSize = 20.sp)
+                Spacer(modifier = Modifier.width(12.dp))
+                Text(stringResource(id = com.callonly.launcher.R.string.language), style = MaterialTheme.typography.titleLarge)
+            }
+        }
+
+        Spacer(modifier = Modifier.height(12.dp))
+        // Time format selection (AM/PM vs 24h)
+        val currentFormat by viewModel.timeFormat.collectAsState()
+        Column(modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)) {
+            Text(stringResource(id = com.callonly.launcher.R.string.time_format_title), style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(bottom = 8.dp))
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                androidx.compose.material3.RadioButton(
+                    selected = currentFormat == "12",
+                    onClick = { viewModel.setTimeFormat("12") }
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(stringResource(id = com.callonly.launcher.R.string.time_format_12), modifier = Modifier.clickable { viewModel.setTimeFormat("12") })
+                Spacer(modifier = Modifier.width(24.dp))
+                androidx.compose.material3.RadioButton(
+                    selected = currentFormat == "24",
+                    onClick = { viewModel.setTimeFormat("24") }
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(stringResource(id = com.callonly.launcher.R.string.time_format_24), modifier = Modifier.clickable { viewModel.setTimeFormat("24") })
+            }
+        }
+
+        if (showLangDialog) {
+            val lang by viewModel.language.collectAsState()
+            val context = androidx.compose.ui.platform.LocalContext.current
+            AlertDialog(
+                onDismissRequest = { showLangDialog = false },
+                title = { Text(stringResource(id = com.callonly.launcher.R.string.language)) },
+                text = {
+                    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                        Row(modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                viewModel.setLanguage("fr")
+                                showLangDialog = false
+                                (context as? android.app.Activity)?.recreate()
+                            }
+                            .padding(8.dp), verticalAlignment = Alignment.CenterVertically) {
+                            Text("🇫🇷", fontSize = 22.sp)
+                            Spacer(modifier = Modifier.width(12.dp))
+                            Text(stringResource(id = com.callonly.launcher.R.string.language_french), style = MaterialTheme.typography.titleMedium)
+                            Spacer(modifier = Modifier.weight(1f))
+                            if (lang == "fr") Text("✓")
+                        }
+
+                        Row(modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                viewModel.setLanguage("en")
+                                showLangDialog = false
+                                (context as? android.app.Activity)?.recreate()
+                            }
+                            .padding(8.dp), verticalAlignment = Alignment.CenterVertically) {
+                            Text("🇬🇧", fontSize = 22.sp)
+                            Spacer(modifier = Modifier.width(12.dp))
+                            Text(stringResource(id = com.callonly.launcher.R.string.language_english), style = MaterialTheme.typography.titleMedium)
+                            Spacer(modifier = Modifier.weight(1f))
+                            if (lang == "en") Text("✓")
+                        }
+                    }
+                },
+                confirmButton = {},
+                dismissButton = {
+                    TextButton(onClick = { showLangDialog = false }) { Text(stringResource(id = com.callonly.launcher.R.string.cancel)) }
+                }
+            )
         }
     }
 }

@@ -29,6 +29,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.ui.res.stringResource
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -137,7 +138,14 @@ fun HomeScreen(
         }
     }
 
-    val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
+    val timeFormatPattern = remember {
+        mutableStateOf("HH:mm")
+    }
+    val savedFormat by viewModel.timeFormat.collectAsState()
+    LaunchedEffect(savedFormat) {
+        timeFormatPattern.value = if (savedFormat == "12") "hh:mm a" else "HH:mm"
+    }
+    val timeFormat = SimpleDateFormat(timeFormatPattern.value, Locale.getDefault())
     val dateFormat = SimpleDateFormat("EEEE d MMMM yyyy", Locale.getDefault())
 
     // High Contrast / Black Background
@@ -206,12 +214,32 @@ fun HomeScreen(
                 }
             )
 
-            Text(
-                text = timeFormat.format(currentTime),
-                style = MaterialTheme.typography.displayLarge.copy(fontSize = 120.sp),
-                color = clockColor,
-                textAlign = TextAlign.Center
-            )
+            if (savedFormat == "12") {
+                val timeOnly = SimpleDateFormat("hh:mm", Locale.getDefault()).format(currentTime)
+                val ampm = SimpleDateFormat("a", Locale.getDefault()).format(currentTime)
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(
+                        text = timeOnly,
+                        style = MaterialTheme.typography.displayLarge.copy(fontSize = 120.sp),
+                        color = clockColor,
+                        textAlign = TextAlign.Center
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = ampm,
+                        style = MaterialTheme.typography.titleLarge.copy(fontSize = 28.sp),
+                        color = clockColor,
+                        textAlign = TextAlign.Center
+                    )
+                }
+            } else {
+                Text(
+                    text = timeFormat.format(currentTime),
+                    style = MaterialTheme.typography.displayLarge.copy(fontSize = 120.sp),
+                    color = clockColor,
+                    textAlign = TextAlign.Center
+                )
+            }
 
             Spacer(modifier = Modifier.height(24.dp))
             
@@ -240,7 +268,7 @@ fun HomeScreen(
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        text = if (isRingerEnabled) "SONNERIE ACTIVE" else "SONNERIE DÉSACTIVÉE",
+                        text = if (isRingerEnabled) stringResource(id = com.callonly.launcher.R.string.ringer_active) else stringResource(id = com.callonly.launcher.R.string.ringer_disabled),
                         fontSize = 20.sp,
                         fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
                         textAlign = TextAlign.Center
@@ -290,7 +318,7 @@ fun HomeScreen(
                     colors = androidx.compose.material3.ButtonDefaults.buttonColors(containerColor = com.callonly.launcher.ui.theme.ErrorRed),
                     modifier = Modifier.padding(16.dp)
                 ) {
-                    Text("ACTIVER LES APPELS", fontSize = 24.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.Bold)
+                    Text(stringResource(id = com.callonly.launcher.R.string.activate_calls), fontSize = 24.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.Bold)
                 }
             }
         }
@@ -382,9 +410,9 @@ fun BatteryLevelDisplay() {
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(
+                Icon(
                 imageVector = if (isCharging) com.callonly.launcher.ui.theme.StatusIcons.Charging else iconVector,
-                contentDescription = "Battery Level",
+                contentDescription = stringResource(id = com.callonly.launcher.R.string.battery_level_desc),
                 tint = if (isCharging) com.callonly.launcher.ui.theme.White else color,
                 modifier = Modifier
                     .size(48.dp)
