@@ -61,6 +61,7 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.Slider
 import java.text.SimpleDateFormat // For displaying hours sensibly if needed, or just Int
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.material3.Divider
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
