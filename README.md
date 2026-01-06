@@ -207,7 +207,7 @@ If successful, the launcher will be pinned and the status bar/navigation will be
 
 The Admin interface is intentionally hidden to prevent accidental access by the end user.
 
-- On the home screen, long-press the date/time area for 30 seconds to open the Admin entry point.
+- On the home screen, long-press the date/time area for 20 seconds to open the Admin entry point.
 - Enter the default PIN: `1234` (this is used for demonstration; change it in a production deployment).
 
 From the Admin interface you can:
