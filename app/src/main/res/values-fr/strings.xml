@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">CallOnly</string>
+    <string name="app_name">Call Only Launcher</string>
     <string name="admin_mode">Mode Administrateur</string>
     <string name="enter_pin">Entrez le PIN (1234)</string>
     <string name="pin_label">PIN</string>

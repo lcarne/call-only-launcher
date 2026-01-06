@@ -1,20 +1,14 @@
-# CallOnly - Minimalist & Secure Android Launcher
+# Call Only Launcher - Minimalist & Secure Android Launcher
 
-CallOnly is an ultra-simplified open-source Android launcher designed for elderly or vulnerable users. It converts an Android device into a tightly controlled phone interface focused on readability and safe incoming calls.
+<p align="center"><img src="images/app_icon.svg" alt="App icon" width="160"/></p>
 
-![License](images/placeholder_icon.png) ![Android](images/placeholder_icon.png)
+Call Only Launcher is an ultra-simplified open-source Android launcher designed for elderly or vulnerable users. It converts an Android device into a tightly controlled phone interface focused on readability and safe incoming calls.
 
-![Screenshot Home](images/home.png)
-
-Caption: Home screen — large clock and favorites list.
-
-![Screenshot Admin](images/placeholder_screenshot_2.png)
-
-Caption: Admin settings and contact management.
+![License](https://img.shields.io/badge/license-MIT-blue.svg) ![Android](https://img.shields.io/badge/platform-Android-green.svg)
 
 ## Purpose
 
-CallOnly locks the user into a simple interface that emphasizes two primary functions:
+Call Only Launcher locks the user into a simple interface that emphasizes two primary functions:
 - View the date and time with large, high-contrast display.
 - Receive incoming calls from a curated list of trusted contacts (Favorites).
 
@@ -42,39 +36,33 @@ Below are example screenshots of the main app screens. Replace these placeholder
 
 - Home screen
 
-![Home screen](images/home.png)
+<p align="center"><img src="images/home.png" alt="Home screen" width="360"/></p>
 
 - Incoming call
 
-![Incoming call](images/incoming_call.png)
+<p align="center"><img src="images/incoming_call.png" alt="Incoming call" width="360"/></p>
 
 - Admin / PIN entry
 
-![Admin screen](images/admin.png)
+<p align="center"><img src="images/admin.png" alt="Admin screen" width="360"/></p>
 
 - Contact management
 
-![Contacts screen](images/contacts.png)
+<p align="center"><img src="images/contacts.png" alt="Contacts screen" width="360"/></p>
 
 - Settings
 
-![Settings screen](images/settings.png)
+<p align="center"><img src="images/settings.png" alt="Settings screen" width="360"/></p>
 
 -- Other images in the `images/` folder --
 
-![Home (ring off)](images/home_ring_off.png)
+<p align="center"><img src="images/home_ring_off.png" alt="Home (ring off)" width="360"/></p>
 
-![Add contact](images/contacts_add.png)
+<p align="center"><img src="images/contacts_add.png" alt="Add contact" width="360"/></p>
 
-![Add contact - take photo](images/contacts_add_photo.png)
+<p align="center"><img src="images/contacts_add_photo.png" alt="Add contact - take photo" width="360"/></p>
 
-![Admin language](images/admin_language.png)
-
-![Placeholder screenshot 1](images/placeholder_screenshot_1.png)
-
-![Placeholder screenshot 2](images/placeholder_screenshot_2.png)
-
-![Placeholder icon](images/placeholder_icon.png)
+<p align="center"><img src="images/admin_language.png" alt="Admin language" width="360"/></p>
 
 ## Installation & Setup
 
@@ -83,7 +71,7 @@ Below are example screenshots of the main app screens. Replace these placeholder
 
 ### Set as Default Launcher
 
-After installation, press the Home button and select CallOnly, choosing "Always" to make it the default launcher.
+After installation, press the Home button and select Call Only Launcher, choosing "Always" to make it the default launcher.
 
 ### Enable True Kiosk Mode (Device Owner)
 
