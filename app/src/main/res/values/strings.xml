@@ -35,10 +35,10 @@
     <string name="ringer_volume">Ringer volume</string>
     <string name="screen_settings">Screen settings</string>
     <string name="always_on_screen">Always keep screen on</string>
-    <string name="always_on_desc">Except at night (see below)</string>
+    <string name="always_on_desc">Except at night (when activated below)</string>
     <string name="night_mode">Night mode (screen off)</string>
-    <string name="night_start">Night start: %1$d h</string>
-    <string name="night_end">Night end: %1$d h</string>
+    <string name="night_start">Night start: %1$s</string>
+    <string name="night_end">Night end: %1$s</string>
     <string name="clock_color">Clock color</string>
     <string name="ringer_active">RINGER ON</string>
     <string name="ringer_disabled">RINGER OFF</string>
@@ -59,11 +59,18 @@
     <string name="time_format_title">Time format</string>
     <string name="time_format_12">AM/PM</string>
     <string name="time_format_24">24h</string>
-    <string name="night_mode_active_ringer_off">Ringer disabled\n(Night Mode\nfrom %1$dh to %2$dh)</string>
+    <string name="night_mode_active_ringer_off">Ringer disabled\n(Night Mode\nfrom %1$s to %2$s)</string>
     <string name="hang_up">HANG UP</string>
     <string name="speaker">SPEAKER</string>
     <string name="earpiece">EARPIECE</string>
     <string name="incoming_call">Incoming call</string>
     <string name="answer">ANSWER</string>
     <string name="refuse">REFUSE</string>
+    <string name="night_mode_desc">Silencing the ringer during a period</string>
+    <string name="night_start_label">Night start</string>
+    <string name="night_end_label">Night end</string>
+    <string name="night_mode_duration_desc">Duration: %1$d hours %2$s</string>
+    <string name="next_day">(until next day)</string>
+    <string name="confirm">Confirm</string>
+    <string name="select_hour">Select hour</string>
 </resources>

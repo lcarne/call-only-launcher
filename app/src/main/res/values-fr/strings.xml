@@ -35,10 +35,10 @@
     <string name="ringer_volume">Volume de la sonnerie</string>
     <string name="screen_settings">Paramètres d\'écran</string>
     <string name="always_on_screen">Écran toujours allumé</string>
-    <string name="always_on_desc">Sauf la nuit (voir ci-dessous)</string>
+    <string name="always_on_desc">Sauf la nuit (si activé ci-dessous)</string>
     <string name="night_mode">Mode Nuit (Écran éteint)</string>
-    <string name="night_start">Début nuit: %1$d h</string>
-    <string name="night_end">Fin nuit: %1$d h</string>
+    <string name="night_start">Début nuit : %1$s</string>
+    <string name="night_end">Fin nuit : %1$s</string>
     <string name="clock_color">Couleur de l\'horloge</string>
     <string name="ringer_active">SONNERIE ACTIVE</string>
     <string name="ringer_disabled">SONNERIE DÉSACTIVÉE</string>
@@ -59,11 +59,18 @@
     <string name="time_format_title">Format de l\'heure</string>
     <string name="time_format_12">AM/PM</string>
     <string name="time_format_24">24h</string>
-    <string name="night_mode_active_ringer_off">Sonnerie désactivée\n(Mode Nuit de %1$d h à %2$d h)</string>
+    <string name="night_mode_active_ringer_off">Sonnerie désactivée\n(Mode Nuit de %1$s à %2$s)</string>
     <string name="hang_up">RACCROCHER</string>
     <string name="speaker">HAUT\nPARLEUR</string>
     <string name="earpiece">À\nL\'OREILLE</string>
     <string name="incoming_call">Appel entrant</string>
     <string name="answer">RÉPONDRE</string>
     <string name="refuse">REFUSER</string>
+    <string name="night_mode_desc">Couper la sonnerie durant une plage horaire</string>
+    <string name="night_start_label">Début de nuit</string>
+    <string name="night_end_label">Fin de nuit</string>
+    <string name="night_mode_duration_desc">Durée : %1$d heures %2$s</string>
+    <string name="next_day">(jusqu\'au lendemain)</string>
+    <string name="confirm">Confirmer</string>
+    <string name="select_hour">Choisir l\'heure</string>
 </resources>

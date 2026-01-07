@@ -19,9 +19,11 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.callonly.launcher.data.model.Contact
+import com.callonly.launcher.ui.components.BatteryLevelDisplay
 import kotlinx.coroutines.delay
 
 @Composable
@@ -104,6 +106,13 @@ fun CallLayout(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween
     ) {
+        // Battery Display at the very top
+        BatteryLevelDisplay(
+            modifier = Modifier.padding(top = 8.dp),
+            iconSize = 32.dp,
+            fontSize = 20.sp
+        )
+
         // --- ZONE HAUTE : Information (Non cliquable) ---
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,

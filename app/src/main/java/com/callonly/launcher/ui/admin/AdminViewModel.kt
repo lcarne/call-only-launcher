@@ -30,10 +30,13 @@ class AdminViewModel @Inject constructor(
 
     val isAlwaysOnEnabled = settingsRepository.isAlwaysOnEnabled
     val nightModeStartHour = settingsRepository.nightModeStartHour
+    val nightModeStartMinute = settingsRepository.nightModeStartMinute
     val nightModeEndHour = settingsRepository.nightModeEndHour
+    val nightModeEndMinute = settingsRepository.nightModeEndMinute
     val allowAllCalls = settingsRepository.allowAllCalls
     val ringerVolume = settingsRepository.ringerVolume
     val isRingerEnabled = settingsRepository.isRingerEnabled
+    val isNightModeEnabled = settingsRepository.isNightModeEnabled
 
     val language = settingsRepository.language
     val timeFormat = settingsRepository.timeFormat
@@ -112,8 +115,20 @@ class AdminViewModel @Inject constructor(
         settingsRepository.setNightModeStartHour(hour)
     }
 
+    fun setNightModeStartMinute(minute: Int) {
+        settingsRepository.setNightModeStartMinute(minute)
+    }
+
     fun setNightModeEndHour(hour: Int) {
         settingsRepository.setNightModeEndHour(hour)
+    }
+
+    fun setNightModeEndMinute(minute: Int) {
+        settingsRepository.setNightModeEndMinute(minute)
+    }
+
+    fun setNightModeEnabled(enabled: Boolean) {
+        settingsRepository.setNightModeEnabled(enabled)
     }
 
     fun setAllowAllCalls(enabled: Boolean) {

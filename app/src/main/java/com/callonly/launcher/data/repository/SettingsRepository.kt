@@ -21,8 +21,17 @@ class SettingsRepository @Inject constructor(
     private val _nightModeStartHour = MutableStateFlow(prefs.getInt(KEY_NIGHT_START, 22)) // Default 22h / 10PM
     val nightModeStartHour: StateFlow<Int> = _nightModeStartHour.asStateFlow()
 
+    private val _nightModeStartMinute = MutableStateFlow(prefs.getInt(KEY_NIGHT_START_MINUTE, 0))
+    val nightModeStartMinute: StateFlow<Int> = _nightModeStartMinute.asStateFlow()
+
     private val _nightModeEndHour = MutableStateFlow(prefs.getInt(KEY_NIGHT_END, 7)) // Default 7h / 7AM
     val nightModeEndHour: StateFlow<Int> = _nightModeEndHour.asStateFlow()
+
+    private val _nightModeEndMinute = MutableStateFlow(prefs.getInt(KEY_NIGHT_END_MINUTE, 0))
+    val nightModeEndMinute: StateFlow<Int> = _nightModeEndMinute.asStateFlow()
+
+    private val _isNightModeEnabled = MutableStateFlow(prefs.getBoolean(KEY_NIGHT_MODE_ENABLED, true))
+    val isNightModeEnabled: StateFlow<Boolean> = _isNightModeEnabled.asStateFlow()
 
     private val _clockColor = MutableStateFlow(prefs.getInt(KEY_CLOCK_COLOR, 0)) // Default 0 (Use default blue/theme)
     val clockColor: StateFlow<Int> = _clockColor.asStateFlow()
@@ -57,9 +66,24 @@ class SettingsRepository @Inject constructor(
         _nightModeStartHour.value = hour
     }
 
+    fun setNightModeStartMinute(minute: Int) {
+        prefs.edit().putInt(KEY_NIGHT_START_MINUTE, minute).apply()
+        _nightModeStartMinute.value = minute
+    }
+
     fun setNightModeEndHour(hour: Int) {
         prefs.edit().putInt(KEY_NIGHT_END, hour).apply()
         _nightModeEndHour.value = hour
+    }
+
+    fun setNightModeEndMinute(minute: Int) {
+        prefs.edit().putInt(KEY_NIGHT_END_MINUTE, minute).apply()
+        _nightModeEndMinute.value = minute
+    }
+
+    fun setNightModeEnabled(enabled: Boolean) {
+        prefs.edit().putBoolean(KEY_NIGHT_MODE_ENABLED, enabled).apply()
+        _isNightModeEnabled.value = enabled
     }
     
     fun setClockColor(color: Int) {
@@ -100,7 +124,10 @@ class SettingsRepository @Inject constructor(
     companion object {
         private const val KEY_ALWAYS_ON = "always_on_enabled"
         private const val KEY_NIGHT_START = "night_mode_start"
+        private const val KEY_NIGHT_START_MINUTE = "night_mode_start_minute"
         private const val KEY_NIGHT_END = "night_mode_end"
+        private const val KEY_NIGHT_END_MINUTE = "night_mode_end_minute"
+        private const val KEY_NIGHT_MODE_ENABLED = "night_mode_enabled"
         private const val KEY_CLOCK_COLOR = "clock_color"
         private const val KEY_ALLOW_ALL_CALLS = "allow_all_calls"
         private const val KEY_RINGER_ENABLED = "ringer_enabled"

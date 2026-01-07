@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.draw.clip
 
 import androidx.compose.foundation.layout.Box
@@ -760,8 +761,12 @@ fun ContactDialog(
 @Composable
 fun SettingsSection(viewModel: AdminViewModel) {
     val isAlwaysOn by viewModel.isAlwaysOnEnabled.collectAsState()
+    val isNightModeEnabled by viewModel.isNightModeEnabled.collectAsState()
     val nightStart by viewModel.nightModeStartHour.collectAsState()
+    val nightStartMin by viewModel.nightModeStartMinute.collectAsState()
     val nightEnd by viewModel.nightModeEndHour.collectAsState()
+    val nightEndMin by viewModel.nightModeEndMinute.collectAsState()
+
 
     Column(modifier = Modifier.padding(16.dp)) {
         Divider(modifier = Modifier.padding(vertical = 16.dp))
@@ -814,25 +819,112 @@ fun SettingsSection(viewModel: AdminViewModel) {
             )
         }
 
-        if (isAlwaysOn) {
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(stringResource(id = com.callonly.launcher.R.string.night_mode), style = MaterialTheme.typography.titleMedium)
-            
-            Text(stringResource(id = com.callonly.launcher.R.string.night_start, nightStart), style = MaterialTheme.typography.bodyMedium)
-            Slider(
-                value = nightStart.toFloat(),
-                onValueChange = { viewModel.setNightModeStartHour(it.toInt()) },
-                valueRange = 0f..23f,
-                steps = 22
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(modifier = Modifier.weight(1f)) {
+                Text(stringResource(id = com.callonly.launcher.R.string.night_mode), style = MaterialTheme.typography.titleMedium)
+                Text(stringResource(id = com.callonly.launcher.R.string.night_mode_desc), style = MaterialTheme.typography.bodySmall)
+            }
+            Switch(
+                checked = isNightModeEnabled,
+                onCheckedChange = { viewModel.setNightModeEnabled(it) }
             )
+        }
+
+
+
+        if (isNightModeEnabled) {
+            var showStartPicker by remember { mutableStateOf(false) }
+            var showEndPicker by remember { mutableStateOf(false) }
+
+            Spacer(modifier = Modifier.height(8.dp))
             
-            Text(stringResource(id = com.callonly.launcher.R.string.night_end, nightEnd), style = MaterialTheme.typography.bodyMedium)
-            Slider(
-                value = nightEnd.toFloat(),
-                onValueChange = { viewModel.setNightModeEndHour(it.toInt()) },
-                valueRange = 0f..23f,
-                steps = 22
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colorScheme.surfaceVariant, RoundedCornerShape(16.dp))
+                    .padding(8.dp)
+            ) {
+                // Start Time
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { showStartPicker = true }
+                        .padding(12.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(stringResource(id = com.callonly.launcher.R.string.night_start_label), style = MaterialTheme.typography.bodyLarge)
+                    Text(
+                        text = String.format("%02dh%02d", nightStart, nightStartMin),
+                        style = MaterialTheme.typography.titleLarge,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
+
+                Divider(modifier = Modifier.padding(horizontal = 12.dp), thickness = 0.5.dp, color = MaterialTheme.colorScheme.outlineVariant)
+
+                // End Time
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { showEndPicker = true }
+                        .padding(12.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(stringResource(id = com.callonly.launcher.R.string.night_end_label), style = MaterialTheme.typography.bodyLarge)
+                    Text(
+                        text = String.format("%02dh%02d", nightEnd, nightEndMin),
+                        style = MaterialTheme.typography.titleLarge,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
+            }
+
+            // Calculation and explanation
+            val startTotalMinutes = nightStart * 60 + nightStartMin
+            val endTotalMinutes = nightEnd * 60 + nightEndMin
+            val durationMinutes = if (endTotalMinutes > startTotalMinutes) endTotalMinutes - startTotalMinutes else (24 * 60 - startTotalMinutes) + endTotalMinutes
+            val durationHours = durationMinutes / 60
+            val durationMinsOnly = durationMinutes % 60
+            val nextDay = if (endTotalMinutes <= startTotalMinutes) stringResource(id = com.callonly.launcher.R.string.next_day) else ""
+            
+            Text(
+                text = stringResource(id = com.callonly.launcher.R.string.night_mode_duration_desc, durationHours, if (durationMinsOnly > 0) String.format("%02d", durationMinsOnly) else "", nextDay),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(start = 16.dp, top = 8.dp)
             )
+
+            if (showStartPicker) {
+                TimePickerDialogWrapper(
+                    initialHour = nightStart,
+                    initialMinute = nightStartMin,
+                    onDismiss = { showStartPicker = false },
+                    onConfirm = { hour, minute ->
+                        viewModel.setNightModeStartHour(hour)
+                        viewModel.setNightModeStartMinute(minute)
+                        showStartPicker = false
+                    }
+                )
+            }
+
+            if (showEndPicker) {
+                TimePickerDialogWrapper(
+                    initialHour = nightEnd,
+                    initialMinute = nightEndMin,
+                    onDismiss = { showEndPicker = false },
+                    onConfirm = { hour, minute ->
+                        viewModel.setNightModeEndHour(hour)
+                        viewModel.setNightModeEndMinute(minute)
+                        showEndPicker = false
+                    }
+                )
+            }
         }
         
         Divider(modifier = Modifier.padding(vertical = 16.dp))
@@ -979,4 +1071,39 @@ fun SettingsSection(viewModel: AdminViewModel) {
             )
         }
     }
+}
+
+@OptIn(androidx.compose.material3.ExperimentalMaterial3Api::class)
+@Composable
+fun TimePickerDialogWrapper(
+    initialHour: Int,
+    initialMinute: Int,
+    onDismiss: () -> Unit,
+    onConfirm: (Int, Int) -> Unit
+) {
+    val timePickerState = androidx.compose.material3.rememberTimePickerState(
+        initialHour = initialHour,
+        initialMinute = initialMinute,
+        is24Hour = true
+    )
+
+    androidx.compose.material3.AlertDialog(
+        onDismissRequest = onDismiss,
+        confirmButton = {
+            androidx.compose.material3.TextButton(onClick = { onConfirm(timePickerState.hour, timePickerState.minute) }) {
+                androidx.compose.material3.Text(androidx.compose.ui.res.stringResource(id = com.callonly.launcher.R.string.confirm))
+            }
+        },
+        dismissButton = {
+            androidx.compose.material3.TextButton(onClick = onDismiss) {
+                androidx.compose.material3.Text(androidx.compose.ui.res.stringResource(id = com.callonly.launcher.R.string.cancel))
+            }
+        },
+        title = { androidx.compose.material3.Text(androidx.compose.ui.res.stringResource(id = com.callonly.launcher.R.string.select_hour)) },
+        text = {
+            androidx.compose.foundation.layout.Box(modifier = androidx.compose.ui.Modifier.fillMaxWidth(), contentAlignment = androidx.compose.ui.Alignment.Center) {
+                androidx.compose.material3.TimePicker(state = timePickerState)
+            }
+        }
+    )
 }

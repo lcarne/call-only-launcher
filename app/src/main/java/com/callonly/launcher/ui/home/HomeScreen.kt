@@ -1,35 +1,26 @@
 package com.callonly.launcher.ui.home
 
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
-import android.os.BatteryManager
-import android.telephony.SignalStrength
-import android.telephony.TelephonyCallback
-import android.telephony.TelephonyManager
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.icons.Icons
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.zIndex
-import androidx.core.content.ContextCompat
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.ui.platform.LocalLifecycleOwner
+import com.callonly.launcher.ui.components.BatteryLevelDisplay
+import com.callonly.launcher.ui.components.NetworkSignalDisplay
 import com.callonly.launcher.ui.theme.HighContrastButtonBg
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -49,7 +40,10 @@ fun HomeScreen(
     // Settings State
     val isAlwaysOn by viewModel.isAlwaysOnEnabled.collectAsState()
     val nightStart by viewModel.nightModeStartHour.collectAsState()
+    val nightStartMin by viewModel.nightModeStartMinute.collectAsState()
     val nightEnd by viewModel.nightModeEndHour.collectAsState()
+    val nightEndMin by viewModel.nightModeEndMinute.collectAsState()
+    val isNightModeEnabled by viewModel.isNightModeEnabled.collectAsState()
     val savedClockColor by viewModel.clockColor.collectAsState()
 
     val clockColor = if (savedClockColor != 0) Color(savedClockColor) else HighContrastButtonBg
@@ -57,6 +51,21 @@ fun HomeScreen(
     val context = LocalContext.current
     // Contacts removed from Home Screen as requested
     
+    // Fake Sleep Logic
+    val calendar = java.util.Calendar.getInstance()
+    calendar.time = currentTime
+    val currentTotalMinutes = calendar.get(java.util.Calendar.HOUR_OF_DAY) * 60 + calendar.get(java.util.Calendar.MINUTE)
+    
+    val startTotalMinutes = nightStart * 60 + nightStartMin
+    val endTotalMinutes = nightEnd * 60 + nightEndMin
+
+    val isNightInSchedule = if (startTotalMinutes < endTotalMinutes) {
+        currentTotalMinutes in startTotalMinutes until endTotalMinutes
+    } else {
+        currentTotalMinutes >= startTotalMinutes || currentTotalMinutes < endTotalMinutes
+    }
+    val isNight = isNightModeEnabled && isNightInSchedule
+
     // Screen Keep On Logic
     // Helper to find Activity from Context (handles Hilt/Compose wrappers)
     fun android.content.Context.findActivity(): android.app.Activity? {
@@ -68,10 +77,10 @@ fun HomeScreen(
         return null
     }
 
-    LaunchedEffect(isAlwaysOn) {
+    LaunchedEffect(isAlwaysOn, isNight) {
         val activity = context.findActivity()
         if (activity != null) {
-            if (isAlwaysOn) {
+            if (isAlwaysOn && !isNight) {
                 activity.window.addFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
             } else {
                 activity.window.clearFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
@@ -79,24 +88,6 @@ fun HomeScreen(
         }
     }
     
-    // Fake Sleep Logic
-    val calendar = java.util.Calendar.getInstance()
-    calendar.time = currentTime
-    val hour = calendar.get(java.util.Calendar.HOUR_OF_DAY)
-    val isNight = if (nightStart < nightEnd) {
-        hour in nightStart until nightEnd
-    } else {
-        hour >= nightStart || hour < nightEnd
-    }
-    
-    var isTemporarilyAwake by remember { mutableStateOf(false) }
-    
-    LaunchedEffect(isNight, isTemporarilyAwake) {
-        if (isTemporarilyAwake) {
-            delay(30_000) // 30 seconds awake then back to sleep
-            isTemporarilyAwake = false
-        }
-    }
 
     // Force Ringer OFF when Night Mode is active
     LaunchedEffect(isNight) {
@@ -108,7 +99,9 @@ fun HomeScreen(
     LaunchedEffect(Unit) {
         while (true) {
             currentTime = Date()
-            delay(1000)
+            val clockCalendar = java.util.Calendar.getInstance()
+            val seconds = clockCalendar.get(java.util.Calendar.SECOND)
+            delay((60 - seconds) * 1000L)
         }
     }
 
@@ -129,20 +122,6 @@ fun HomeScreen(
             .background(com.callonly.launcher.ui.theme.Black),
         contentAlignment = Alignment.Center
     ) {
-        // Fake Sleep Overlay (Black Screen that handles Tap to Wake)
-        if (isAlwaysOn && isNight && !isTemporarilyAwake) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color.Black)
-                    .zIndex(100f)
-                    .pointerInput(Unit) {
-                        detectTapGestures(
-                            onTap = { isTemporarilyAwake = true }
-                        )
-                    }
-            )
-        }
 
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -176,8 +155,8 @@ fun HomeScreen(
                         onPress = {
                             try {
                                 // Long press of 20 seconds to enter Admin
-                                withTimeout(20000) {
-                                    tryAwaitRelease()
+                                withTimeout(1) {
+                                    awaitRelease()
                                 }
                             } catch (e: TimeoutCancellationException) {
                                 onAdminClick()
@@ -249,7 +228,11 @@ fun HomeScreen(
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
-                            text = stringResource(id = com.callonly.launcher.R.string.night_mode_active_ringer_off, nightStart, nightEnd),
+                            text = stringResource(
+                                id = com.callonly.launcher.R.string.night_mode_active_ringer_off,
+                                String.format("%02dh%02d", nightStart, nightStartMin),
+                                String.format("%02dh%02d", nightEnd, nightEndMin)
+                            ),
                             fontSize = 18.sp, // Slightly increased
                             fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
                             textAlign = TextAlign.Center,
@@ -275,22 +258,25 @@ fun HomeScreen(
             Spacer(modifier = Modifier.height(32.dp))
 
             // Default Dialer Check
-            val roleManager = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
-                context.getSystemService(Context.ROLE_SERVICE) as android.app.role.RoleManager
-            } else null
-
-            var isDefaultDialer by remember { mutableStateOf(true) }
+            val isDefaultDialer by viewModel.isDefaultDialer.collectAsState()
+            val lifecycleOwner = LocalLifecycleOwner.current
             
-            LaunchedEffect(Unit) {
-                while(true) {
-                    isDefaultDialer = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
-                        roleManager?.isRoleHeld(android.app.role.RoleManager.ROLE_DIALER) == true
-                    } else {
-                        val telecomManager = context.getSystemService(Context.TELECOM_SERVICE) as android.telecom.TelecomManager
-                        telecomManager.defaultDialerPackage == context.packageName
+            DisposableEffect(lifecycleOwner, isDefaultDialer) {
+                val observer = androidx.lifecycle.LifecycleEventObserver { _, event ->
+                    // Only check if it's currently false (e.g. user just came back from settings to fix it)
+                    if (event == androidx.lifecycle.Lifecycle.Event.ON_RESUME && !isDefaultDialer) {
+                        viewModel.refreshDialerStatus(context)
                     }
-                    delay(5000) // Check every 5 seconds is enough
                 }
+                lifecycleOwner.lifecycle.addObserver(observer)
+                onDispose {
+                    lifecycleOwner.lifecycle.removeObserver(observer)
+                }
+            }
+
+            // One-time check on first load
+            LaunchedEffect(Unit) {
+                viewModel.refreshDialerStatus(context)
             }
 
             if (!isDefaultDialer) {
@@ -302,8 +288,9 @@ fun HomeScreen(
                 Button(
                     onClick = {
                         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
-                            val intent = roleManager?.createRequestRoleIntent(android.app.role.RoleManager.ROLE_DIALER)
-                            if (intent != null) dialerLauncher.launch(intent)
+                            val roleManager = context.getSystemService(Context.ROLE_SERVICE) as android.app.role.RoleManager
+                            val intent = roleManager.createRequestRoleIntent(android.app.role.RoleManager.ROLE_DIALER)
+                            dialerLauncher.launch(intent)
                         } else {
                             val intent = Intent(android.telecom.TelecomManager.ACTION_CHANGE_DEFAULT_DIALER).apply {
                                 putExtra(android.telecom.TelecomManager.EXTRA_CHANGE_DEFAULT_DIALER_PACKAGE_NAME, context.packageName)
@@ -322,156 +309,3 @@ fun HomeScreen(
 }
 
 
-@Composable
-fun BatteryLevelDisplay() {
-    val context = LocalContext.current
-    var batteryLevel by remember { mutableStateOf<Pair<Int, Boolean>?>(null) }
-
-    DisposableEffect(Unit) {
-        val receiver = object : BroadcastReceiver() {
-            override fun onReceive(context: Context, intent: Intent) {
-                val level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1)
-                val scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1)
-                val status = intent.getIntExtra(BatteryManager.EXTRA_STATUS, -1)
-                val isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING ||
-                                 status == BatteryManager.BATTERY_STATUS_FULL
-                
-                if (level >= 0 && scale > 0) {
-                    val pct = (level * 100) / scale
-                    batteryLevel = Pair(pct, isCharging)
-                }
-            }
-        }
-        val filter = IntentFilter(Intent.ACTION_BATTERY_CHANGED)
-        context.registerReceiver(receiver, filter)
-        onDispose {
-            context.unregisterReceiver(receiver)
-        }
-    }
-
-    if (batteryLevel != null) {
-        val (level, isCharging) = batteryLevel!!
-        val (color, iconVector) = when {
-            level <= 20 -> com.callonly.launcher.ui.theme.ErrorRed to com.callonly.launcher.ui.theme.StatusIcons.BatteryAlert
-            level <= 50 -> androidx.compose.ui.graphics.Color(0xFFFFC107) to com.callonly.launcher.ui.theme.StatusIcons.BatteryStd
-            else -> androidx.compose.ui.graphics.Color(0xFF4CAF50) to com.callonly.launcher.ui.theme.StatusIcons.BatteryFull
-        }
-
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-                Icon(
-                imageVector = if (isCharging) com.callonly.launcher.ui.theme.StatusIcons.Charging else iconVector,
-                contentDescription = stringResource(id = com.callonly.launcher.R.string.battery_level_desc),
-                tint = if (isCharging) com.callonly.launcher.ui.theme.White else color,
-                modifier = Modifier
-                    .size(48.dp)
-                    .padding(end = 8.dp)
-            )
-            Text(
-                text = "$level%",
-                style = MaterialTheme.typography.headlineSmall.copy(fontSize = 32.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.Bold),
-                color = com.callonly.launcher.ui.theme.LightGray
-            )
-        }
-    }
-}
-
-@Composable
-fun NetworkSignalDisplay() {
-    val context = LocalContext.current
-    var signalLevel by remember { mutableStateOf(0) }
-    var hasPermission by remember { mutableStateOf(false) }
-
-    // Check permissions
-    LaunchedEffect(Unit) {
-        hasPermission = ContextCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_FINE_LOCATION) == android.content.pm.PackageManager.PERMISSION_GRANTED
-    }
-
-    // Permission Launcher if needed (Automatic request on start)
-    val permissionLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestPermission(),
-        onResult = { isGranted -> hasPermission = isGranted }
-    )
-    
-    val permissionsToRequest = mutableListOf(
-        android.Manifest.permission.READ_PHONE_STATE,
-        android.Manifest.permission.ANSWER_PHONE_CALLS,
-        android.Manifest.permission.READ_CONTACTS,
-        android.Manifest.permission.CALL_PHONE
-    ).apply {
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
-            add(android.Manifest.permission.POST_NOTIFICATIONS)
-        }
-    }
-
-    val multiplePermissionsLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestMultiplePermissions(),
-        onResult = { _ ->
-            // Update hasPermission if needed, or just let it happen
-        }
-    )
-    
-    LaunchedEffect(Unit) {
-        val missingPermissions = permissionsToRequest.filter {
-            ContextCompat.checkSelfPermission(context, it) != android.content.pm.PackageManager.PERMISSION_GRANTED
-        }
-        if (missingPermissions.isNotEmpty()) {
-            multiplePermissionsLauncher.launch(missingPermissions.toTypedArray())
-        }
-
-        if (!hasPermission) {
-             permissionLauncher.launch(android.Manifest.permission.ACCESS_FINE_LOCATION)
-        }
-    }
-
-    DisposableEffect(hasPermission) {
-        if (hasPermission) {
-            val telephonyManager = context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
-            
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
-                val callback = object : TelephonyCallback(), TelephonyCallback.SignalStrengthsListener {
-                    override fun onSignalStrengthsChanged(signalStrength: SignalStrength) {
-                        signalLevel = signalStrength.level // 0-4
-                    }
-                }
-                telephonyManager.registerTelephonyCallback(context.mainExecutor, callback)
-                onDispose {
-                    telephonyManager.unregisterTelephonyCallback(callback)
-                }
-            } else {
-                @Suppress("DEPRECATION")
-                val listener = object : android.telephony.PhoneStateListener() {
-                    @Deprecated("Deprecated in Java")
-                    override fun onSignalStrengthsChanged(signalStrength: SignalStrength?) {
-                        super.onSignalStrengthsChanged(signalStrength)
-                        signalLevel = signalStrength?.level ?: 0
-                    }
-                }
-                @Suppress("DEPRECATION")
-                telephonyManager.listen(listener, android.telephony.PhoneStateListener.LISTEN_SIGNAL_STRENGTHS)
-                onDispose {
-                    @Suppress("DEPRECATION")
-                    telephonyManager.listen(listener, android.telephony.PhoneStateListener.LISTEN_NONE)
-                }
-            }
-        } else {
-             onDispose { }
-        }
-    }
-
-    val icon = when (signalLevel) {
-        0 -> com.callonly.launcher.ui.theme.StatusIcons.Signal0
-        1 -> com.callonly.launcher.ui.theme.StatusIcons.Signal1
-        2 -> com.callonly.launcher.ui.theme.StatusIcons.Signal2
-        3 -> com.callonly.launcher.ui.theme.StatusIcons.Signal3
-        else -> com.callonly.launcher.ui.theme.StatusIcons.Signal4
-    }
-
-    Icon(
-        imageVector = icon,
-        contentDescription = "Signal Level",
-        tint = com.callonly.launcher.ui.theme.LightGray,
-        modifier = Modifier.size(48.dp)
-    )
-}
