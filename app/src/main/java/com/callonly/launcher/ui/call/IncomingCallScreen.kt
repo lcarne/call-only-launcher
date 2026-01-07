@@ -121,7 +121,7 @@ fun CallLayout(
             // Photo de l'appelant
             Box(
                 modifier = Modifier
-                    .size(if (isRinging) 300.dp else 220.dp)
+                    .size(if (isRinging) 300.dp else 150.dp)
                     .clip(if (isRinging) CircleShape else RoundedCornerShape(32.dp))
                     .background(Color.DarkGray)
             ) {
@@ -138,7 +138,7 @@ fun CallLayout(
                         imageVector = Icons.Default.Person,
                         contentDescription = null,
                         modifier = Modifier
-                            .size(if (isRinging) 180.dp else 120.dp)
+                            .size(if (isRinging) 180.dp else 90.dp)
                             .align(Alignment.Center),
                         tint = Color.White
                     )
