@@ -88,7 +88,6 @@ fun HomeScreen(
             
             // Clear flags first to avoid conflicts
             activity.window.clearFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-            activity.window.clearFlags(android.view.WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON)
             
             if (isAlwaysOn && !isNight) {
                 // If transitioning from night to day, actively wake the screen
