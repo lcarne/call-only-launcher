@@ -16,7 +16,7 @@ class ScreenManager @Inject constructor(
 ) {
     private val powerManager = context.getSystemService(Context.POWER_SERVICE) as PowerManager
     private var wakeLock: PowerManager.WakeLock? = null
-    
+
     /**
      * Wakes up the screen from deep sleep using a WakeLock.
      * The wake lock is automatically released after 3 seconds.
@@ -30,16 +30,16 @@ class ScreenManager @Inject constructor(
                     it.release()
                 }
             }
-            
+
             // Create a new wake lock with ACQUIRE_CAUSES_WAKEUP flag to turn on the screen
             wakeLock = powerManager.newWakeLock(
                 PowerManager.SCREEN_BRIGHT_WAKE_LOCK or PowerManager.ACQUIRE_CAUSES_WAKEUP,
                 "CallOnly::ScreenWakeLock"
             )
-            
+
             // Acquire the wake lock
             wakeLock?.acquire(3000L) // 3 seconds timeout
-            
+
             // Release after 3 seconds in case the timeout doesn't work
             CoroutineScope(Dispatchers.Main).launch {
                 delay(3000L)

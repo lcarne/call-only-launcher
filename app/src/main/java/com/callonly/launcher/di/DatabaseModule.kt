@@ -24,7 +24,7 @@ object DatabaseModule {
             AppDatabase::class.java,
             "callonly_db"
         ).fallbackToDestructiveMigration()
-         .build()
+            .build()
     }
 
     @Provides

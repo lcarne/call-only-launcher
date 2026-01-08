@@ -3,8 +3,8 @@ package com.callonly.launcher.services
 import android.content.Intent
 import android.telecom.Call
 import android.telecom.InCallService
-import com.callonly.launcher.manager.CallManager
 import com.callonly.launcher.MainActivity
+import com.callonly.launcher.manager.CallManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -15,7 +15,8 @@ class CallService : InCallService(), CallManager.AudioController {
     @Inject
     lateinit var callManager: CallManager
 
-    private val serviceScope = kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.Main)
+    private val serviceScope =
+        kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.Main)
 
     override fun onCreate() {
         super.onCreate()
@@ -38,9 +39,9 @@ class CallService : InCallService(), CallManager.AudioController {
 
     override fun onCallAdded(call: Call) {
         super.onCallAdded(call)
-        
+
         callManager.setCall(call)
-        
+
         // Wait for CallManager to approve the call before showing UI/Notification
         serviceScope.launch {
             callManager.isCallAllowed.collect { allowed ->
@@ -53,7 +54,8 @@ class CallService : InCallService(), CallManager.AudioController {
 
     private fun showIncomingCallNotification() {
         val channelId = "incoming_calls"
-        val notificationManager = getSystemService(android.content.Context.NOTIFICATION_SERVICE) as android.app.NotificationManager
+        val notificationManager =
+            getSystemService(NOTIFICATION_SERVICE) as android.app.NotificationManager
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             val channel = android.app.NotificationChannel(
@@ -70,9 +72,9 @@ class CallService : InCallService(), CallManager.AudioController {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP
         }
         val pendingIntent = android.app.PendingIntent.getActivity(
-            this, 
-            0, 
-            intent, 
+            this,
+            0,
+            intent,
             android.app.PendingIntent.FLAG_UPDATE_CURRENT or android.app.PendingIntent.FLAG_IMMUTABLE
         )
 
@@ -92,7 +94,8 @@ class CallService : InCallService(), CallManager.AudioController {
 
     override fun onCallRemoved(call: Call) {
         super.onCallRemoved(call)
-        val notificationManager = getSystemService(android.content.Context.NOTIFICATION_SERVICE) as android.app.NotificationManager
+        val notificationManager =
+            getSystemService(NOTIFICATION_SERVICE) as android.app.NotificationManager
         notificationManager.cancel(1)
         callManager.clear()
     }

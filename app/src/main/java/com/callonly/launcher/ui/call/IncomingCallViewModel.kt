@@ -5,17 +5,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.callonly.launcher.data.model.Contact
 import com.callonly.launcher.data.repository.ContactRepository
-import com.callonly.launcher.data.repository.SettingsRepository
 import com.callonly.launcher.manager.CallManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -28,19 +22,27 @@ class IncomingCallViewModel @Inject constructor(
         callManager.incomingNumber,
         callManager.callState,
         contactRepository.getAllContacts()
-    ) { number, state, contacts -> 
+    ) { number, state, contacts ->
         if (number == null) {
             IncomingCallUiState.Empty
         } else {
-            val contact = contacts.find { 
+            val contact = contacts.find {
                 @Suppress("DEPRECATION")
                 PhoneNumberUtils.compare(it.phoneNumber, number)
             }
             when (state) {
                 com.callonly.launcher.manager.CallState.Idle,
                 com.callonly.launcher.manager.CallState.Ended -> IncomingCallUiState.Empty
-                com.callonly.launcher.manager.CallState.Active -> IncomingCallUiState.Active(number, contact)
-                com.callonly.launcher.manager.CallState.Ringing -> IncomingCallUiState.Ringing(number, contact)
+
+                com.callonly.launcher.manager.CallState.Active -> IncomingCallUiState.Active(
+                    number,
+                    contact
+                )
+
+                com.callonly.launcher.manager.CallState.Ringing -> IncomingCallUiState.Ringing(
+                    number,
+                    contact
+                )
             }
         }
     }.stateIn(

@@ -23,6 +23,9 @@ misc.xml
 deploymentTargetDropDown.xml
 render.experimental.xml
 
+# VSCode
+.vscode/
+
 # Keystore files
 *.jks
 *.keystore

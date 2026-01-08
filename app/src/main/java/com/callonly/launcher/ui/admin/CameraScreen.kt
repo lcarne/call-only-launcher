@@ -1,6 +1,5 @@
 package com.callonly.launcher.ui.admin
 
-import android.content.Context
 import android.net.Uri
 import android.util.Log
 import androidx.camera.core.CameraSelector
@@ -11,10 +10,25 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -24,7 +38,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import java.io.File
-import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
 @Composable
@@ -44,7 +57,7 @@ fun CameraScreen(
         cameraProviderFuture.addListener({
             val cameraProvider = cameraProviderFuture.get()
             val preview = Preview.Builder().build().also {
-                it.setSurfaceProvider(previewView.surfaceProvider)
+                it.surfaceProvider = previewView.surfaceProvider
             }
 
             val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
@@ -63,7 +76,11 @@ fun CameraScreen(
         }, ContextCompat.getMainExecutor(context))
     }
 
-    Box(modifier = Modifier.fillMaxSize().background(Color.Black)) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.Black)
+    ) {
         // Camera Preview
         Box(
             modifier = Modifier
@@ -87,9 +104,17 @@ fun CameraScreen(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             IconButton(onClick = onCancel) {
-                Icon(com.callonly.launcher.ui.theme.StatusIcons.ArrowBack, contentDescription = "Cancel", tint = Color.White)
+                Icon(
+                    com.callonly.launcher.ui.theme.StatusIcons.ArrowBack,
+                    contentDescription = "Cancel",
+                    tint = Color.White
+                )
             }
-            Text("Prendre une photo", color = Color.White, style = MaterialTheme.typography.titleLarge)
+            Text(
+                "Prendre une photo",
+                color = Color.White,
+                style = MaterialTheme.typography.titleLarge
+            )
             Box(Modifier.size(48.dp)) // Spacer
         }
 
@@ -115,7 +140,11 @@ fun CameraScreen(
                         }
 
                         override fun onError(exception: ImageCaptureException) {
-                            Log.e("CameraScreen", "Photo capture failed: ${exception.message}", exception)
+                            Log.e(
+                                "CameraScreen",
+                                "Photo capture failed: ${exception.message}",
+                                exception
+                            )
                         }
                     }
                 )

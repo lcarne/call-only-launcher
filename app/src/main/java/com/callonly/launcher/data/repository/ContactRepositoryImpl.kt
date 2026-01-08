@@ -1,10 +1,10 @@
 package com.callonly.launcher.data.repository
 
+import android.content.Context
 import com.callonly.launcher.data.local.ContactDao
 import com.callonly.launcher.data.model.Contact
-import kotlinx.coroutines.flow.Flow
-import android.content.Context
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class ContactRepositoryImpl @Inject constructor(
@@ -48,9 +48,11 @@ class ContactRepositoryImpl @Inject constructor(
     }
 
     override suspend fun importContacts(json: String): Int {
-        val type = object : com.google.gson.reflect.TypeToken<List<com.callonly.launcher.data.model.ContactExportDto>>() {}.type
-        val importList: List<com.callonly.launcher.data.model.ContactExportDto> = com.google.gson.Gson().fromJson(json, type)
-        
+        val type = object :
+            com.google.gson.reflect.TypeToken<List<com.callonly.launcher.data.model.ContactExportDto>>() {}.type
+        val importList: List<com.callonly.launcher.data.model.ContactExportDto> =
+            com.google.gson.Gson().fromJson(json, type)
+
         var count = 0
         importList.forEach { dto ->
             // Check if contact already exists (simple check by number)
@@ -68,7 +70,7 @@ class ContactRepositoryImpl @Inject constructor(
                         e.printStackTrace()
                     }
                 }
-                
+
                 val newContact = Contact(
                     name = dto.name,
                     phoneNumber = dto.phoneNumber,

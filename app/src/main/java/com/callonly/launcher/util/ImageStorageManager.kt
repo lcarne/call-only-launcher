@@ -24,7 +24,7 @@ class ImageStorageManager @Inject constructor(
         return try {
             val fileName = "photo_${System.currentTimeMillis()}.jpg"
             val destFile = File(photosDir, fileName)
-            
+
             context.contentResolver.openInputStream(uri)?.use { input ->
                 FileOutputStream(destFile).use { output ->
                     input.copyTo(output)

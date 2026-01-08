@@ -1,6 +1,5 @@
 package com.callonly.launcher.ui.admin
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -10,15 +9,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -26,12 +26,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.AlertDialog
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.callonly.launcher.data.model.CallLog
 import com.callonly.launcher.data.model.CallLogType
@@ -54,12 +52,19 @@ fun CallHistoryScreen(
                 title = { Text(stringResource(id = com.callonly.launcher.R.string.call_history)) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(com.callonly.launcher.ui.theme.StatusIcons.ArrowBack, contentDescription = stringResource(id = com.callonly.launcher.R.string.back))
+                        Icon(
+                            com.callonly.launcher.ui.theme.StatusIcons.ArrowBack,
+                            contentDescription = stringResource(id = com.callonly.launcher.R.string.back)
+                        )
                     }
                 },
                 actions = {
                     IconButton(onClick = { showDeleteConfirmation = true }) {
-                        Icon(Icons.Default.Delete, contentDescription = stringResource(id = com.callonly.launcher.R.string.clear_history_title), tint = MaterialTheme.colorScheme.error)
+                        Icon(
+                            Icons.Default.Delete,
+                            contentDescription = stringResource(id = com.callonly.launcher.R.string.clear_history_title),
+                            tint = MaterialTheme.colorScheme.error
+                        )
                     }
                 }
             )
@@ -73,7 +78,10 @@ fun CallHistoryScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-                Text(stringResource(id = com.callonly.launcher.R.string.no_call_history), style = MaterialTheme.typography.bodyLarge)
+                Text(
+                    stringResource(id = com.callonly.launcher.R.string.no_call_history),
+                    style = MaterialTheme.typography.bodyLarge
+                )
             }
         } else {
             LazyColumn(
@@ -99,7 +107,10 @@ fun CallHistoryScreen(
                             showDeleteConfirmation = false
                         }
                     ) {
-                        Text(stringResource(id = com.callonly.launcher.R.string.delete), color = MaterialTheme.colorScheme.error)
+                        Text(
+                            stringResource(id = com.callonly.launcher.R.string.delete),
+                            color = MaterialTheme.colorScheme.error
+                        )
                     }
                 },
                 dismissButton = {
@@ -118,10 +129,29 @@ fun CallLogItem(log: CallLog) {
     val dateStr = sdf.format(Date(log.timestamp))
 
     val (icon, color, label) = when (log.type) {
-        CallLogType.INCOMING_ANSWERED -> Triple(com.callonly.launcher.ui.theme.StatusIcons.Call, Color(0xFF4CAF50), stringResource(id = com.callonly.launcher.R.string.call_received_label))
-        CallLogType.INCOMING_MISSED -> Triple(com.callonly.launcher.ui.theme.StatusIcons.CallMissed, Color(0xFFF44336), stringResource(id = com.callonly.launcher.R.string.call_missed_label))
-        CallLogType.INCOMING_REJECTED -> Triple(com.callonly.launcher.ui.theme.StatusIcons.Block, Color(0xFFE91E63), stringResource(id = com.callonly.launcher.R.string.call_rejected_label))
-        CallLogType.BLOCKED -> Triple(com.callonly.launcher.ui.theme.StatusIcons.Block, Color.Gray, stringResource(id = com.callonly.launcher.R.string.call_rejected_auto_label))
+        CallLogType.INCOMING_ANSWERED -> Triple(
+            com.callonly.launcher.ui.theme.StatusIcons.Call,
+            Color(0xFF4CAF50),
+            stringResource(id = com.callonly.launcher.R.string.call_received_label)
+        )
+
+        CallLogType.INCOMING_MISSED -> Triple(
+            com.callonly.launcher.ui.theme.StatusIcons.CallMissed,
+            Color(0xFFF44336),
+            stringResource(id = com.callonly.launcher.R.string.call_missed_label)
+        )
+
+        CallLogType.INCOMING_REJECTED -> Triple(
+            com.callonly.launcher.ui.theme.StatusIcons.Block,
+            Color(0xFFE91E63),
+            stringResource(id = com.callonly.launcher.R.string.call_rejected_label)
+        )
+
+        CallLogType.BLOCKED -> Triple(
+            com.callonly.launcher.ui.theme.StatusIcons.Block,
+            Color.Gray,
+            stringResource(id = com.callonly.launcher.R.string.call_rejected_auto_label)
+        )
     }
 
     Row(
@@ -137,7 +167,7 @@ fun CallLogItem(log: CallLog) {
             tint = color,
             modifier = Modifier.size(32.dp)
         )
-        
+
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = log.name ?: log.number,
@@ -164,7 +194,7 @@ fun CallLogItem(log: CallLog) {
                 }
             }
         }
-        
+
         Text(
             text = dateStr,
             style = MaterialTheme.typography.bodyMedium,

@@ -3,6 +3,7 @@ package com.callonly.launcher.ui.admin
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.callonly.launcher.data.model.Contact
+import com.callonly.launcher.data.repository.CallLogRepository
 import com.callonly.launcher.data.repository.ContactRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -10,7 +11,6 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import com.callonly.launcher.data.repository.CallLogRepository
 import javax.inject.Inject
 
 @HiltViewModel
@@ -75,7 +75,13 @@ class AdminViewModel @Inject constructor(
             val localUri = photoUri?.let { uriStr ->
                 imageStorageManager.saveImageLocally(android.net.Uri.parse(uriStr))
             }
-            repository.insertContact(Contact(name = name, phoneNumber = number, photoUri = localUri))
+            repository.insertContact(
+                Contact(
+                    name = name,
+                    phoneNumber = number,
+                    photoUri = localUri
+                )
+            )
         }
     }
 
@@ -84,11 +90,11 @@ class AdminViewModel @Inject constructor(
             // Check if photo changed
             val existingContact = repository.getContactById(contact.id)
             var newPhotoUri = contact.photoUri
-            
+
             if (existingContact?.photoUri != contact.photoUri) {
                 // Delete old local photo if it exists
                 imageStorageManager.deleteImage(existingContact?.photoUri)
-                
+
                 // Save new one locally if it's not already in our storage
                 newPhotoUri = contact.photoUri?.let { uriStr ->
                     if (!uriStr.startsWith("file://") || !uriStr.contains("contact_photos")) {
@@ -98,7 +104,7 @@ class AdminViewModel @Inject constructor(
                     }
                 }
             }
-            
+
             repository.updateContact(contact.copy(photoUri = newPhotoUri))
         }
     }
@@ -152,7 +158,6 @@ class AdminViewModel @Inject constructor(
     }
 
 
-
     fun setLanguage(lang: String) {
         settingsRepository.setLanguage(lang)
     }
@@ -164,7 +169,6 @@ class AdminViewModel @Inject constructor(
     fun setDefaultSpeakerEnabled(enabled: Boolean) {
         settingsRepository.setDefaultSpeakerEnabled(enabled)
     }
-
 
 
     val clockColor = settingsRepository.clockColor
@@ -181,7 +185,10 @@ class AdminViewModel @Inject constructor(
     fun testRingtone() {
         viewModelScope.launch {
             try {
-                val uri = android.media.RingtoneManager.getActualDefaultRingtoneUri(context, android.media.RingtoneManager.TYPE_RINGTONE)
+                val uri = android.media.RingtoneManager.getActualDefaultRingtoneUri(
+                    context,
+                    android.media.RingtoneManager.TYPE_RINGTONE
+                )
                 val ringtone = android.media.RingtoneManager.getRingtone(context, uri)
                 ringtone.play()
                 // Stop after 3 seconds

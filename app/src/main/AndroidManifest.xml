@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-    
+
     <queries>
         <intent>
             <action android:name="android.media.action.IMAGE_CAPTURE" />
@@ -22,9 +22,11 @@
     <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    
-    <uses-feature android:name="android.hardware.camera" android:required="false" />
-    
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+
     <application
         android:name=".CallOnlyApplication"
         android:allowBackup="true"
@@ -36,7 +38,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CallOnly"
         tools:targetApi="31">
-        
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"
@@ -46,17 +48,18 @@
                 android:name="android.support.FILE_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
-        
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name"
-            android:theme="@style/Theme.CallOnly"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait">
-            
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.CallOnly">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
                 <category android:name="android.intent.category.HOME" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -73,15 +76,18 @@
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.DIAL" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data android:scheme="tel" />
             </intent-filter>
         </activity>
 
-        <service android:name=".services.CallScreeningServiceImpl"
-            android:permission="android.permission.BIND_CALL_SCREENING_SERVICE"
-            android:exported="true">
+        <service
+            android:name=".services.CallScreeningServiceImpl"
+            android:exported="true"
+            android:permission="android.permission.BIND_CALL_SCREENING_SERVICE">
             <intent-filter>
                 <action android:name="android.telecom.CallScreeningService" />
             </intent-filter>
@@ -89,10 +95,10 @@
 
         <receiver
             android:name=".receivers.CallOnlyAdminReceiver"
-            android:label="@string/app_name"
             android:description="@string/app_name"
-            android:permission="android.permission.BIND_DEVICE_ADMIN"
-            android:exported="true">
+            android:exported="true"
+            android:label="@string/app_name"
+            android:permission="android.permission.BIND_DEVICE_ADMIN">
             <meta-data
                 android:name="android.app.device_admin"
                 android:resource="@xml/device_admin_policies" />
@@ -100,10 +106,13 @@
                 <action android:name="android.app.action.DEVICE_ADMIN_ENABLED" />
             </intent-filter>
         </receiver>
-        <service android:name=".services.CallService"
-            android:permission="android.permission.BIND_INCALL_SERVICE"
-            android:exported="true">
-            <meta-data android:name="android.telecom.IN_CALL_SERVICE_UI" android:value="true" />
+        <service
+            android:name=".services.CallService"
+            android:exported="true"
+            android:permission="android.permission.BIND_INCALL_SERVICE">
+            <meta-data
+                android:name="android.telecom.IN_CALL_SERVICE_UI"
+                android:value="true" />
             <intent-filter>
                 <action android:name="android.telecom.InCallService" />
             </intent-filter>

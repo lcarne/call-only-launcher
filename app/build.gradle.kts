@@ -8,11 +8,11 @@ plugins {
 android {
     namespace = "com.callonly.launcher"
     compileSdk = 35
- 
-     defaultConfig {
-         applicationId = "com.callonly.launcher"
-         minSdk = 26 // Android 8.0
-         targetSdk = 35
+
+    defaultConfig {
+        applicationId = "com.callonly.launcher"
+        minSdk = 26 // Android 8.0
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -69,7 +69,7 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     // implementation("androidx.compose.material:material-icons-extended:1.5.4") // Removed to fix OOM
-    
+
     // Hilt
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)

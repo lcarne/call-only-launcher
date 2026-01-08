@@ -1,18 +1,14 @@
 package com.callonly.launcher.ui.home
 
+import android.app.role.RoleManager
+import android.content.Context
+import android.os.Build
 import android.telecom.TelecomManager
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.callonly.launcher.data.repository.ContactRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
-import android.content.Context
-import android.app.role.RoleManager
-import android.os.Build
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
@@ -57,7 +53,10 @@ class HomeViewModel @Inject constructor(
         } else {
             val intent = android.content.Intent(android.content.Intent.ACTION_MAIN)
             intent.addCategory(android.content.Intent.CATEGORY_HOME)
-            val resolveInfo = context.packageManager.resolveActivity(intent, android.content.pm.PackageManager.MATCH_DEFAULT_ONLY)
+            val resolveInfo = context.packageManager.resolveActivity(
+                intent,
+                android.content.pm.PackageManager.MATCH_DEFAULT_ONLY
+            )
             val currentLauncherPackage = resolveInfo?.activityInfo?.packageName
             currentLauncherPackage == context.packageName
         }

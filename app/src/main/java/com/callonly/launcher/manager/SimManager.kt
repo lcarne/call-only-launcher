@@ -23,8 +23,9 @@ enum class SimStatus {
 class SimManager @Inject constructor(
     @ApplicationContext private val context: Context
 ) {
-    private val telephonyManager = context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
-    
+    private val telephonyManager =
+        context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+
     private val _simStatus = MutableStateFlow(getSimStatusFromSystem())
     val simStatus: StateFlow<SimStatus> = _simStatus.asStateFlow()
 
@@ -47,6 +48,7 @@ class SimManager @Inject constructor(
             TelephonyManager.SIM_STATE_PIN_REQUIRED,
             TelephonyManager.SIM_STATE_PUK_REQUIRED,
             TelephonyManager.SIM_STATE_NETWORK_LOCKED -> SimStatus.LOCKED
+
             TelephonyManager.SIM_STATE_ABSENT -> SimStatus.ABSENT
             else -> SimStatus.UNKNOWN
         }

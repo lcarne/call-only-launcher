@@ -13,33 +13,41 @@ import javax.inject.Singleton
 class SettingsRepository @Inject constructor(
     @ApplicationContext private val context: Context
 ) {
-    private val prefs: SharedPreferences = context.getSharedPreferences("callonly_prefs", Context.MODE_PRIVATE)
+    private val prefs: SharedPreferences =
+        context.getSharedPreferences("callonly_prefs", Context.MODE_PRIVATE)
 
-    private val _screenBehaviorPlugged = MutableStateFlow(prefs.getInt(KEY_SCREEN_BEHAVIOR_PLUGGED, SCREEN_BEHAVIOR_AWAKE))
+    private val _screenBehaviorPlugged =
+        MutableStateFlow(prefs.getInt(KEY_SCREEN_BEHAVIOR_PLUGGED, SCREEN_BEHAVIOR_AWAKE))
     val screenBehaviorPlugged: StateFlow<Int> = _screenBehaviorPlugged.asStateFlow()
 
-    private val _screenBehaviorBattery = MutableStateFlow(prefs.getInt(KEY_SCREEN_BEHAVIOR_BATTERY, SCREEN_BEHAVIOR_OFF))
+    private val _screenBehaviorBattery =
+        MutableStateFlow(prefs.getInt(KEY_SCREEN_BEHAVIOR_BATTERY, SCREEN_BEHAVIOR_OFF))
     val screenBehaviorBattery: StateFlow<Int> = _screenBehaviorBattery.asStateFlow()
 
-    private val _nightModeStartHour = MutableStateFlow(prefs.getInt(KEY_NIGHT_START, 22)) // Default 22h / 10PM
+    private val _nightModeStartHour =
+        MutableStateFlow(prefs.getInt(KEY_NIGHT_START, 22)) // Default 22h / 10PM
     val nightModeStartHour: StateFlow<Int> = _nightModeStartHour.asStateFlow()
 
     private val _nightModeStartMinute = MutableStateFlow(prefs.getInt(KEY_NIGHT_START_MINUTE, 0))
     val nightModeStartMinute: StateFlow<Int> = _nightModeStartMinute.asStateFlow()
 
-    private val _nightModeEndHour = MutableStateFlow(prefs.getInt(KEY_NIGHT_END, 7)) // Default 7h / 7AM
+    private val _nightModeEndHour =
+        MutableStateFlow(prefs.getInt(KEY_NIGHT_END, 7)) // Default 7h / 7AM
     val nightModeEndHour: StateFlow<Int> = _nightModeEndHour.asStateFlow()
 
     private val _nightModeEndMinute = MutableStateFlow(prefs.getInt(KEY_NIGHT_END_MINUTE, 0))
     val nightModeEndMinute: StateFlow<Int> = _nightModeEndMinute.asStateFlow()
 
-    private val _isNightModeEnabled = MutableStateFlow(prefs.getBoolean(KEY_NIGHT_MODE_ENABLED, true))
+    private val _isNightModeEnabled =
+        MutableStateFlow(prefs.getBoolean(KEY_NIGHT_MODE_ENABLED, true))
     val isNightModeEnabled: StateFlow<Boolean> = _isNightModeEnabled.asStateFlow()
 
-    private val _clockColor = MutableStateFlow(prefs.getInt(KEY_CLOCK_COLOR, 0)) // Default 0 (Use default blue/theme)
+    private val _clockColor =
+        MutableStateFlow(prefs.getInt(KEY_CLOCK_COLOR, 0)) // Default 0 (Use default blue/theme)
     val clockColor: StateFlow<Int> = _clockColor.asStateFlow()
 
-    private val _allowAllCalls = MutableStateFlow(prefs.getBoolean(KEY_ALLOW_ALL_CALLS, false)) // Default False (Strict)
+    private val _allowAllCalls =
+        MutableStateFlow(prefs.getBoolean(KEY_ALLOW_ALL_CALLS, false)) // Default False (Strict)
     val allowAllCalls: StateFlow<Boolean> = _allowAllCalls.asStateFlow()
 
 
@@ -50,19 +58,23 @@ class SettingsRepository @Inject constructor(
     val ringerVolume: StateFlow<Int> = _ringerVolume.asStateFlow()
 
 
-
     private val _language = MutableStateFlow(prefs.getString(KEY_LANGUAGE, "fr") ?: "fr")
     val language: StateFlow<String> = _language.asStateFlow()
 
     private val _timeFormat = MutableStateFlow(prefs.getString(KEY_TIME_FORMAT, "24") ?: "24")
     val timeFormat: StateFlow<String> = _timeFormat.asStateFlow()
 
-    private val _isDefaultSpeakerEnabled = MutableStateFlow(prefs.getBoolean(KEY_DEFAULT_SPEAKER_ENABLED, true)) // Default True (Speaker)
+    private val _isDefaultSpeakerEnabled = MutableStateFlow(
+        prefs.getBoolean(
+            KEY_DEFAULT_SPEAKER_ENABLED,
+            true
+        )
+    ) // Default True (Speaker)
     val isDefaultSpeakerEnabled: StateFlow<Boolean> = _isDefaultSpeakerEnabled.asStateFlow()
 
-    private val _hasSeenOnboarding = MutableStateFlow(prefs.getBoolean(KEY_HAS_SEEN_ONBOARDING, false))
+    private val _hasSeenOnboarding =
+        MutableStateFlow(prefs.getBoolean(KEY_HAS_SEEN_ONBOARDING, false))
     val hasSeenOnboarding: StateFlow<Boolean> = _hasSeenOnboarding.asStateFlow()
-
 
 
     fun setScreenBehaviorPlugged(behavior: Int) {
@@ -99,7 +111,7 @@ class SettingsRepository @Inject constructor(
         prefs.edit().putBoolean(KEY_NIGHT_MODE_ENABLED, enabled).apply()
         _isNightModeEnabled.value = enabled
     }
-    
+
     fun setClockColor(color: Int) {
         prefs.edit().putInt(KEY_CLOCK_COLOR, color).apply()
         _clockColor.value = color
@@ -122,7 +134,6 @@ class SettingsRepository @Inject constructor(
     }
 
 
-
     fun setLanguage(lang: String) {
         prefs.edit().putString(KEY_LANGUAGE, lang).apply()
         _language.value = lang
@@ -142,9 +153,6 @@ class SettingsRepository @Inject constructor(
         prefs.edit().putBoolean(KEY_HAS_SEEN_ONBOARDING, hasSeen).apply()
         _hasSeenOnboarding.value = hasSeen
     }
-
-
-
 
 
     companion object {

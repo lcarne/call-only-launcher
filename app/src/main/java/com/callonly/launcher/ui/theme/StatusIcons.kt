@@ -18,9 +18,17 @@ object StatusIcons {
             viewportWidth = 24.0f,
             viewportHeight = 24.0f
         ).apply {
-            path(fill = SolidColor(Color.Black), fillAlpha = 1.0f, stroke = null, strokeAlpha = 1.0f,
-                strokeLineWidth = 1.0f, strokeLineCap = StrokeCap.Butt, strokeLineJoin = StrokeJoin.Miter,
-                strokeLineMiter = 1.0f, pathFillType = PathFillType.NonZero) {
+            path(
+                fill = SolidColor(Color.Black),
+                fillAlpha = 1.0f,
+                stroke = null,
+                strokeAlpha = 1.0f,
+                strokeLineWidth = 1.0f,
+                strokeLineCap = StrokeCap.Butt,
+                strokeLineJoin = StrokeJoin.Miter,
+                strokeLineMiter = 1.0f,
+                pathFillType = PathFillType.NonZero
+            ) {
                 moveTo(15.67f, 4.0f)
                 horizontalLineTo(14.0f)
                 verticalLineTo(2.0f)
@@ -46,9 +54,17 @@ object StatusIcons {
             viewportWidth = 24.0f,
             viewportHeight = 24.0f
         ).apply {
-            path(fill = SolidColor(Color.Black), fillAlpha = 1.0f, stroke = null, strokeAlpha = 1.0f,
-                strokeLineWidth = 1.0f, strokeLineCap = StrokeCap.Butt, strokeLineJoin = StrokeJoin.Miter,
-                strokeLineMiter = 1.0f, pathFillType = PathFillType.NonZero) {
+            path(
+                fill = SolidColor(Color.Black),
+                fillAlpha = 1.0f,
+                stroke = null,
+                strokeAlpha = 1.0f,
+                strokeLineWidth = 1.0f,
+                strokeLineCap = StrokeCap.Butt,
+                strokeLineJoin = StrokeJoin.Miter,
+                strokeLineMiter = 1.0f,
+                pathFillType = PathFillType.NonZero
+            ) {
                 moveTo(15.67f, 4.0f)
                 horizontalLineTo(14.0f)
                 verticalLineTo(2.0f)
@@ -81,9 +97,17 @@ object StatusIcons {
             viewportWidth = 24.0f,
             viewportHeight = 24.0f
         ).apply {
-            path(fill = SolidColor(Color.Black), fillAlpha = 1.0f, stroke = null, strokeAlpha = 1.0f,
-                strokeLineWidth = 1.0f, strokeLineCap = StrokeCap.Butt, strokeLineJoin = StrokeJoin.Miter,
-                strokeLineMiter = 1.0f, pathFillType = PathFillType.NonZero) {
+            path(
+                fill = SolidColor(Color.Black),
+                fillAlpha = 1.0f,
+                stroke = null,
+                strokeAlpha = 1.0f,
+                strokeLineWidth = 1.0f,
+                strokeLineCap = StrokeCap.Butt,
+                strokeLineJoin = StrokeJoin.Miter,
+                strokeLineMiter = 1.0f,
+                pathFillType = PathFillType.NonZero
+            ) {
                 moveTo(15.67f, 4.0f)
                 horizontalLineTo(14.0f)
                 verticalLineTo(2.0f)
@@ -112,7 +136,7 @@ object StatusIcons {
                 close()
             }
         }.build()
-    
+
     val Charging: ImageVector
         get() = ImageVector.Builder(
             name = "Charging",
@@ -121,9 +145,17 @@ object StatusIcons {
             viewportWidth = 24.0f,
             viewportHeight = 24.0f
         ).apply {
-            path(fill = SolidColor(Color.Black), fillAlpha = 1.0f, stroke = null, strokeAlpha = 1.0f,
-                strokeLineWidth = 1.0f, strokeLineCap = StrokeCap.Butt, strokeLineJoin = StrokeJoin.Miter,
-                strokeLineMiter = 1.0f, pathFillType = PathFillType.NonZero) {
+            path(
+                fill = SolidColor(Color.Black),
+                fillAlpha = 1.0f,
+                stroke = null,
+                strokeAlpha = 1.0f,
+                strokeLineWidth = 1.0f,
+                strokeLineCap = StrokeCap.Butt,
+                strokeLineJoin = StrokeJoin.Miter,
+                strokeLineMiter = 1.0f,
+                pathFillType = PathFillType.NonZero
+            ) {
                 moveTo(7.0f, 2.0f)
                 verticalLineTo(13.0f)
                 horizontalLineTo(10.0f)
@@ -135,6 +167,7 @@ object StatusIcons {
                 close()
             }
         }.build()
+
     // SIGNAL ICONS
     val Signal0: ImageVector
         get() = ImageVector.Builder(
@@ -144,9 +177,17 @@ object StatusIcons {
             viewportWidth = 24.0f,
             viewportHeight = 24.0f
         ).apply {
-            path(fill = SolidColor(Color.Black), fillAlpha = 0.3f, stroke = null, strokeAlpha = 1.0f,
-                 strokeLineWidth = 1.0f, strokeLineCap = StrokeCap.Butt, strokeLineJoin = StrokeJoin.Miter,
-                 strokeLineMiter = 1.0f, pathFillType = PathFillType.NonZero) {
+            path(
+                fill = SolidColor(Color.Black),
+                fillAlpha = 0.3f,
+                stroke = null,
+                strokeAlpha = 1.0f,
+                strokeLineWidth = 1.0f,
+                strokeLineCap = StrokeCap.Butt,
+                strokeLineJoin = StrokeJoin.Miter,
+                strokeLineMiter = 1.0f,
+                pathFillType = PathFillType.NonZero
+            ) {
                 moveTo(22.0f, 2.0f)
                 lineTo(2.0f, 22.0f)
                 horizontalLineTo(22.0f)
@@ -163,23 +204,39 @@ object StatusIcons {
             viewportWidth = 24.0f,
             viewportHeight = 24.0f
         ).apply {
-            path(fill = SolidColor(Color.Black), fillAlpha = 0.3f, stroke = null, strokeAlpha = 1.0f,
-                 strokeLineWidth = 1.0f, strokeLineCap = StrokeCap.Butt, strokeLineJoin = StrokeJoin.Miter,
-                 strokeLineMiter = 1.0f, pathFillType = PathFillType.NonZero) {
-                 moveTo(22.0f, 2.0f)
-                 lineTo(2.0f, 22.0f)
-                 horizontalLineTo(22.0f)
-                 verticalLineTo(2.0f)
-                 close() 
+            path(
+                fill = SolidColor(Color.Black),
+                fillAlpha = 0.3f,
+                stroke = null,
+                strokeAlpha = 1.0f,
+                strokeLineWidth = 1.0f,
+                strokeLineCap = StrokeCap.Butt,
+                strokeLineJoin = StrokeJoin.Miter,
+                strokeLineMiter = 1.0f,
+                pathFillType = PathFillType.NonZero
+            ) {
+                moveTo(22.0f, 2.0f)
+                lineTo(2.0f, 22.0f)
+                horizontalLineTo(22.0f)
+                verticalLineTo(2.0f)
+                close()
             }
-            path(fill = SolidColor(Color.Black), fillAlpha = 1.0f, stroke = null, strokeAlpha = 1.0f,
-                 strokeLineWidth = 1.0f, strokeLineCap = StrokeCap.Butt, strokeLineJoin = StrokeJoin.Miter,
-                 strokeLineMiter = 1.0f, pathFillType = PathFillType.NonZero) {
-                 moveTo(7.0f, 17.0f)
-                 lineTo(2.0f, 22.0f)
-                 horizontalLineTo(7.0f)
-                 verticalLineTo(17.0f)
-                 close()
+            path(
+                fill = SolidColor(Color.Black),
+                fillAlpha = 1.0f,
+                stroke = null,
+                strokeAlpha = 1.0f,
+                strokeLineWidth = 1.0f,
+                strokeLineCap = StrokeCap.Butt,
+                strokeLineJoin = StrokeJoin.Miter,
+                strokeLineMiter = 1.0f,
+                pathFillType = PathFillType.NonZero
+            ) {
+                moveTo(7.0f, 17.0f)
+                lineTo(2.0f, 22.0f)
+                horizontalLineTo(7.0f)
+                verticalLineTo(17.0f)
+                close()
             }
         }.build()
 
@@ -191,23 +248,39 @@ object StatusIcons {
             viewportWidth = 24.0f,
             viewportHeight = 24.0f
         ).apply {
-             path(fill = SolidColor(Color.Black), fillAlpha = 0.3f, stroke = null, strokeAlpha = 1.0f,
-                 strokeLineWidth = 1.0f, strokeLineCap = StrokeCap.Butt, strokeLineJoin = StrokeJoin.Miter,
-                 strokeLineMiter = 1.0f, pathFillType = PathFillType.NonZero) {
-                 moveTo(22.0f, 2.0f)
-                 lineTo(2.0f, 22.0f)
-                 horizontalLineTo(22.0f)
-                 verticalLineTo(2.0f)
-                 close() 
+            path(
+                fill = SolidColor(Color.Black),
+                fillAlpha = 0.3f,
+                stroke = null,
+                strokeAlpha = 1.0f,
+                strokeLineWidth = 1.0f,
+                strokeLineCap = StrokeCap.Butt,
+                strokeLineJoin = StrokeJoin.Miter,
+                strokeLineMiter = 1.0f,
+                pathFillType = PathFillType.NonZero
+            ) {
+                moveTo(22.0f, 2.0f)
+                lineTo(2.0f, 22.0f)
+                horizontalLineTo(22.0f)
+                verticalLineTo(2.0f)
+                close()
             }
-            path(fill = SolidColor(Color.Black), fillAlpha = 1.0f, stroke = null, strokeAlpha = 1.0f,
-                 strokeLineWidth = 1.0f, strokeLineCap = StrokeCap.Butt, strokeLineJoin = StrokeJoin.Miter,
-                 strokeLineMiter = 1.0f, pathFillType = PathFillType.NonZero) {
-                 moveTo(12.0f, 12.0f)
-                 lineTo(2.0f, 22.0f)
-                 horizontalLineTo(12.0f)
-                 verticalLineTo(12.0f)
-                 close()
+            path(
+                fill = SolidColor(Color.Black),
+                fillAlpha = 1.0f,
+                stroke = null,
+                strokeAlpha = 1.0f,
+                strokeLineWidth = 1.0f,
+                strokeLineCap = StrokeCap.Butt,
+                strokeLineJoin = StrokeJoin.Miter,
+                strokeLineMiter = 1.0f,
+                pathFillType = PathFillType.NonZero
+            ) {
+                moveTo(12.0f, 12.0f)
+                lineTo(2.0f, 22.0f)
+                horizontalLineTo(12.0f)
+                verticalLineTo(12.0f)
+                close()
             }
         }.build()
 
@@ -219,23 +292,39 @@ object StatusIcons {
             viewportWidth = 24.0f,
             viewportHeight = 24.0f
         ).apply {
-             path(fill = SolidColor(Color.Black), fillAlpha = 0.3f, stroke = null, strokeAlpha = 1.0f,
-                 strokeLineWidth = 1.0f, strokeLineCap = StrokeCap.Butt, strokeLineJoin = StrokeJoin.Miter,
-                 strokeLineMiter = 1.0f, pathFillType = PathFillType.NonZero) {
-                 moveTo(22.0f, 2.0f)
-                 lineTo(2.0f, 22.0f)
-                 horizontalLineTo(22.0f)
-                 verticalLineTo(2.0f)
-                 close() 
+            path(
+                fill = SolidColor(Color.Black),
+                fillAlpha = 0.3f,
+                stroke = null,
+                strokeAlpha = 1.0f,
+                strokeLineWidth = 1.0f,
+                strokeLineCap = StrokeCap.Butt,
+                strokeLineJoin = StrokeJoin.Miter,
+                strokeLineMiter = 1.0f,
+                pathFillType = PathFillType.NonZero
+            ) {
+                moveTo(22.0f, 2.0f)
+                lineTo(2.0f, 22.0f)
+                horizontalLineTo(22.0f)
+                verticalLineTo(2.0f)
+                close()
             }
-            path(fill = SolidColor(Color.Black), fillAlpha = 1.0f, stroke = null, strokeAlpha = 1.0f,
-                 strokeLineWidth = 1.0f, strokeLineCap = StrokeCap.Butt, strokeLineJoin = StrokeJoin.Miter,
-                 strokeLineMiter = 1.0f, pathFillType = PathFillType.NonZero) {
-                 moveTo(17.0f, 7.0f)
-                 lineTo(2.0f, 22.0f)
-                 horizontalLineTo(17.0f)
-                 verticalLineTo(7.0f)
-                 close()
+            path(
+                fill = SolidColor(Color.Black),
+                fillAlpha = 1.0f,
+                stroke = null,
+                strokeAlpha = 1.0f,
+                strokeLineWidth = 1.0f,
+                strokeLineCap = StrokeCap.Butt,
+                strokeLineJoin = StrokeJoin.Miter,
+                strokeLineMiter = 1.0f,
+                pathFillType = PathFillType.NonZero
+            ) {
+                moveTo(17.0f, 7.0f)
+                lineTo(2.0f, 22.0f)
+                horizontalLineTo(17.0f)
+                verticalLineTo(7.0f)
+                close()
             }
         }.build()
 
@@ -247,17 +336,25 @@ object StatusIcons {
             viewportWidth = 24.0f,
             viewportHeight = 24.0f
         ).apply {
-            path(fill = SolidColor(Color.Black), fillAlpha = 1.0f, stroke = null, strokeAlpha = 1.0f,
-                 strokeLineWidth = 1.0f, strokeLineCap = StrokeCap.Butt, strokeLineJoin = StrokeJoin.Miter,
-                 strokeLineMiter = 1.0f, pathFillType = PathFillType.NonZero) {
-                 moveTo(22.0f, 2.0f)
-                 lineTo(2.0f, 22.0f)
-                 horizontalLineTo(22.0f)
-                 verticalLineTo(2.0f)
-                 close()
+            path(
+                fill = SolidColor(Color.Black),
+                fillAlpha = 1.0f,
+                stroke = null,
+                strokeAlpha = 1.0f,
+                strokeLineWidth = 1.0f,
+                strokeLineCap = StrokeCap.Butt,
+                strokeLineJoin = StrokeJoin.Miter,
+                strokeLineMiter = 1.0f,
+                pathFillType = PathFillType.NonZero
+            ) {
+                moveTo(22.0f, 2.0f)
+                lineTo(2.0f, 22.0f)
+                horizontalLineTo(22.0f)
+                verticalLineTo(2.0f)
+                close()
             }
         }.build()
-        
+
     val List: ImageVector
         get() = ImageVector.Builder(
             name = "List",
@@ -266,9 +363,17 @@ object StatusIcons {
             viewportWidth = 24.0f,
             viewportHeight = 24.0f
         ).apply {
-            path(fill = SolidColor(Color.Black), fillAlpha = 1.0f, stroke = null, strokeAlpha = 1.0f,
-                strokeLineWidth = 1.0f, strokeLineCap = StrokeCap.Butt, strokeLineJoin = StrokeJoin.Miter,
-                strokeLineMiter = 1.0f, pathFillType = PathFillType.NonZero) {
+            path(
+                fill = SolidColor(Color.Black),
+                fillAlpha = 1.0f,
+                stroke = null,
+                strokeAlpha = 1.0f,
+                strokeLineWidth = 1.0f,
+                strokeLineCap = StrokeCap.Butt,
+                strokeLineJoin = StrokeJoin.Miter,
+                strokeLineMiter = 1.0f,
+                pathFillType = PathFillType.NonZero
+            ) {
                 moveTo(3.0f, 13.0f)
                 horizontalLineTo(21.0f)
                 verticalLineTo(11.0f)
@@ -298,9 +403,17 @@ object StatusIcons {
             viewportWidth = 24.0f,
             viewportHeight = 24.0f
         ).apply {
-            path(fill = SolidColor(Color.Black), fillAlpha = 1.0f, stroke = null, strokeAlpha = 1.0f,
-                strokeLineWidth = 1.0f, strokeLineCap = StrokeCap.Butt, strokeLineJoin = StrokeJoin.Miter,
-                strokeLineMiter = 1.0f, pathFillType = PathFillType.NonZero) {
+            path(
+                fill = SolidColor(Color.Black),
+                fillAlpha = 1.0f,
+                stroke = null,
+                strokeAlpha = 1.0f,
+                strokeLineWidth = 1.0f,
+                strokeLineCap = StrokeCap.Butt,
+                strokeLineJoin = StrokeJoin.Miter,
+                strokeLineMiter = 1.0f,
+                pathFillType = PathFillType.NonZero
+            ) {
                 moveTo(20.0f, 11.0f)
                 horizontalLineTo(7.83f)
                 lineTo(13.42f, 5.41f)
@@ -323,9 +436,17 @@ object StatusIcons {
             viewportWidth = 24.0f,
             viewportHeight = 24.0f
         ).apply {
-            path(fill = SolidColor(Color.Black), fillAlpha = 1.0f, stroke = null, strokeAlpha = 1.0f,
-                strokeLineWidth = 1.0f, strokeLineCap = StrokeCap.Butt, strokeLineJoin = StrokeJoin.Miter,
-                strokeLineMiter = 1.0f, pathFillType = PathFillType.NonZero) {
+            path(
+                fill = SolidColor(Color.Black),
+                fillAlpha = 1.0f,
+                stroke = null,
+                strokeAlpha = 1.0f,
+                strokeLineWidth = 1.0f,
+                strokeLineCap = StrokeCap.Butt,
+                strokeLineJoin = StrokeJoin.Miter,
+                strokeLineMiter = 1.0f,
+                pathFillType = PathFillType.NonZero
+            ) {
                 moveTo(20.01f, 15.39f)
                 curveToRelative(-1.25f, 0.0f, -2.45f, -0.2f, -3.57f, -0.57f)
                 curveToRelative(-0.35f, -0.11f, -0.74f, -0.03f, -1.02f, 0.24f)
@@ -353,9 +474,17 @@ object StatusIcons {
             viewportWidth = 24.0f,
             viewportHeight = 24.0f
         ).apply {
-            path(fill = SolidColor(Color.Black), fillAlpha = 1.0f, stroke = null, strokeAlpha = 1.0f,
-                strokeLineWidth = 1.0f, strokeLineCap = StrokeCap.Butt, strokeLineJoin = StrokeJoin.Miter,
-                strokeLineMiter = 1.0f, pathFillType = PathFillType.NonZero) {
+            path(
+                fill = SolidColor(Color.Black),
+                fillAlpha = 1.0f,
+                stroke = null,
+                strokeAlpha = 1.0f,
+                strokeLineWidth = 1.0f,
+                strokeLineCap = StrokeCap.Butt,
+                strokeLineJoin = StrokeJoin.Miter,
+                strokeLineMiter = 1.0f,
+                pathFillType = PathFillType.NonZero
+            ) {
                 moveTo(12.0f, 2.0f)
                 curveTo(6.48f, 2.0f, 2.0f, 6.48f, 2.0f, 12.0f)
                 reflectiveCurveToRelative(4.48f, 10.0f, 10.0f, 10.0f)
@@ -385,9 +514,17 @@ object StatusIcons {
             viewportWidth = 24.0f,
             viewportHeight = 24.0f
         ).apply {
-            path(fill = SolidColor(Color.Black), fillAlpha = 1.0f, stroke = null, strokeAlpha = 1.0f,
-                strokeLineWidth = 1.0f, strokeLineCap = StrokeCap.Butt, strokeLineJoin = StrokeJoin.Miter,
-                strokeLineMiter = 1.0f, pathFillType = PathFillType.NonZero) {
+            path(
+                fill = SolidColor(Color.Black),
+                fillAlpha = 1.0f,
+                stroke = null,
+                strokeAlpha = 1.0f,
+                strokeLineWidth = 1.0f,
+                strokeLineCap = StrokeCap.Butt,
+                strokeLineJoin = StrokeJoin.Miter,
+                strokeLineMiter = 1.0f,
+                pathFillType = PathFillType.NonZero
+            ) {
                 moveTo(19.59f, 7.0f)
                 lineTo(12.0f, 14.59f)
                 lineTo(6.41f, 9.0f)
@@ -410,9 +547,17 @@ object StatusIcons {
             viewportWidth = 24.0f,
             viewportHeight = 24.0f
         ).apply {
-            path(fill = SolidColor(Color.Black), fillAlpha = 1.0f, stroke = null, strokeAlpha = 1.0f,
-                strokeLineWidth = 1.0f, strokeLineCap = StrokeCap.Butt, strokeLineJoin = StrokeJoin.Miter,
-                strokeLineMiter = 1.0f, pathFillType = PathFillType.NonZero) {
+            path(
+                fill = SolidColor(Color.Black),
+                fillAlpha = 1.0f,
+                stroke = null,
+                strokeAlpha = 1.0f,
+                strokeLineWidth = 1.0f,
+                strokeLineCap = StrokeCap.Butt,
+                strokeLineJoin = StrokeJoin.Miter,
+                strokeLineMiter = 1.0f,
+                pathFillType = PathFillType.NonZero
+            ) {
                 moveTo(3.0f, 9.0f)
                 verticalLineTo(15.0f)
                 horizontalLineTo(7.0f)
@@ -445,9 +590,17 @@ object StatusIcons {
             viewportWidth = 24.0f,
             viewportHeight = 24.0f
         ).apply {
-            path(fill = SolidColor(Color.Black), fillAlpha = 1.0f, stroke = null, strokeAlpha = 1.0f,
-                strokeLineWidth = 1.0f, strokeLineCap = StrokeCap.Butt, strokeLineJoin = StrokeJoin.Miter,
-                strokeLineMiter = 1.0f, pathFillType = PathFillType.NonZero) {
+            path(
+                fill = SolidColor(Color.Black),
+                fillAlpha = 1.0f,
+                stroke = null,
+                strokeAlpha = 1.0f,
+                strokeLineWidth = 1.0f,
+                strokeLineCap = StrokeCap.Butt,
+                strokeLineJoin = StrokeJoin.Miter,
+                strokeLineMiter = 1.0f,
+                pathFillType = PathFillType.NonZero
+            ) {
                 moveTo(16.5f, 12.0f)
                 curveToRelative(0.0f, -1.77f, -1.02f, -3.29f, -2.5f, -4.03f)
                 verticalLineToRelative(2.21f)
@@ -494,9 +647,17 @@ object StatusIcons {
             viewportWidth = 24.0f,
             viewportHeight = 24.0f
         ).apply {
-            path(fill = SolidColor(Color.Black), fillAlpha = 1.0f, stroke = null, strokeAlpha = 1.0f,
-                strokeLineWidth = 1.0f, strokeLineCap = StrokeCap.Butt, strokeLineJoin = StrokeJoin.Miter,
-                strokeLineMiter = 1.0f, pathFillType = PathFillType.NonZero) {
+            path(
+                fill = SolidColor(Color.Black),
+                fillAlpha = 1.0f,
+                stroke = null,
+                strokeAlpha = 1.0f,
+                strokeLineWidth = 1.0f,
+                strokeLineCap = StrokeCap.Butt,
+                strokeLineJoin = StrokeJoin.Miter,
+                strokeLineMiter = 1.0f,
+                pathFillType = PathFillType.NonZero
+            ) {
                 moveTo(12.0f, 9.0f)
                 curveToRelative(-1.6f, 0.0f, -3.15f, 0.25f, -4.6f, 0.72f)
                 verticalLineToRelative(3.1f)
@@ -632,9 +793,17 @@ object StatusIcons {
             viewportWidth = 24.0f,
             viewportHeight = 24.0f
         ).apply {
-            path(fill = SolidColor(Color.Black), fillAlpha = 1.0f, stroke = null, strokeAlpha = 1.0f,
-                strokeLineWidth = 1.0f, strokeLineCap = StrokeCap.Butt, strokeLineJoin = StrokeJoin.Miter,
-                strokeLineMiter = 1.0f, pathFillType = PathFillType.NonZero) {
+            path(
+                fill = SolidColor(Color.Black),
+                fillAlpha = 1.0f,
+                stroke = null,
+                strokeAlpha = 1.0f,
+                strokeLineWidth = 1.0f,
+                strokeLineCap = StrokeCap.Butt,
+                strokeLineJoin = StrokeJoin.Miter,
+                strokeLineMiter = 1.0f,
+                pathFillType = PathFillType.NonZero
+            ) {
                 moveTo(12.0f, 17.0f)
                 curveToRelative(1.1f, 0.0f, 2.0f, -0.9f, 2.0f, -2.0f)
                 reflectiveCurveToRelative(-0.9f, -2.0f, -2.0f, -2.0f)
@@ -676,9 +845,17 @@ object StatusIcons {
             viewportWidth = 24.0f,
             viewportHeight = 24.0f
         ).apply {
-            path(fill = SolidColor(Color.Black), fillAlpha = 1.0f, stroke = null, strokeAlpha = 1.0f,
-                strokeLineWidth = 1.0f, strokeLineCap = StrokeCap.Butt, strokeLineJoin = StrokeJoin.Miter,
-                strokeLineMiter = 1.0f, pathFillType = PathFillType.NonZero) {
+            path(
+                fill = SolidColor(Color.Black),
+                fillAlpha = 1.0f,
+                stroke = null,
+                strokeAlpha = 1.0f,
+                strokeLineWidth = 1.0f,
+                strokeLineCap = StrokeCap.Butt,
+                strokeLineJoin = StrokeJoin.Miter,
+                strokeLineMiter = 1.0f,
+                pathFillType = PathFillType.NonZero
+            ) {
                 moveTo(22.0f, 16.0f)
                 lineTo(22.0f, 4.0f)
                 curveToRelative(0.0f, -1.1f, -0.9f, -2.0f, -2.0f, -2.0f)
@@ -716,9 +893,17 @@ object StatusIcons {
             viewportWidth = 24.0f,
             viewportHeight = 24.0f
         ).apply {
-            path(fill = SolidColor(Color.Black), fillAlpha = 1.0f, stroke = null, strokeAlpha = 1.0f,
-                strokeLineWidth = 1.0f, strokeLineCap = StrokeCap.Butt, strokeLineJoin = StrokeJoin.Miter,
-                strokeLineMiter = 1.0f, pathFillType = PathFillType.NonZero) {
+            path(
+                fill = SolidColor(Color.Black),
+                fillAlpha = 1.0f,
+                stroke = null,
+                strokeAlpha = 1.0f,
+                strokeLineWidth = 1.0f,
+                strokeLineCap = StrokeCap.Butt,
+                strokeLineJoin = StrokeJoin.Miter,
+                strokeLineMiter = 1.0f,
+                pathFillType = PathFillType.NonZero
+            ) {
                 moveTo(9.0f, 2.0f)
                 lineTo(7.17f, 4.0f)
                 lineTo(4.0f, 4.0f)

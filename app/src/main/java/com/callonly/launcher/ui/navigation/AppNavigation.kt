@@ -1,13 +1,12 @@
 package com.callonly.launcher.ui.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.callonly.launcher.ui.admin.AdminScreen
 import com.callonly.launcher.ui.home.HomeScreen
-import com.callonly.launcher.data.model.Contact
-import androidx.hilt.navigation.compose.hiltViewModel
 
 @Composable
 fun CallOnlyNavGraph(

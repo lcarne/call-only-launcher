@@ -5,35 +5,56 @@ import android.content.Intent
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.changedToDown
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.ui.platform.LocalLifecycleOwner
-import com.callonly.launcher.ui.components.BatteryLevelDisplay
-import com.callonly.launcher.ui.components.NetworkSignalDisplay
-import com.callonly.launcher.ui.theme.HighContrastButtonBg
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.callonly.launcher.ui.components.BatteryLevelDisplay
+import com.callonly.launcher.ui.components.NetworkSignalDisplay
+import com.callonly.launcher.ui.theme.HighContrastButtonBg
+import kotlinx.coroutines.delay
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.withTimeout
-import kotlinx.coroutines.TimeoutCancellationException
+
 
 @Composable
 fun HomeScreen(
@@ -42,8 +63,7 @@ fun HomeScreen(
 ) {
     // Clock State
     var currentTime by remember { mutableStateOf(Date()) }
-    
-    // Settings State
+
     // Settings State
     val screenBehaviorPlugged by viewModel.screenBehaviorPlugged.collectAsState(initial = 0)
     val screenBehaviorBattery by viewModel.screenBehaviorBattery.collectAsState(initial = 0)
@@ -56,15 +76,16 @@ fun HomeScreen(
     val hasSeenOnboarding by viewModel.hasSeenOnboarding.collectAsState()
 
     val clockColor = if (savedClockColor != 0) Color(savedClockColor) else HighContrastButtonBg
-    
+
     val context = LocalContext.current
     // Contacts removed from Home Screen as requested
-    
+
     // Fake Sleep Logic
     val calendar = java.util.Calendar.getInstance()
     calendar.time = currentTime
-    val currentTotalMinutes = calendar.get(java.util.Calendar.HOUR_OF_DAY) * 60 + calendar.get(java.util.Calendar.MINUTE)
-    
+    val currentTotalMinutes =
+        calendar.get(java.util.Calendar.HOUR_OF_DAY) * 60 + calendar.get(java.util.Calendar.MINUTE)
+
     val startTotalMinutes = nightStart * 60 + nightStartMin
     val endTotalMinutes = nightEnd * 60 + nightEndMin
 
@@ -94,19 +115,19 @@ fun HomeScreen(
                 intent?.let {
                     val plugged = it.getIntExtra(android.os.BatteryManager.EXTRA_PLUGGED, -1)
                     isPlugged = plugged == android.os.BatteryManager.BATTERY_PLUGGED_AC ||
-                                plugged == android.os.BatteryManager.BATTERY_PLUGGED_USB ||
-                                plugged == android.os.BatteryManager.BATTERY_PLUGGED_WIRELESS
+                            plugged == android.os.BatteryManager.BATTERY_PLUGGED_USB ||
+                            plugged == android.os.BatteryManager.BATTERY_PLUGGED_WIRELESS
                 }
             }
         }
-        val filter = android.content.IntentFilter(android.content.Intent.ACTION_BATTERY_CHANGED)
+        val filter = android.content.IntentFilter(Intent.ACTION_BATTERY_CHANGED)
         val intent = context.registerReceiver(receiver, filter)
         // Initial check (sticky)
         intent?.let {
-             val plugged = it.getIntExtra(android.os.BatteryManager.EXTRA_PLUGGED, -1)
-             isPlugged = plugged == android.os.BatteryManager.BATTERY_PLUGGED_AC ||
-                         plugged == android.os.BatteryManager.BATTERY_PLUGGED_USB ||
-                         plugged == android.os.BatteryManager.BATTERY_PLUGGED_WIRELESS
+            val plugged = it.getIntExtra(android.os.BatteryManager.EXTRA_PLUGGED, -1)
+            isPlugged = plugged == android.os.BatteryManager.BATTERY_PLUGGED_AC ||
+                    plugged == android.os.BatteryManager.BATTERY_PLUGGED_USB ||
+                    plugged == android.os.BatteryManager.BATTERY_PLUGGED_WIRELESS
         }
         onDispose {
             context.unregisterReceiver(receiver)
@@ -133,7 +154,7 @@ fun HomeScreen(
 
     // Screen Keep On & Brightness Logic
     // Helper to find Activity from Context (handles Hilt/Compose wrappers)
-    fun android.content.Context.findActivity(): android.app.Activity? {
+    fun Context.findActivity(): android.app.Activity? {
         var currentContext = this
         while (currentContext is android.content.ContextWrapper) {
             if (currentContext is android.app.Activity) return currentContext
@@ -147,48 +168,54 @@ fun HomeScreen(
         if (activity != null) {
             // Detect transition from night to day
             val isTransitioningFromNightToDay = previousIsNight && !isNight
-            
+
             // Clear flags first to avoid conflicts
             activity.window.clearFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-            
+
             val params = activity.window.attributes
-            
+
             if (!isNight) {
                 if (isTransitioningFromNightToDay && currentBehavior != 0) {
-                     viewModel.wakeUpScreen()
+                    viewModel.wakeUpScreen()
                 }
 
                 when (currentBehavior) {
                     0 -> { // OFF
                         // Standard Android timeout behavior
-                        params.screenBrightness = android.view.WindowManager.LayoutParams.BRIGHTNESS_OVERRIDE_NONE
+                        params.screenBrightness =
+                            android.view.WindowManager.LayoutParams.BRIGHTNESS_OVERRIDE_NONE
                     }
+
                     1 -> { // DIM
                         // Keep screen on
                         activity.window.addFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
                         if (isDimmed) {
                             params.screenBrightness = 0.01f // Lowest brightness
                         } else {
-                            params.screenBrightness = android.view.WindowManager.LayoutParams.BRIGHTNESS_OVERRIDE_NONE
+                            params.screenBrightness =
+                                android.view.WindowManager.LayoutParams.BRIGHTNESS_OVERRIDE_NONE
                         }
                     }
+
                     2 -> { // AWAKE
                         // Keep screen on, full brightness
                         activity.window.addFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-                        params.screenBrightness = android.view.WindowManager.LayoutParams.BRIGHTNESS_OVERRIDE_NONE
+                        params.screenBrightness =
+                            android.view.WindowManager.LayoutParams.BRIGHTNESS_OVERRIDE_NONE
                     }
                 }
             } else {
                 // Night Mode: Screen should behave like OFF (or allow system sleep)
-                params.screenBrightness = android.view.WindowManager.LayoutParams.BRIGHTNESS_OVERRIDE_NONE
+                params.screenBrightness =
+                    android.view.WindowManager.LayoutParams.BRIGHTNESS_OVERRIDE_NONE
             }
             activity.window.attributes = params
-            
+
             // Update previous state
             previousIsNight = isNight
         }
     }
-    
+
 
     // Force Ringer OFF when Night Mode is active
     LaunchedEffect(isNight) {
@@ -249,22 +276,29 @@ fun HomeScreen(
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Center,
-                    modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 16.dp)
                 ) {
-                     NetworkSignalDisplay()
-                     Spacer(modifier = Modifier.width(32.dp))
-                     BatteryLevelDisplay()
+                    NetworkSignalDisplay()
+                    Spacer(modifier = Modifier.width(32.dp))
+                    BatteryLevelDisplay()
                 }
-                
+
                 // Date
                 val rawDate = dateFormat.format(currentTime)
-                val capitalizedDate = rawDate.split(" ").joinToString(" ") { 
-                    if (it.firstOrNull()?.isLetter() == true) it.replaceFirstChar { char -> char.uppercase() } else it 
+                val capitalizedDate = rawDate.split(" ").joinToString(" ") {
+                    if (it.firstOrNull()
+                            ?.isLetter() == true
+                    ) it.replaceFirstChar { char -> char.uppercase() } else it
                 }
 
                 Text(
                     text = capitalizedDate,
-                    style = MaterialTheme.typography.displayMedium.copy(fontSize = 30.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.Bold),
+                    style = MaterialTheme.typography.displayMedium.copy(
+                        fontSize = 30.sp,
+                        fontWeight = FontWeight.Bold
+                    ),
                     color = com.callonly.launcher.ui.theme.White,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.pointerInput(Unit) {
@@ -288,7 +322,8 @@ fun HomeScreen(
                 )
 
                 if (savedFormat == "12") {
-                    val timeOnly = SimpleDateFormat("hh:mm", Locale.getDefault()).format(currentTime)
+                    val timeOnly =
+                        SimpleDateFormat("hh:mm", Locale.getDefault()).format(currentTime)
                     val ampm = SimpleDateFormat("a", Locale.getDefault()).format(currentTime)
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Text(
@@ -315,14 +350,14 @@ fun HomeScreen(
                 }
 
                 Spacer(modifier = Modifier.height(24.dp))
-                
+
                 // Ringer Toggle Button
                 val isRingerEnabled by viewModel.isRingerEnabled.collectAsState()
-                
+
                 androidx.compose.material3.FilledTonalButton(
-                    onClick = { 
+                    onClick = {
                         if (!isNight) {
-                            viewModel.setRingerEnabled(!isRingerEnabled) 
+                            viewModel.setRingerEnabled(!isRingerEnabled)
                         }
                     },
                     modifier = Modifier
@@ -330,19 +365,21 @@ fun HomeScreen(
                         .height(160.dp), // Increased to 160.dp to accommodate 3-line English text
                     enabled = !isNight, // Optional: visually disable it, or keep enabled but show "Action not allowed" toast. User asked for "pas possible de passer en mode active"
                     colors = androidx.compose.material3.ButtonDefaults.filledTonalButtonColors(
-                        containerColor = if (isNight) com.callonly.launcher.ui.theme.ErrorRed.copy(alpha = 0.5f) else if (isRingerEnabled) clockColor else com.callonly.launcher.ui.theme.ErrorRed,
+                        containerColor = if (isNight) com.callonly.launcher.ui.theme.ErrorRed.copy(
+                            alpha = 0.5f
+                        ) else if (isRingerEnabled) clockColor else com.callonly.launcher.ui.theme.ErrorRed,
                         contentColor = if (isNight) com.callonly.launcher.ui.theme.White.copy(alpha = 0.5f) else if (isRingerEnabled) com.callonly.launcher.ui.theme.Black else com.callonly.launcher.ui.theme.White,
                         disabledContainerColor = com.callonly.launcher.ui.theme.ErrorRed.copy(alpha = 0.3f), // If we use enabled=false
                         disabledContentColor = com.callonly.launcher.ui.theme.White.copy(alpha = 0.5f)
                     ),
                     shape = androidx.compose.foundation.shape.RoundedCornerShape(32.dp)
                 ) {
-                     Column(
+                    Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center
                     ) {
                         if (isNight) {
-                             Icon(
+                            Icon(
                                 imageVector = com.callonly.launcher.ui.theme.StatusIcons.VolumeOff,
                                 contentDescription = null,
                                 modifier = Modifier.size(48.dp) // Reduced from 56.dp to save vertical space
@@ -355,7 +392,7 @@ fun HomeScreen(
                                     String.format("%02dh%02d", nightEnd, nightEndMin)
                                 ),
                                 fontSize = 18.sp, // Slightly increased
-                                fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
+                                fontWeight = FontWeight.Bold,
                                 textAlign = TextAlign.Center,
                                 lineHeight = 20.sp
                             )
@@ -367,9 +404,11 @@ fun HomeScreen(
                             )
                             Spacer(modifier = Modifier.height(8.dp))
                             Text(
-                                text = if (isRingerEnabled) stringResource(id = com.callonly.launcher.R.string.ringer_active) else stringResource(id = com.callonly.launcher.R.string.ringer_disabled),
+                                text = if (isRingerEnabled) stringResource(id = com.callonly.launcher.R.string.ringer_active) else stringResource(
+                                    id = com.callonly.launcher.R.string.ringer_disabled
+                                ),
                                 fontSize = 24.sp, // Increased from 20.sp
-                                fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
+                                fontWeight = FontWeight.Bold,
                                 textAlign = TextAlign.Center
                             )
                         }
@@ -382,7 +421,7 @@ fun HomeScreen(
                 val isDefaultDialer by viewModel.isDefaultDialer.collectAsState()
                 val isDefaultLauncher by viewModel.isDefaultLauncher.collectAsState()
                 val lifecycleOwner = LocalLifecycleOwner.current
-                
+
                 DisposableEffect(lifecycleOwner) {
                     val observer = androidx.lifecycle.LifecycleEventObserver { _, event ->
                         if (event == androidx.lifecycle.Lifecycle.Event.ON_RESUME) {
@@ -409,20 +448,32 @@ fun HomeScreen(
                     Button(
                         onClick = {
                             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
-                                val roleManager = context.getSystemService(Context.ROLE_SERVICE) as android.app.role.RoleManager
-                                val intent = roleManager.createRequestRoleIntent(android.app.role.RoleManager.ROLE_DIALER)
+                                val roleManager =
+                                    context.getSystemService(Context.ROLE_SERVICE) as android.app.role.RoleManager
+                                val intent =
+                                    roleManager.createRequestRoleIntent(android.app.role.RoleManager.ROLE_DIALER)
                                 dialerLauncher.launch(intent)
                             } else {
-                                val intent = Intent(android.telecom.TelecomManager.ACTION_CHANGE_DEFAULT_DIALER).apply {
-                                    putExtra(android.telecom.TelecomManager.EXTRA_CHANGE_DEFAULT_DIALER_PACKAGE_NAME, context.packageName)
-                                }
+                                val intent =
+                                    Intent(android.telecom.TelecomManager.ACTION_CHANGE_DEFAULT_DIALER).apply {
+                                        putExtra(
+                                            android.telecom.TelecomManager.EXTRA_CHANGE_DEFAULT_DIALER_PACKAGE_NAME,
+                                            context.packageName
+                                        )
+                                    }
                                 dialerLauncher.launch(intent)
                             }
                         },
-                        colors = androidx.compose.material3.ButtonDefaults.buttonColors(containerColor = com.callonly.launcher.ui.theme.ErrorRed),
+                        colors = androidx.compose.material3.ButtonDefaults.buttonColors(
+                            containerColor = com.callonly.launcher.ui.theme.ErrorRed
+                        ),
                         modifier = Modifier.padding(16.dp)
                     ) {
-                        Text(stringResource(id = com.callonly.launcher.R.string.activate_calls), fontSize = 24.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.Bold)
+                        Text(
+                            stringResource(id = com.callonly.launcher.R.string.activate_calls),
+                            fontSize = 24.sp,
+                            fontWeight = FontWeight.Bold
+                        )
                     }
                 }
 
@@ -436,10 +487,16 @@ fun HomeScreen(
                                 context.startActivity(Intent(android.provider.Settings.ACTION_SETTINGS))
                             }
                         },
-                        colors = androidx.compose.material3.ButtonDefaults.buttonColors(containerColor = com.callonly.launcher.ui.theme.ErrorRed),
+                        colors = androidx.compose.material3.ButtonDefaults.buttonColors(
+                            containerColor = com.callonly.launcher.ui.theme.ErrorRed
+                        ),
                         modifier = Modifier.padding(16.dp)
                     ) {
-                        Text(stringResource(id = com.callonly.launcher.R.string.activate_launcher), fontSize = 24.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.Bold)
+                        Text(
+                            stringResource(id = com.callonly.launcher.R.string.activate_launcher),
+                            fontSize = 24.sp,
+                            fontWeight = FontWeight.Bold
+                        )
                     }
                 }
             }
@@ -450,8 +507,9 @@ fun HomeScreen(
                 verticalArrangement = Arrangement.Center,
                 modifier = Modifier.fillMaxSize()
             ) {
-                 if (savedFormat == "12") {
-                    val timeOnly = SimpleDateFormat("hh:mm", Locale.getDefault()).format(currentTime)
+                if (savedFormat == "12") {
+                    val timeOnly =
+                        SimpleDateFormat("hh:mm", Locale.getDefault()).format(currentTime)
                     val ampm = SimpleDateFormat("a", Locale.getDefault()).format(currentTime)
                     Text(
                         text = timeOnly,
@@ -464,7 +522,7 @@ fun HomeScreen(
                         text = ampm,
                         style = MaterialTheme.typography.titleLarge.copy(fontSize = 28.sp),
                         color = Color(0xFFB4BEB0),
-                         textAlign = TextAlign.Center
+                        textAlign = TextAlign.Center
                     )
                 } else {
                     Text(
@@ -504,7 +562,7 @@ fun OnboardingFlow(onDismiss: () -> Unit) {
                     else -> stringResource(id = com.callonly.launcher.R.string.admin_mode) // Admin Mode (was Welcome)
                 },
                 style = MaterialTheme.typography.headlineMedium,
-                fontWeight = androidx.compose.ui.text.font.FontWeight.Bold
+                fontWeight = FontWeight.Bold
             )
         },
         text = {
@@ -519,13 +577,13 @@ fun OnboardingFlow(onDismiss: () -> Unit) {
                     fontSize = 18.sp
                 )
                 Spacer(modifier = Modifier.height(16.dp))
-                
+
                 if (step == 2) {
                     Text(
                         text = stringResource(id = com.callonly.launcher.R.string.onboarding_important),
                         style = MaterialTheme.typography.titleMedium,
                         color = com.callonly.launcher.ui.theme.ErrorRed,
-                        fontWeight = androidx.compose.ui.text.font.FontWeight.Bold
+                        fontWeight = FontWeight.Bold
                     )
                 }
             }
@@ -534,7 +592,9 @@ fun OnboardingFlow(onDismiss: () -> Unit) {
             if (step < 2) {
                 Button(
                     onClick = { step++ },
-                    modifier = Modifier.fillMaxWidth().heightIn(min = 56.dp)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .heightIn(min = 56.dp)
                 ) {
                     Text(
                         text = stringResource(id = com.callonly.launcher.R.string.next),
@@ -544,12 +604,12 @@ fun OnboardingFlow(onDismiss: () -> Unit) {
             } else {
                 // Final Step Logic (Double Tap)
                 var tapCount by remember { mutableStateOf(0) }
-                
+
                 // Reset tap count after delay
                 LaunchedEffect(tapCount) {
                     if (tapCount > 0) {
                         delay(2000)
-                        if (tapCount == 1) { 
+                        if (tapCount == 1) {
                             tapCount = 0
                         }
                     }
@@ -563,13 +623,17 @@ fun OnboardingFlow(onDismiss: () -> Unit) {
                             onDismiss()
                         }
                     },
-                    modifier = Modifier.fillMaxWidth().heightIn(min = 56.dp),
-                     colors = androidx.compose.material3.ButtonDefaults.buttonColors(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .heightIn(min = 56.dp),
+                    colors = androidx.compose.material3.ButtonDefaults.buttonColors(
                         containerColor = if (tapCount == 0) MaterialTheme.colorScheme.primary else com.callonly.launcher.ui.theme.ConfirmGreen
                     )
                 ) {
                     Text(
-                        text = if (tapCount == 0) stringResource(id = com.callonly.launcher.R.string.understood) else stringResource(id = com.callonly.launcher.R.string.press_again_to_confirm),
+                        text = if (tapCount == 0) stringResource(id = com.callonly.launcher.R.string.understood) else stringResource(
+                            id = com.callonly.launcher.R.string.press_again_to_confirm
+                        ),
                         fontSize = 14.sp,
                         textAlign = TextAlign.Center,
                         lineHeight = 16.sp

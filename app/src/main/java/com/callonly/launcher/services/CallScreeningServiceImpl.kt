@@ -2,7 +2,6 @@ package com.callonly.launcher.services
 
 import android.telecom.Call
 import android.telecom.CallScreeningService
-import android.net.Uri
 import android.telephony.PhoneNumberUtils
 import com.callonly.launcher.data.model.CallLog
 import com.callonly.launcher.data.model.CallLogType
@@ -40,7 +39,7 @@ class CallScreeningServiceImpl : CallScreeningService() {
             try {
                 // Fetch all contacts to compare
                 val contacts = contactRepository.getContactsList()
-                
+
                 // Check if any contact matches the incoming number
                 val isFavorite = contacts.any { contact ->
                     @Suppress("DEPRECATION")
@@ -58,7 +57,7 @@ class CallScreeningServiceImpl : CallScreeningService() {
                 // Fail safe: Allow or Block?
                 // Given "Call Only" for favorites, maybe blocking is safer, but avoiding missed emergency calls?
                 // Defaulting to block for strict requirement "Appels provenant de numéros non favoris sont automatiquement rejetés"
-                blockCall(callDetails) 
+                blockCall(callDetails)
             }
         }
     }
@@ -90,7 +89,7 @@ class CallScreeningServiceImpl : CallScreeningService() {
                 @Suppress("DEPRECATION")
                 PhoneNumberUtils.compare(contact.phoneNumber, number)
             }
-            
+
             callLogRepository.insertCallLog(
                 CallLog(
                     number = number,

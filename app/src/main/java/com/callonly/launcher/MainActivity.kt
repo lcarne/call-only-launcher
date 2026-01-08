@@ -1,73 +1,73 @@
 package com.callonly.launcher
 
-import android.os.Bundle
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Lock
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.compose.foundation.background
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import dagger.hilt.android.AndroidEntryPoint
-import com.callonly.launcher.ui.navigation.CallOnlyNavGraph
-import com.callonly.launcher.ui.theme.CallOnlyTheme
-import com.callonly.launcher.ui.call.IncomingCallScreen
-import com.callonly.launcher.ui.call.IncomingCallViewModel
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.foundation.layout.Box
-import androidx.hilt.navigation.compose.hiltViewModel
-import com.callonly.launcher.manager.SimManager
-import com.callonly.launcher.manager.SimStatus
-import com.callonly.launcher.data.repository.SettingsRepository
-import javax.inject.Inject
-import android.media.AudioManager
-import android.provider.Settings
 import android.app.NotificationManager
 import android.content.Context
 import android.content.ContextWrapper
-import java.util.Locale
 import android.content.res.Configuration
+import android.media.AudioManager
+import android.os.Bundle
 import android.view.KeyEvent
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.lifecycleScope
+import com.callonly.launcher.data.repository.SettingsRepository
+import com.callonly.launcher.manager.SimManager
+import com.callonly.launcher.manager.SimStatus
+import com.callonly.launcher.ui.call.IncomingCallScreen
+import com.callonly.launcher.ui.call.IncomingCallViewModel
+import com.callonly.launcher.ui.navigation.CallOnlyNavGraph
+import com.callonly.launcher.ui.theme.CallOnlyTheme
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
+import java.util.Locale
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    @Inject lateinit var simManager: SimManager
-    @Inject lateinit var settingsRepository: SettingsRepository
-    
+    @Inject
+    lateinit var simManager: SimManager
+
+    @Inject
+    lateinit var settingsRepository: SettingsRepository
+
     private lateinit var audioManager: AudioManager
-    
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
-        audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
-        
+
+        audioManager = getSystemService(AUDIO_SERVICE) as AudioManager
+
         setupRingerManagement()
-        
+
         // Block back button using modern API
-        onBackPressedDispatcher.addCallback(this, object : androidx.activity.OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                // Do nothing - block back button for kiosk mode
-            }
-        })
-        
+        onBackPressedDispatcher.addCallback(
+            this,
+            object : androidx.activity.OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    // Do nothing - block back button for kiosk mode
+                }
+            })
+
         // Hide System UI for Kiosk feel
         hideSystemUI()
 
@@ -80,8 +80,12 @@ class MainActivity : ComponentActivity() {
                             try {
                                 stopLockTask()
                                 // Re-enable Status Bar if we are Device Owner
-                                val dpm = getSystemService(android.content.Context.DEVICE_POLICY_SERVICE) as android.app.admin.DevicePolicyManager
-                                val adminComponent = android.content.ComponentName(this@MainActivity, com.callonly.launcher.receivers.CallOnlyAdminReceiver::class.java)
+                                val dpm =
+                                    getSystemService(DEVICE_POLICY_SERVICE) as android.app.admin.DevicePolicyManager
+                                val adminComponent = android.content.ComponentName(
+                                    this@MainActivity,
+                                    com.callonly.launcher.receivers.CallOnlyAdminReceiver::class.java
+                                )
                                 if (dpm.isDeviceOwnerApp(packageName)) {
                                     dpm.setStatusBarDisabled(adminComponent, false)
                                 }
@@ -90,11 +94,11 @@ class MainActivity : ComponentActivity() {
                             }
                         }
                     )
-                    
+
                     // Incoming Call Overlay
                     val incomingCallViewModel: IncomingCallViewModel = hiltViewModel()
                     val uiState by incomingCallViewModel.incomingCallState.collectAsState()
-                    
+
                     if (uiState !is com.callonly.launcher.ui.call.IncomingCallUiState.Empty) {
                         IncomingCallScreen(
                             viewModel = incomingCallViewModel,
@@ -123,7 +127,7 @@ class MainActivity : ComponentActivity() {
 
     override fun attachBaseContext(newBase: Context) {
         // Read saved language directly from prefs to apply before UI is created
-        val prefs = newBase.getSharedPreferences("callonly_prefs", Context.MODE_PRIVATE)
+        val prefs = newBase.getSharedPreferences("callonly_prefs", MODE_PRIVATE)
         val lang = prefs.getString("language", "fr") ?: "fr"
         val locale = if (lang == "en") Locale.ENGLISH else Locale("fr")
         val context = updateLocale(newBase, locale)
@@ -157,30 +161,32 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.size(120.dp),
                     tint = com.callonly.launcher.ui.theme.ErrorRed
                 )
-                
+
                 Spacer(modifier = Modifier.height(32.dp))
-                
+
                 Text(
                     text = "SIM VERROUILLÉE",
                     style = MaterialTheme.typography.headlineLarge,
                     color = com.callonly.launcher.ui.theme.White,
                     textAlign = androidx.compose.ui.text.style.TextAlign.Center
                 )
-                
+
                 Spacer(modifier = Modifier.height(16.dp))
-                
+
                 Text(
                     text = "Veuillez saisir le code PIN de la carte SIM pour continuer.",
                     style = MaterialTheme.typography.bodyLarge,
                     color = com.callonly.launcher.ui.theme.LightGray,
                     textAlign = androidx.compose.ui.text.style.TextAlign.Center
                 )
-                
+
                 Spacer(modifier = Modifier.height(64.dp))
-                
+
                 androidx.compose.material3.Button(
                     onClick = onUnlockClick,
-                    modifier = Modifier.fillMaxWidth().height(80.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(80.dp),
                     colors = androidx.compose.material3.ButtonDefaults.buttonColors(containerColor = com.callonly.launcher.ui.theme.HighContrastButtonBg)
                 ) {
                     Text(
@@ -194,7 +200,8 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun setupRingerManagement() {
-        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val notificationManager =
+            getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         lifecycleScope.launch {
             combine(
                 settingsRepository.isRingerEnabled,
@@ -203,11 +210,12 @@ class MainActivity : ComponentActivity() {
                 Pair(enabled, volumePercent)
             }.collect { (enabled, volumePercent) ->
                 try {
-                    val hasDndAccess = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-                        notificationManager.isNotificationPolicyAccessGranted
-                    } else {
-                        true
-                    }
+                    val hasDndAccess =
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                            notificationManager.isNotificationPolicyAccessGranted
+                        } else {
+                            true
+                        }
 
                     if (enabled) {
                         // Ringer is ON (White Button)
@@ -254,9 +262,10 @@ class MainActivity : ComponentActivity() {
     override fun onResume() {
         super.onResume()
         hideSystemUI()
-        
+
         // Block Notifications visibility if possible
-        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val notificationManager =
+            getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
             if (notificationManager.isNotificationPolicyAccessGranted) {
                 // Priority mode allows us to let calls through if configured in system, 
@@ -266,40 +275,50 @@ class MainActivity : ComponentActivity() {
                 notificationManager.setInterruptionFilter(NotificationManager.INTERRUPTION_FILTER_ALL)
             }
         }
-        
+
         // Kiosk Mode / Lock Task
-        val dpm = getSystemService(android.content.Context.DEVICE_POLICY_SERVICE) as android.app.admin.DevicePolicyManager
-        val adminComponent = android.content.ComponentName(this, com.callonly.launcher.receivers.CallOnlyAdminReceiver::class.java)
-        
+        val dpm =
+            getSystemService(DEVICE_POLICY_SERVICE) as android.app.admin.DevicePolicyManager
+        val adminComponent = android.content.ComponentName(
+            this,
+            com.callonly.launcher.receivers.CallOnlyAdminReceiver::class.java
+        )
+
         if (dpm.isDeviceOwnerApp(packageName)) {
             // Whitelist ourselves if we are owner
             if (!dpm.isLockTaskPermitted(packageName)) {
                 dpm.setLockTaskPackages(adminComponent, arrayOf(packageName))
             }
-            
+
             // STRICT KIOSK: Disable Status Bar and all Lock Task Features (Home, Notifications, etc.)
             try {
-                dpm.setLockTaskFeatures(adminComponent, android.app.admin.DevicePolicyManager.LOCK_TASK_FEATURE_NONE)
+                dpm.setLockTaskFeatures(
+                    adminComponent,
+                    android.app.admin.DevicePolicyManager.LOCK_TASK_FEATURE_NONE
+                )
                 dpm.setStatusBarDisabled(adminComponent, true)
             } catch (e: SecurityException) {
                 e.printStackTrace()
             }
         }
-        
+
         try {
-             // Only start lock task if not already in lock task mode
-             val am = getSystemService(android.content.Context.ACTIVITY_SERVICE) as android.app.ActivityManager
-             if (am.lockTaskModeState == android.app.ActivityManager.LOCK_TASK_MODE_NONE) {
-                 startLockTask()
-             }
+            // Only start lock task if not already in lock task mode
+            val am =
+                getSystemService(ACTIVITY_SERVICE) as android.app.ActivityManager
+            if (am.lockTaskModeState == android.app.ActivityManager.LOCK_TASK_MODE_NONE) {
+                startLockTask()
+            }
         } catch (e: Exception) {
             e.printStackTrace()
         }
     }
 
     private fun hideSystemUI() {
-        val windowInsetsController = androidx.core.view.WindowCompat.getInsetsController(window, window.decorView)
-        windowInsetsController.systemBarsBehavior = androidx.core.view.WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        val windowInsetsController =
+            androidx.core.view.WindowCompat.getInsetsController(window, window.decorView)
+        windowInsetsController.systemBarsBehavior =
+            androidx.core.view.WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
         windowInsetsController.hide(androidx.core.view.WindowInsetsCompat.Type.systemBars())
     }
 

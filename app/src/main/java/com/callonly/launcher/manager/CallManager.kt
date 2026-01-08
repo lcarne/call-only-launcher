@@ -2,6 +2,7 @@ package com.callonly.launcher.manager
 
 import android.telecom.Call
 import android.telecom.CallAudioState
+import android.telephony.PhoneNumberUtils
 import com.callonly.launcher.data.model.CallLog
 import com.callonly.launcher.data.model.CallLogType
 import com.callonly.launcher.data.repository.CallLogRepository
@@ -9,7 +10,6 @@ import com.callonly.launcher.data.repository.ContactRepository
 import com.callonly.launcher.data.repository.SettingsRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import android.telephony.PhoneNumberUtils
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -33,7 +33,6 @@ class CallManager @Inject constructor(
 
     private val _callState = MutableStateFlow<CallState>(CallState.Idle)
     val callState: StateFlow<CallState> = _callState.asStateFlow()
-
 
 
     private val _incomingNumber = MutableStateFlow<String?>(null)
@@ -87,12 +86,12 @@ class CallManager @Inject constructor(
         _isCallAllowed.value = false
         _incomingNumber.value = null
         _callState.value = CallState.Idle
-        
+
         // Register immediately to catch state changes during validation
         call.registerCallback(callCallback)
-        
+
         val number = call.details.handle?.schemeSpecificPart
-        
+
         scope.launch {
             val contacts = contactRepository.getContactsList()
             val isFavorite = number != null && contacts.any { contact ->
@@ -133,6 +132,7 @@ class CallManager @Inject constructor(
             Call.STATE_RINGING -> {
                 _callState.value = CallState.Ringing
             }
+
             Call.STATE_ACTIVE -> {
                 if (!wasAnswered) {
                     wasAnswered = true
@@ -142,6 +142,7 @@ class CallManager @Inject constructor(
                 }
                 _callState.value = CallState.Active
             }
+
             Call.STATE_DISCONNECTED -> {
                 if (wasAnswered && answerTime > 0) {
                     durationSeconds = (System.currentTimeMillis() - answerTime) / 1000
@@ -150,6 +151,7 @@ class CallManager @Inject constructor(
                 logCall()
                 currentCall = null
             }
+
             else -> {
                 _callState.value = CallState.Idle
             }
@@ -191,14 +193,14 @@ class CallManager @Inject constructor(
             userRejected -> CallLogType.INCOMING_REJECTED
             else -> CallLogType.INCOMING_MISSED
         }
-        
+
         scope.launch {
             val contacts = contactRepository.getContactsList()
-            val contact = contacts.find { 
+            val contact = contacts.find {
                 @Suppress("DEPRECATION")
                 PhoneNumberUtils.compare(it.phoneNumber, number)
             }
-            
+
             callLogRepository.insertCallLog(
                 CallLog(
                     number = number,
