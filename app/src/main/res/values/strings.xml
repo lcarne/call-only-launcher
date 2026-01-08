@@ -53,6 +53,7 @@
     <string name="mode_dim">Dim</string>
     <string name="mode_off">Off</string>
     <string name="new_contact">New Contact</string>
+    <string name="next">Next</string>
     <string name="next_day">(until next day)</string>
     <string name="night_end">Night end: %1$s</string>
     <string name="night_end_label">Night end</string>
@@ -67,6 +68,8 @@
     <string name="onboarding_important">Important: This message will not be shown again.</string>
     <string name="onboarding_message">To check the settings or access Admin Mode:\n\nTap *15 times on the date*, then enter *PIN 1234*.</string>
     <string name="onboarding_title">Welcome</string>
+    <string name="permission_message">This app requires access to your contacts and call logs to function. These data serve only to display your history and contacts.\n\n*No data is shared.* Everything remains local on your device.</string>
+    <string name="permission_title">Privacy &amp; Data</string>
     <string name="photo_selected">Photo selected</string>
     <string name="photo_source">Photo source</string>
     <string name="pin_label">PIN</string>
@@ -91,4 +94,5 @@
     <string name="understood">Understood</string>
     <string name="unlock">Unlock</string>
     <string name="validate">Validate</string>
+    <string name="welcome_message">This launcher allows receiving calls only (no outgoing calls). It can be configured to accept calls from all numbers or only from your contact list.</string>
 </resources>

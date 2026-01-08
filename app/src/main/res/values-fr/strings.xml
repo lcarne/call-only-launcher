@@ -53,6 +53,7 @@
     <string name="mode_dim">Dim</string>
     <string name="mode_off">Éteint</string>
     <string name="new_contact">Nouveau Contact</string>
+    <string name="next">Suivant</string>
     <string name="next_day">(jusqu\'au lendemain)</string>
     <string name="night_end">Fin nuit : %1$s</string>
     <string name="night_end_label">Fin de nuit</string>
@@ -67,6 +68,8 @@
     <string name="onboarding_important">Important : Ce message ne s\'affichera plus.</string>
     <string name="onboarding_message">Pour accéder aux réglages ou au mode Admin :\n\nTapez *15 fois sur la date*, puis *code PIN 1234*.</string>
     <string name="onboarding_title">Bienvenue</string>
+    <string name="permission_message">L\'application a besoin d\'accéder à vos contacts et à l\'historique des appels pour fonctionner. Ces données servent uniquement à afficher vos correspondants.\n\n*Aucune donnée n\'est partagée.* Tout reste stocké localement sur votre téléphone.</string>
+    <string name="permission_title">Confidentialité et Données</string>
     <string name="photo_selected">Photo sélectionnée</string>
     <string name="photo_source">Source de la photo</string>
     <string name="pin_label">PIN</string>
@@ -91,4 +94,5 @@
     <string name="understood">Compris</string>
     <string name="unlock">Déverrouiller</string>
     <string name="validate">Valider</string>
+    <string name="welcome_message">Ce launcher permet de recevoir des appels uniquement (pas d\'appels sortants). Il peut être configuré pour accepter les appels de n\'importe qui ou uniquement de vos contacts.</string>
 </resources>

@@ -479,7 +479,7 @@ fun HomeScreen(
 
 
         if (!hasSeenOnboarding) {
-            OnboardingDialog(
+            OnboardingFlow(
                 onDismiss = { viewModel.markOnboardingSeen() }
             )
         }
@@ -487,24 +487,22 @@ fun HomeScreen(
 }
 
 @Composable
-fun OnboardingDialog(onDismiss: () -> Unit) {
-    var tapCount by remember { mutableStateOf(0) }
-    
-    // Reset tap count after delay
-    LaunchedEffect(tapCount) {
-        if (tapCount > 0) {
-            delay(2000)
-            if (tapCount == 1) { // If still 1 after delay, reset
-                tapCount = 0
-            }
-        }
-    }
+fun OnboardingFlow(onDismiss: () -> Unit) {
+    var step by remember { mutableStateOf(0) }
+
+    // Step 0: Welcome
+    // Step 1: Permissions
+    // Step 2: Admin Info (Original Onboarding)
 
     AlertDialog(
-        onDismissRequest = { /* Prevent dismissal by clicking outside */ },
+        onDismissRequest = { /* Prevent dismissal */ },
         title = {
             Text(
-                text = stringResource(id = com.callonly.launcher.R.string.onboarding_title),
+                text = when (step) {
+                    0 -> stringResource(id = com.callonly.launcher.R.string.onboarding_title) // Welcome
+                    1 -> stringResource(id = com.callonly.launcher.R.string.permission_title) // Privacy
+                    else -> stringResource(id = com.callonly.launcher.R.string.admin_mode) // Admin Mode (was Welcome)
+                },
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = androidx.compose.ui.text.font.FontWeight.Bold
             )
@@ -512,39 +510,71 @@ fun OnboardingDialog(onDismiss: () -> Unit) {
         text = {
             Column {
                 Text(
-                    text = parseBoldString(stringResource(id = com.callonly.launcher.R.string.onboarding_message)),
+                    text = when (step) {
+                        0 -> parseBoldString(stringResource(id = com.callonly.launcher.R.string.welcome_message))
+                        1 -> parseBoldString(stringResource(id = com.callonly.launcher.R.string.permission_message))
+                        else -> parseBoldString(stringResource(id = com.callonly.launcher.R.string.onboarding_message))
+                    },
                     style = MaterialTheme.typography.bodyLarge,
                     fontSize = 18.sp
                 )
                 Spacer(modifier = Modifier.height(16.dp))
-                Text(
-                    text = stringResource(id = com.callonly.launcher.R.string.onboarding_important),
-                    style = MaterialTheme.typography.titleMedium,
-                    color = com.callonly.launcher.ui.theme.ErrorRed,
-                    fontWeight = androidx.compose.ui.text.font.FontWeight.Bold
-                )
+                
+                if (step == 2) {
+                    Text(
+                        text = stringResource(id = com.callonly.launcher.R.string.onboarding_important),
+                        style = MaterialTheme.typography.titleMedium,
+                        color = com.callonly.launcher.ui.theme.ErrorRed,
+                        fontWeight = androidx.compose.ui.text.font.FontWeight.Bold
+                    )
+                }
             }
         },
         confirmButton = {
-            Button(
-                onClick = {
-                    if (tapCount == 0) {
-                        tapCount++
-                    } else {
-                        onDismiss()
+            if (step < 2) {
+                Button(
+                    onClick = { step++ },
+                    modifier = Modifier.fillMaxWidth().heightIn(min = 56.dp)
+                ) {
+                    Text(
+                        text = stringResource(id = com.callonly.launcher.R.string.next),
+                        fontSize = 18.sp
+                    )
+                }
+            } else {
+                // Final Step Logic (Double Tap)
+                var tapCount by remember { mutableStateOf(0) }
+                
+                // Reset tap count after delay
+                LaunchedEffect(tapCount) {
+                    if (tapCount > 0) {
+                        delay(2000)
+                        if (tapCount == 1) { 
+                            tapCount = 0
+                        }
                     }
-                },
-                modifier = Modifier.fillMaxWidth().heightIn(min = 56.dp),
-                 colors = androidx.compose.material3.ButtonDefaults.buttonColors(
-                    containerColor = if (tapCount == 0) MaterialTheme.colorScheme.primary else com.callonly.launcher.ui.theme.ConfirmGreen
-                )
-            ) {
-                Text(
-                    text = if (tapCount == 0) stringResource(id = com.callonly.launcher.R.string.understood) else stringResource(id = com.callonly.launcher.R.string.press_again_to_confirm),
-                    fontSize = 14.sp,
-                    textAlign = TextAlign.Center,
-                    lineHeight = 16.sp
-                )
+                }
+
+                Button(
+                    onClick = {
+                        if (tapCount == 0) {
+                            tapCount++
+                        } else {
+                            onDismiss()
+                        }
+                    },
+                    modifier = Modifier.fillMaxWidth().heightIn(min = 56.dp),
+                     colors = androidx.compose.material3.ButtonDefaults.buttonColors(
+                        containerColor = if (tapCount == 0) MaterialTheme.colorScheme.primary else com.callonly.launcher.ui.theme.ConfirmGreen
+                    )
+                ) {
+                    Text(
+                        text = if (tapCount == 0) stringResource(id = com.callonly.launcher.R.string.understood) else stringResource(id = com.callonly.launcher.R.string.press_again_to_confirm),
+                        fontSize = 14.sp,
+                        textAlign = TextAlign.Center,
+                        lineHeight = 16.sp
+                    )
+                }
             }
         },
         modifier = Modifier.padding(16.dp)
