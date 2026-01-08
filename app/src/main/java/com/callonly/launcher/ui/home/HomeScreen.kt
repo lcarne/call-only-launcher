@@ -548,19 +548,45 @@ fun HomeScreen(
 fun OnboardingFlow(onDismiss: () -> Unit) {
     var step by remember { mutableStateOf(0) }
 
-    // Step 0: Welcome
-    // Step 1: Permissions
-    // Step 2: Admin Info (Original Onboarding)
+    // 0: Presentation
+    // 1: Authorization Requests Explanation
+    // 2: Request Contacts
+    // 3: Request Phone State
+    // 4: Location Explanation
+    // 5: Request Location
+    // 6: Admin Explanation
+
+    // Permission Launchers
+    // We proceed to next step regardless of result to avoid blocking the user
+    // Ideally user should grant them, but we can't force them infinitely here without bad UX
+    val contactLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission(),
+        onResult = { _ -> step++ }
+    )
+    
+    val phoneLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission(),
+        onResult = { _ -> step++ }
+    )
+
+    val locationLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission(),
+        onResult = { _ -> step++ }
+    )
 
     AlertDialog(
         onDismissRequest = { /* Prevent dismissal */ },
         title = {
             Text(
-                text = when (step) {
-                    0 -> stringResource(id = com.callonly.launcher.R.string.onboarding_title) // Welcome
-                    1 -> stringResource(id = com.callonly.launcher.R.string.permission_title) // Privacy
-                    else -> stringResource(id = com.callonly.launcher.R.string.admin_mode) // Admin Mode (was Welcome)
-                },
+                text = stringResource(id = when (step) {
+                    0 -> com.callonly.launcher.R.string.onboarding_presentation_title
+                    1 -> com.callonly.launcher.R.string.onboarding_auth_intro_title
+                    2 -> com.callonly.launcher.R.string.onboarding_auth_contacts_title
+                    3 -> com.callonly.launcher.R.string.onboarding_auth_calls_title
+                    4 -> com.callonly.launcher.R.string.onboarding_auth_location_intro_title
+                    5 -> com.callonly.launcher.R.string.onboarding_auth_location_request_title
+                    else -> com.callonly.launcher.R.string.onboarding_admin_intro_title
+                }),
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold
             )
@@ -568,17 +594,21 @@ fun OnboardingFlow(onDismiss: () -> Unit) {
         text = {
             Column {
                 Text(
-                    text = when (step) {
-                        0 -> parseBoldString(stringResource(id = com.callonly.launcher.R.string.welcome_message))
-                        1 -> parseBoldString(stringResource(id = com.callonly.launcher.R.string.permission_message))
-                        else -> parseBoldString(stringResource(id = com.callonly.launcher.R.string.onboarding_message))
-                    },
+                    text = parseBoldString(stringResource(id = when (step) {
+                        0 -> com.callonly.launcher.R.string.onboarding_presentation_message
+                        1 -> com.callonly.launcher.R.string.onboarding_auth_intro_message
+                        2 -> com.callonly.launcher.R.string.onboarding_auth_contacts_message
+                        3 -> com.callonly.launcher.R.string.onboarding_auth_calls_message
+                        4 -> com.callonly.launcher.R.string.onboarding_auth_location_intro_message
+                        5 -> com.callonly.launcher.R.string.onboarding_auth_location_request_message
+                        else -> com.callonly.launcher.R.string.onboarding_admin_intro_message
+                    })),
                     style = MaterialTheme.typography.bodyLarge,
                     fontSize = 18.sp
                 )
                 Spacer(modifier = Modifier.height(16.dp))
 
-                if (step == 2) {
+                if (step == 6) {
                     Text(
                         text = stringResource(id = com.callonly.launcher.R.string.onboarding_important),
                         style = MaterialTheme.typography.titleMedium,
@@ -589,23 +619,10 @@ fun OnboardingFlow(onDismiss: () -> Unit) {
             }
         },
         confirmButton = {
-            if (step < 2) {
-                Button(
-                    onClick = { step++ },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .heightIn(min = 56.dp)
-                ) {
-                    Text(
-                        text = stringResource(id = com.callonly.launcher.R.string.next),
-                        fontSize = 18.sp
-                    )
-                }
-            } else {
+            if (step == 6) {
                 // Final Step Logic (Double Tap)
                 var tapCount by remember { mutableStateOf(0) }
 
-                // Reset tap count after delay
                 LaunchedEffect(tapCount) {
                     if (tapCount > 0) {
                         delay(2000)
@@ -637,6 +654,25 @@ fun OnboardingFlow(onDismiss: () -> Unit) {
                         fontSize = 14.sp,
                         textAlign = TextAlign.Center,
                         lineHeight = 16.sp
+                    )
+                }
+            } else {
+                Button(
+                    onClick = {
+                        when (step) {
+                            0, 1, 4 -> step++
+                            2 -> contactLauncher.launch(android.Manifest.permission.READ_CONTACTS)
+                            3 -> phoneLauncher.launch(android.Manifest.permission.READ_PHONE_STATE)
+                            5 -> locationLauncher.launch(android.Manifest.permission.ACCESS_FINE_LOCATION)
+                        }
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .heightIn(min = 56.dp)
+                ) {
+                    Text(
+                        text = stringResource(id = if (step in listOf(2, 3, 5)) com.callonly.launcher.R.string.validate else com.callonly.launcher.R.string.next),
+                        fontSize = 18.sp
                     )
                 }
             }
