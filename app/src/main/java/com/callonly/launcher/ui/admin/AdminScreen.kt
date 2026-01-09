@@ -167,7 +167,7 @@ fun PinEntryScreen(
                                 modifier = Modifier.size(72.dp)
                             ) {
                                 Icon(
-                                    imageVector = com.callonly.launcher.ui.theme.StatusIcons.ArrowBack, // Or appropriate delete icon
+                                    painter = androidx.compose.ui.res.painterResource(id = com.callonly.launcher.R.drawable.ic_arrow_back),
                                     contentDescription = "Delete"
                                 )
                             }
@@ -351,7 +351,7 @@ fun AdminSettingsScreen(
                         )
                     ) {
                         Icon(
-                            com.callonly.launcher.ui.theme.StatusIcons.LockOpen,
+                            painter = androidx.compose.ui.res.painterResource(id = com.callonly.launcher.R.drawable.ic_lock_open),
                             contentDescription = null
                         )
                         Spacer(modifier = Modifier.width(8.dp))
@@ -368,7 +368,7 @@ fun AdminSettingsScreen(
                             .height(56.dp)
                     ) {
                         Icon(
-                            com.callonly.launcher.ui.theme.StatusIcons.ArrowBack,
+                            painter = androidx.compose.ui.res.painterResource(id = com.callonly.launcher.R.drawable.ic_arrow_back),
                             contentDescription = null
                         )
                         Spacer(modifier = Modifier.width(8.dp))
@@ -384,7 +384,7 @@ fun AdminSettingsScreen(
                     colors = androidx.compose.material3.ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
                 ) {
                     Icon(
-                        com.callonly.launcher.ui.theme.StatusIcons.List,
+                        painter = androidx.compose.ui.res.painterResource(id = com.callonly.launcher.R.drawable.ic_list),
                         contentDescription = null,
                         tint = MaterialTheme.colorScheme.onPrimaryContainer
                     )
@@ -406,7 +406,7 @@ fun AdminSettingsScreen(
                     colors = androidx.compose.material3.ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
                 ) {
                     Icon(
-                        com.callonly.launcher.ui.theme.StatusIcons.Call,
+                        painter = androidx.compose.ui.res.painterResource(id = com.callonly.launcher.R.drawable.ic_call),
                         contentDescription = null,
                         tint = MaterialTheme.colorScheme.onSecondaryContainer
                     )
@@ -481,7 +481,7 @@ fun ContactManagementScreen(
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(
-                            com.callonly.launcher.ui.theme.StatusIcons.ArrowBack,
+                            painter = androidx.compose.ui.res.painterResource(id = com.callonly.launcher.R.drawable.ic_arrow_back),
                             contentDescription = stringResource(id = com.callonly.launcher.R.string.back)
                         )
                     }
@@ -876,7 +876,7 @@ fun ContactDialog(
                                     modifier = Modifier.fillMaxWidth()
                                 ) {
                                     Icon(
-                                        com.callonly.launcher.ui.theme.StatusIcons.PhotoLibrary,
+                                        painter = androidx.compose.ui.res.painterResource(id = com.callonly.launcher.R.drawable.ic_photo_library),
                                         contentDescription = null
                                     )
                                     Spacer(modifier = Modifier.width(8.dp))
@@ -901,7 +901,7 @@ fun ContactDialog(
                                     modifier = Modifier.fillMaxWidth()
                                 ) {
                                     Icon(
-                                        com.callonly.launcher.ui.theme.StatusIcons.PhotoCamera,
+                                        painter = androidx.compose.ui.res.painterResource(id = com.callonly.launcher.R.drawable.ic_photo_camera),
                                         contentDescription = null
                                     )
                                     Spacer(modifier = Modifier.width(8.dp))
@@ -1012,7 +1012,10 @@ fun SettingsSection(viewModel: AdminViewModel) {
                     contentColor = if (!isDefaultSpeakerEnabled) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant
                 )
             ) {
-                Icon(com.callonly.launcher.ui.theme.StatusIcons.Hearing, contentDescription = null)
+                Icon(
+                    painter = androidx.compose.ui.res.painterResource(id = com.callonly.launcher.R.drawable.ic_hearing),
+                    contentDescription = null
+                )
                 Spacer(Modifier.width(8.dp))
                 Text(
                     text = stringResource(id = com.callonly.launcher.R.string.earpiece),
@@ -1031,7 +1034,10 @@ fun SettingsSection(viewModel: AdminViewModel) {
                     contentColor = if (isDefaultSpeakerEnabled) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant
                 )
             ) {
-                Icon(com.callonly.launcher.ui.theme.StatusIcons.Speaker, contentDescription = null)
+                Icon(
+                    painter = androidx.compose.ui.res.painterResource(id = com.callonly.launcher.R.drawable.ic_speaker),
+                    contentDescription = null
+                )
                 Spacer(Modifier.width(8.dp))
                 Text(
                     text = stringResource(id = com.callonly.launcher.R.string.speaker),
@@ -1113,7 +1119,10 @@ fun SettingsSection(viewModel: AdminViewModel) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Row(modifier = Modifier.weight(1f), verticalAlignment = Alignment.CenterVertically) {
-                Icon(com.callonly.launcher.ui.theme.StatusIcons.Charging, contentDescription = null)
+                Icon(
+                    painter = androidx.compose.ui.res.painterResource(id = com.callonly.launcher.R.drawable.ic_battery_charging),
+                    contentDescription = null
+                )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
                     stringResource(id = com.callonly.launcher.R.string.screen_behavior_plugged),
@@ -1142,7 +1151,7 @@ fun SettingsSection(viewModel: AdminViewModel) {
         ) {
             Row(modifier = Modifier.weight(1f), verticalAlignment = Alignment.CenterVertically) {
                 Icon(
-                    com.callonly.launcher.ui.theme.StatusIcons.BatteryFull,
+                    painter = androidx.compose.ui.res.painterResource(id = com.callonly.launcher.R.drawable.ic_battery_full),
                     contentDescription = null
                 )
                 Spacer(modifier = Modifier.width(8.dp))
@@ -1166,7 +1175,7 @@ fun SettingsSection(viewModel: AdminViewModel) {
         if (showPluggedDialog) {
             ScreenBehaviorDialog(
                 title = stringResource(id = com.callonly.launcher.R.string.screen_behavior_plugged),
-                icon = com.callonly.launcher.ui.theme.StatusIcons.Charging,
+                iconRes = com.callonly.launcher.R.drawable.ic_battery_charging,
                 currentValue = screenBehaviorPlugged,
                 onConfirm = { viewModel.setScreenBehaviorPlugged(it); showPluggedDialog = false },
                 onDismiss = { showPluggedDialog = false }
@@ -1176,7 +1185,7 @@ fun SettingsSection(viewModel: AdminViewModel) {
         if (showBatteryDialog) {
             ScreenBehaviorDialog(
                 title = stringResource(id = com.callonly.launcher.R.string.screen_behavior_battery),
-                icon = com.callonly.launcher.ui.theme.StatusIcons.BatteryFull,
+                iconRes = com.callonly.launcher.R.drawable.ic_battery_full,
                 currentValue = screenBehaviorBattery,
                 onConfirm = { viewModel.setScreenBehaviorBattery(it); showBatteryDialog = false },
                 onDismiss = { showBatteryDialog = false }
@@ -1541,7 +1550,7 @@ fun TimePickerDialogWrapper(
 @Composable
 fun ScreenBehaviorDialog(
     title: String,
-    icon: androidx.compose.ui.graphics.vector.ImageVector? = null,
+    iconRes: Int? = null,
     currentValue: Int,
     onConfirm: (Int) -> Unit,
     onDismiss: () -> Unit
@@ -1550,8 +1559,11 @@ fun ScreenBehaviorDialog(
         onDismissRequest = onDismiss,
         title = {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                if (icon != null) {
-                    Icon(icon, contentDescription = null)
+                if (iconRes != null) {
+                    Icon(
+                        painter = androidx.compose.ui.res.painterResource(id = iconRes),
+                        contentDescription = null
+                    )
                     Spacer(modifier = Modifier.width(8.dp))
                 }
                 Text(title)

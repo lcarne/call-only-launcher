@@ -44,7 +44,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.callonly.launcher.data.model.Contact
 import com.callonly.launcher.ui.components.BatteryLevelDisplay
-import com.callonly.launcher.ui.theme.StatusIcons
+import com.callonly.launcher.R
 import kotlinx.coroutines.delay
 
 @Composable
@@ -234,7 +234,7 @@ fun CallLayout(
                         modifier = Modifier.size(110.dp)
                     ) {
                         Icon(
-                            imageVector = StatusIcons.CallEnd,
+                            painter = androidx.compose.ui.res.painterResource(id = R.drawable.ic_call_end),
                             contentDescription = "Refuse",
                             tint = Color.White,
                             modifier = Modifier.size(56.dp)
@@ -306,7 +306,7 @@ fun CallLayout(
                     elevation = ButtonDefaults.buttonElevation(defaultElevation = 8.dp)
                 ) {
                     Icon(
-                        imageVector = StatusIcons.CallEnd,
+                        painter = androidx.compose.ui.res.painterResource(id = R.drawable.ic_call_end),
                         contentDescription = "End Call",
                         tint = Color.White,
                         modifier = Modifier.size(80.dp)
@@ -343,7 +343,7 @@ fun CallLayout(
                         modifier = Modifier.size(110.dp)
                     ) {
                         Icon(
-                            imageVector = StatusIcons.Hearing,
+                            painter = androidx.compose.ui.res.painterResource(id = R.drawable.ic_hearing),
                             contentDescription = "Earpiece",
                             tint = if (!isSpeakerOn) Color.White else Color.Gray,
                             modifier = Modifier.size(56.dp)
@@ -370,7 +370,7 @@ fun CallLayout(
                         modifier = Modifier.size(110.dp)
                     ) {
                         Icon(
-                            imageVector = StatusIcons.Speaker,
+                            painter = androidx.compose.ui.res.painterResource(id = R.drawable.ic_speaker),
                             contentDescription = "Speaker",
                             tint = if (isSpeakerOn) Color.Black else Color.White,
                             modifier = Modifier.size(56.dp)

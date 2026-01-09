@@ -105,7 +105,7 @@ fun CameraScreen(
         ) {
             IconButton(onClick = onCancel) {
                 Icon(
-                    com.callonly.launcher.ui.theme.StatusIcons.ArrowBack,
+                    painter = androidx.compose.ui.res.painterResource(id = com.callonly.launcher.R.drawable.ic_arrow_back),
                     contentDescription = "Cancel",
                     tint = Color.White
                 )

@@ -285,6 +285,33 @@ fun HomeScreen(
                     BatteryLevelDisplay()
                 }
 
+                // DEMO: Display all battery icons
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 16.dp),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    val icons = listOf(
+                        com.callonly.launcher.R.drawable.ic_battery_full,
+                        com.callonly.launcher.R.drawable.ic_battery_80,
+                        com.callonly.launcher.R.drawable.ic_battery_50,
+                        com.callonly.launcher.R.drawable.ic_battery_20,
+                        com.callonly.launcher.R.drawable.ic_battery_alert
+                    )
+
+                    icons.forEach { iconRes ->
+                        Icon(
+                            painter = androidx.compose.ui.res.painterResource(id = iconRes),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .size(48.dp)
+                                .padding(horizontal = 8.dp),
+                            tint = Color.Unspecified
+                        )
+                    }
+                }
+
                 // Date
                 val rawDate = dateFormat.format(currentTime)
                 val capitalizedDate = rawDate.split(" ").joinToString(" ") {
@@ -380,7 +407,7 @@ fun HomeScreen(
                     ) {
                         if (isNight) {
                             Icon(
-                                imageVector = com.callonly.launcher.ui.theme.StatusIcons.VolumeOff,
+                                painter = androidx.compose.ui.res.painterResource(id = R.drawable.ic_volume_off),
                                 contentDescription = null,
                                 modifier = Modifier.size(48.dp) // Reduced from 56.dp to save vertical space
                             )
@@ -398,7 +425,9 @@ fun HomeScreen(
                             )
                         } else {
                             Icon(
-                                imageVector = if (isRingerEnabled) com.callonly.launcher.ui.theme.StatusIcons.VolumeUp else com.callonly.launcher.ui.theme.StatusIcons.VolumeOff,
+                                painter = androidx.compose.ui.res.painterResource(
+                                    id = if (isRingerEnabled) R.drawable.ic_volume_up else R.drawable.ic_volume_off
+                                ),
                                 contentDescription = null,
                                 modifier = Modifier.size(56.dp) // Increased from 40.dp
                             )

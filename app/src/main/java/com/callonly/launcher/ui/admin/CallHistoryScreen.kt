@@ -53,7 +53,7 @@ fun CallHistoryScreen(
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(
-                            com.callonly.launcher.ui.theme.StatusIcons.ArrowBack,
+                            painter = androidx.compose.ui.res.painterResource(id = com.callonly.launcher.R.drawable.ic_arrow_back),
                             contentDescription = stringResource(id = com.callonly.launcher.R.string.back)
                         )
                     }
@@ -128,27 +128,27 @@ fun CallLogItem(log: CallLog) {
     val sdf = SimpleDateFormat("dd/MM HH:mm", Locale.getDefault())
     val dateStr = sdf.format(Date(log.timestamp))
 
-    val (icon, color, label) = when (log.type) {
+    val (iconRes, color, label) = when (log.type) {
         CallLogType.INCOMING_ANSWERED -> Triple(
-            com.callonly.launcher.ui.theme.StatusIcons.Call,
+            com.callonly.launcher.R.drawable.ic_call,
             Color(0xFF4CAF50),
             stringResource(id = com.callonly.launcher.R.string.call_received_label)
         )
 
         CallLogType.INCOMING_MISSED -> Triple(
-            com.callonly.launcher.ui.theme.StatusIcons.CallMissed,
+            com.callonly.launcher.R.drawable.ic_call_missed,
             Color(0xFFF44336),
             stringResource(id = com.callonly.launcher.R.string.call_missed_label)
         )
 
         CallLogType.INCOMING_REJECTED -> Triple(
-            com.callonly.launcher.ui.theme.StatusIcons.Block,
+            com.callonly.launcher.R.drawable.ic_block,
             Color(0xFFE91E63),
             stringResource(id = com.callonly.launcher.R.string.call_rejected_label)
         )
 
         CallLogType.BLOCKED -> Triple(
-            com.callonly.launcher.ui.theme.StatusIcons.Block,
+            com.callonly.launcher.R.drawable.ic_block,
             Color.Gray,
             stringResource(id = com.callonly.launcher.R.string.call_rejected_auto_label)
         )
@@ -162,7 +162,7 @@ fun CallLogItem(log: CallLog) {
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
-            imageVector = icon,
+            painter = androidx.compose.ui.res.painterResource(id = iconRes),
             contentDescription = null,
             tint = color,
             modifier = Modifier.size(32.dp)

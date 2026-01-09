@@ -35,8 +35,6 @@ import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import com.callonly.launcher.R
 import com.callonly.launcher.ui.theme.ErrorRed
-import com.callonly.launcher.ui.theme.LightGray
-import com.callonly.launcher.ui.theme.StatusIcons
 import com.callonly.launcher.ui.theme.White
 
 @Composable
@@ -72,20 +70,39 @@ fun BatteryLevelDisplay(
 
     if (batteryLevel != null) {
         val (level, isCharging) = batteryLevel!!
-        val (color, iconVector) = when {
-            level <= 20 -> ErrorRed to StatusIcons.BatteryAlert
-            level <= 50 -> Color(0xFFFFC107) to StatusIcons.BatteryStd
-            else -> Color(0xFF4CAF50) to StatusIcons.BatteryFull
+        
+        // Determine icon based on level
+        val iconRes = when {
+            isCharging -> R.drawable.ic_battery_charging
+            level <= 20 -> R.drawable.ic_battery_alert
+            level <= 50 -> R.drawable.ic_battery_50
+            level <= 80 -> R.drawable.ic_battery_80
+            else -> R.drawable.ic_battery_full
         }
+
+        // Determine color based on level (keep existing color logic where possible or adapt)
+        // Original logic: <=20 Red, <=50 Yellow, Else Green. 
+        // We can stick to that or use the icon's intrinsic color (Unspecified).
+        // Since the XMLs have colors hardcoded, we should use Color.Unspecified to show them!
+        // EXCEPT for charging which is Black in XML, maybe we want it White or colored?
+        // The original code used Tint.
+        // The user's prompt "je te laisse libre dans ... les couleurs" and "Resource XML" suggests using the XML colors.
+        // My XMLs have colors naturally (Green, Orange, etc). 
+        // ic_battery_charging I made black. Let's make it white or follow theme?
+        // In the existing UI, tint was used.
+        // Let's use Color.Unspecified for the battery levels to show the XML colors.
+        // For charging, let's allow tinting or use a specific color.
+        
+        val tint = if (isCharging) White else Color.Unspecified
 
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = modifier
         ) {
             Icon(
-                imageVector = if (isCharging) StatusIcons.Charging else iconVector,
+                painter = androidx.compose.ui.res.painterResource(id = iconRes),
                 contentDescription = stringResource(id = R.string.battery_level_desc),
-                tint = if (isCharging) White else color,
+                tint = tint,
                 modifier = Modifier
                     .size(iconSize)
                     .padding(end = 8.dp)
@@ -165,16 +182,16 @@ fun NetworkSignalDisplay(
         }
     }
 
-    val icon = when (signalLevel) {
-        0 -> StatusIcons.Signal0
-        1 -> StatusIcons.Signal1
-        2 -> StatusIcons.Signal2
-        3 -> StatusIcons.Signal3
-        else -> StatusIcons.Signal4
+    val iconRes = when (signalLevel) {
+        0 -> R.drawable.ic_signal_0
+        1 -> R.drawable.ic_signal_1
+        2 -> R.drawable.ic_signal_2
+        3 -> R.drawable.ic_signal_3
+        else -> R.drawable.ic_signal_4
     }
 
     Icon(
-        imageVector = icon,
+        painter = androidx.compose.ui.res.painterResource(id = iconRes),
         contentDescription = "Signal Level",
         tint = LightGray,
         modifier = modifier.size(iconSize)
