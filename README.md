@@ -1,10 +1,10 @@
-# Call Only Launcher – Minimalist & Secure Android Launcher
+# Incoming Call Only Launcher – Minimalist & Secure Android Launcher
 
 <p>
   <img src="images/app_icon.svg" alt="App icon" width="160"/>
 </p>
 
-Call Only Launcher is a **minimalist, open-source Android launcher designed for seniors and vulnerable users**.
+Incoming Call Only Launcher is a **minimalist, open-source Android launcher designed for seniors and vulnerable users**.
 
 It transforms an Android device into a **receive-only phone**, allowing incoming calls exclusively from trusted contacts while completely disabling outgoing calls and all non-essential system features.
 
@@ -19,7 +19,7 @@ The goal is to provide a **calm, safe, and confusion-free experience**, while gi
 
 ## Purpose
 
-Call Only Launcher locks the user into a **single-purpose interface** focused on safety and clarity.
+Incoming Call Only Launcher locks the user into a **single-purpose interface** focused on safety and clarity.
 
 The user can:
 - View the current date and time with a **large, high-contrast display**
@@ -45,7 +45,7 @@ This design minimizes confusion and prevents misuse.
 
 ## What this app is (and is not)
 
-**Call Only Launcher is intentionally limited by design.**
+**Incoming Call Only Launcher is intentionally limited by design.**
 
 ✔ It is:
 - A receive-only phone interface
@@ -89,7 +89,7 @@ This design minimizes confusion and prevents misuse.
 
 ## Privacy & Data
 
-Call Only Launcher does **not collect, store, or transmit any personal data**.
+Incoming Call Only Launcher does **not collect, store, or transmit any personal data**.
 
 - No analytics
 - No tracking
@@ -232,7 +232,7 @@ Each release includes:
 
 After installation:
 1. Press the **Home** button.
-2. Select **Call Only Launcher**.
+2. Select **Incoming Call Only Launcher**.
 3. Choose **Always** to make it the default launcher.
 
 ---
