@@ -34,8 +34,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import com.callonly.launcher.R
 import androidx.core.content.ContextCompat
 import java.io.File
 import java.util.concurrent.Executors
@@ -105,13 +108,13 @@ fun CameraScreen(
         ) {
             IconButton(onClick = onCancel) {
                 Icon(
-                    painter = androidx.compose.ui.res.painterResource(id = com.callonly.launcher.R.drawable.ic_arrow_back),
-                    contentDescription = "Cancel",
+                    painter = painterResource(id = R.drawable.ic_arrow_back),
+                    contentDescription = stringResource(id = R.string.cancel),
                     tint = Color.White
                 )
             }
             Text(
-                "Prendre une photo",
+                stringResource(id = R.string.take_photo),
                 color = Color.White,
                 style = MaterialTheme.typography.titleLarge
             )

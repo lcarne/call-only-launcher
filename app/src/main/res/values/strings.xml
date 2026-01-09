@@ -109,4 +109,6 @@
     <string name="unlock">Unlock</string>
     <string name="validate">Validate</string>
     <string name="welcome_message">This launcher allows receiving calls only (no outgoing calls). It can be configured to accept calls from all numbers or only from your contact list.</string>
+    <string name="take_photo">Take a photo</string>
+    <string name="signal_level_desc">Signal level</string>
 </resources>

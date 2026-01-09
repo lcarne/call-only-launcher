@@ -192,7 +192,7 @@ fun NetworkSignalDisplay(
 
     Icon(
         painter = androidx.compose.ui.res.painterResource(id = iconRes),
-        contentDescription = "Signal Level",
+        contentDescription = stringResource(id = R.string.signal_level_desc),
         tint = LightGray,
         modifier = modifier.size(iconSize)
     )
