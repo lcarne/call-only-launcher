@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy - Incoming Call Only Launcher</title>
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --text-color: #1f2937;
+            --bg-color: #f3f4f6;
+            --card-bg: #ffffff;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .lang-switcher {
+            text-align: right;
+            margin-bottom: 20px;
+        }
+
+        .lang-btn {
+            background: none;
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color);
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-left: 5px;
+            transition: all 0.2s;
+        }
+
+        .lang-btn.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #6b7280;
+        }
+
+        section {
+            background: var(--card-bg);
+            padding: 30px;
+            margin-bottom: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            margin-top: 0;
+            border-bottom: 2px solid #e5e7eb;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        h3 {
+            font-size: 1.1rem;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        ul,
+        ol {
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            margin-bottom: 40px;
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+
+        [data-lang] {
+            display: none;
+        }
+
+        [data-lang].visible {
+            display: block;
+        }
+
+        /* Specific override for inline elements to avoid display: block breaking layout */
+        span[data-lang].visible {
+            display: inline;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="lang-switcher">
+            <button class="lang-btn active" onclick="setLanguage('en')">English</button>
+            <button class="lang-btn" onclick="setLanguage('fr')">Français</button>
+        </div>
+
+        <header>
+            <h1>Incoming Call Only Launcher</h1>
+            <p class="subtitle">
+                <span data-lang="en" class="visible">Official Privacy Policy & Terms of Service</span>
+                <span data-lang="fr">Politique de Confidentialité Officielle et Conditions d'Utilisation</span>
+            </p>
+        </header>
+
+        <section id="privacy-policy">
+            <h2>
+                <span data-lang="en" class="visible">Privacy Policy</span>
+                <span data-lang="fr">Politique de Confidentialité</span>
+            </h2>
+            <p>
+                <strong>
+                    <span data-lang="en" class="visible">Last Updated:</span>
+                    <span data-lang="fr">Dernière mise à jour :</span>
+                </strong>
+                January 12, 2026
+            </p>
+
+            <h3>
+                <span data-lang="en" class="visible">Introduction</span>
+                <span data-lang="fr">Introduction</span>
+            </h3>
+            <div data-lang="en" class="visible">
+                <p>Incoming Call Only Launcher is designed with privacy as a core principle. We do not collect, store,
+                    or share any of your personal data. The application operates entirely offline on your device.</p>
+            </div>
+            <div data-lang="fr">
+                <p>Incoming Call Only Launcher est conçu avec la confidentialité comme principe fondamental. Nous ne
+                    collectons, ne stockons ni ne partageons aucune de vos données personnelles. L'application
+                    fonctionne entièrement hors ligne sur votre appareil.</p>
+            </div>
+
+            <h3>
+                <span data-lang="en" class="visible">Data Collection & Usage</span>
+                <span data-lang="fr">Collecte et Utilisation des Données</span>
+            </h3>
+            <div data-lang="en" class="visible">
+                <p>This application collects <strong>zero</strong> user data. No information is transmitted to external
+                    servers or third parties.</p>
+            </div>
+            <div data-lang="fr">
+                <p>Cette application collecte <strong>zéro</strong> donnée utilisateur. Aucune information n'est
+                    transmise à des serveurs externes ou à des tiers.</p>
+            </div>
+
+            <h3>
+                <span data-lang="en" class="visible">Permissions</span>
+                <span data-lang="fr">Autorisations</span>
+            </h3>
+            <div data-lang="en" class="visible">
+                <p>We request specific permissions solely to provide the app's core functionality (making calls and
+                    displaying contacts):</p>
+                <ul>
+                    <li><strong>Read Contacts:</strong> Required to display your contacts with their names and photos.
+                        This data is accessed locally and never leaves your device.</li>
+                    <li><strong>Call Phone:</strong> Required to initiate phone calls directly from the app interface.
+                    </li>
+                    <li><strong>Phone State:</strong> Used to detect incoming calls and adjust the interface
+                        accordingly.</li>
+                </ul>
+            </div>
+            <div data-lang="fr">
+                <p>Nous demandons des autorisations spécifiques uniquement pour fournir les fonctionnalités principales
+                    de l'application (passer des appels et afficher les contacts) :</p>
+                <ul>
+                    <li><strong>Lire les contacts :</strong> Requis pour afficher vos contacts avec leurs noms et
+                        photos. Ces données sont consultées localement et ne quittent jamais votre appareil.</li>
+                    <li><strong>Appeler :</strong> Requis pour lancer des appels téléphoniques directement depuis
+                        l'interface de l'application.</li>
+                    <li><strong>État du téléphone :</strong> Utilisé pour détecter les appels entrants et ajuster
+                        l'interface en conséquence.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="data-safety">
+            <h2>
+                <span data-lang="en" class="visible">Data Safety Section (Google Play)</span>
+                <span data-lang="fr">Section Sécurité des Données (Google Play)</span>
+            </h2>
+            <div data-lang="en" class="visible">
+                <p>To help you fill out the Data Safety form on the Google Play Console:</p>
+                <ul>
+                    <li><strong>Does your app collect or share any of the required user data types?</strong> <br> No.
+                    </li>
+                    <li><strong>Is all of the user data collected by your app encrypted in transit?</strong> <br> Not
+                        capable (N/A) - no data is transmitted.</li>
+                    <li><strong>Do you provide a way for users to request that their data be deleted?</strong> <br> Not
+                        capable (N/A) - no data is collected.</li>
+                </ul>
+            </div>
+            <div data-lang="fr">
+                <p>Pour vous aider à remplir le formulaire de Sécurité des Données sur la Google Play Console :</p>
+                <ul>
+                    <li><strong>Votre application collecte-t-elle ou partage-t-elle l'un des types de données
+                            utilisateur requis ?</strong> <br> Non.</li>
+                    <li><strong>Toutes les données utilisateur collectées par votre application sont-elles chiffrées en
+                            transit ?</strong> <br> Non applicable (N/A) - aucune donnée n'est transmise.</li>
+                    <li><strong>Fournissez-vous un moyen pour les utilisateurs de demander la suppression de leurs
+                            données ?</strong> <br> Non applicable (N/A) - aucune donnée n'est collectée.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="ads-monetization">
+            <h2>
+                <span data-lang="en" class="visible">Ads & Monetization</span>
+                <span data-lang="fr">Publicités et Monétisation</span>
+            </h2>
+            <div data-lang="en" class="visible">
+                <p>This application contains <strong>no advertisements</strong>. It is free to use and does not monetize
+                    user data or attention.</p>
+            </div>
+            <div data-lang="fr">
+                <p>Cette application ne contient <strong>aucune publicité</strong>. Elle est gratuite et ne monétise ni
+                    les données ni l'attention des utilisateurs.</p>
+            </div>
+        </section>
+
+        <section id="target-audience">
+            <h2>
+                <span data-lang="en" class="visible">Target Audience & Content Rating</span>
+                <span data-lang="fr">Public Cible et Classification du Contenu</span>
+            </h2>
+
+            <h3>
+                <span data-lang="en" class="visible">Target Audience</span>
+                <span data-lang="fr">Public Cible</span>
+            </h3>
+            <div data-lang="en" class="visible">
+                <p>This app is designed primarily for seniors and individuals who require a simplified smartphone
+                    interface. However, it is suitable for use by anyone.</p>
+            </div>
+            <div data-lang="fr">
+                <p>Cette application est conçue principalement pour les seniors et les personnes nécessitant une
+                    interface smartphone simplifiée. Cependant, elle convient à tout le monde.</p>
+            </div>
+
+            <h3>
+                <span data-lang="en" class="visible">Content Rating</span>
+                <span data-lang="fr">Classification du Contenu</span>
+            </h3>
+            <div data-lang="en" class="visible">
+                <p>Rated <strong>PEGI 3 / Everyone</strong>. The app contains no violence, sexual content, bad language,
+                    or drug references.</p>
+            </div>
+            <div data-lang="fr">
+                <p>Classé <strong>PEGI 3 / Tout public</strong>. L'application ne contient aucune violence, contenu
+                    sexuel, langage grossier ou référence à la drogue.</p>
+            </div>
+        </section>
+
+        <section id="terms-of-service">
+            <h2>
+                <span data-lang="en" class="visible">Terms of Service</span>
+                <span data-lang="fr">Conditions d'Utilisation</span>
+            </h2>
+            <div data-lang="en" class="visible">
+                <p>By using Incoming Call Only Launcher, you agree to the following terms:</p>
+                <ol>
+                    <li><strong>License:</strong> You are granted a limited, non-exclusive, non-transferable license to
+                        use the application for personal use.</li>
+                    <li><strong>Disclaimer:</strong> The application is provided "as is", without warranty of any kind,
+                        express or implied. The developers are not liable for any damages arising from the use of this
+                        software.</li>
+                    <li><strong>Modifications:</strong> We reserve the right to modify these terms at any time.
+                        Continued use of the app constitutes acceptance of any changes.</li>
+                </ol>
+            </div>
+            <div data-lang="fr">
+                <p>En utilisant Incoming Call Only Launcher, vous acceptez les conditions suivantes :</p>
+                <ol>
+                    <li><strong>Licence :</strong> Une licence limitée, non exclusive et non transférable vous est
+                        accordée pour utiliser l'application à des fins personnelles.</li>
+                    <li><strong>Avis de non-responsabilité :</strong> L'application est fournie "telle quelle", sans
+                        garantie d'aucune sorte, expresse ou implicite. Les développeurs ne sont pas responsables des
+                        dommages résultant de l'utilisation de ce logiciel.</li>
+                    <li><strong>Modifications :</strong> Nous nous réservons le droit de modifier ces conditions à tout
+                        moment. L'utilisation continue de l'application constitue l'acceptation de tout changement.</li>
+                </ol>
+            </div>
+        </section>
+
+        <section id="contact">
+            <h2>
+                <span data-lang="en" class="visible">Contact & Support</span>
+                <span data-lang="fr">Contact et Support</span>
+            </h2>
+            <div data-lang="en" class="visible">
+                <p>For any questions regarding this privacy policy or to report issues, please visit our GitHub
+                    repository:</p>
+            </div>
+            <div data-lang="fr">
+                <p>Pour toute question concernant cette politique de confidentialité ou pour signaler des problèmes,
+                    veuillez visiter notre dépôt GitHub :</p>
+            </div>
+            <p><a href="https://github.com/lcarne/call_only">https://github.com/lcarne/call_only</a></p>
+        </section>
+
+        <footer>
+            <p>&copy; 2026 Incoming Call Only Launcher. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script>
+        function setLanguage(lang) {
+            // Update visible content
+            const elements = document.querySelectorAll('[data-lang]');
+            elements.forEach(el => {
+                if (el.getAttribute('data-lang') === lang) {
+                    el.classList.add('visible');
+                } else {
+                    el.classList.remove('visible');
+                }
+            });
+
+            // Update button states
+            const buttons = document.querySelectorAll('.lang-btn');
+            buttons.forEach(btn => {
+                if (btn.getAttribute('onclick').includes(lang)) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+
+            // Update html lang attribute
+            document.documentElement.lang = lang;
+        }
+
+        // Try to respect browser preference if not manually toggled
+        document.addEventListener('DOMContentLoaded', () => {
+            const userLang = navigator.language || navigator.userLanguage;
+            if (userLang.startsWith('fr')) {
+                setLanguage('fr');
+            }
+        });
+    </script>
+
+</body>
+
+</html>
