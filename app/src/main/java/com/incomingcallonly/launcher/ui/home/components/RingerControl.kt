@@ -35,20 +35,7 @@ fun RingerControl(
     timeFormat: String,
     onToggleRinger: () -> Unit
 ) {
-    // Helper function to format time based on user preference
-    fun formatTime(hour: Int, minute: Int): String {
-        return if (timeFormat == "12") {
-            val period = if (hour < 12) "AM" else "PM"
-            val hour12 = when {
-                hour == 0 -> 12
-                hour > 12 -> hour - 12
-                else -> hour
-            }
-            String.format("%d:%02d %s", hour12, minute, period)
-        } else {
-            String.format("%02d:%02d", hour, minute)
-        }
-    }
+    val is24Hour = timeFormat == "24"
 
     if (isNight) {
         // Night Mode Info - Read Only
@@ -71,8 +58,8 @@ fun RingerControl(
                 Text(
                     text = stringResource(
                         R.string.night_mode_active_ringer_off,
-                        formatTime(nightStart, nightStartMin),
-                        formatTime(nightEnd, nightEndMin)
+                        com.incomingcallonly.launcher.util.TimeFormatUtils.formatTime(nightStart, nightStartMin, is24Hour),
+                        com.incomingcallonly.launcher.util.TimeFormatUtils.formatTime(nightEnd, nightEndMin, is24Hour)
                     ),
                     color = White,
                     fontSize = 18.sp,
