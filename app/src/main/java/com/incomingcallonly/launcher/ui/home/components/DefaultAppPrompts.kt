@@ -81,69 +81,53 @@ fun DefaultAppPrompts(
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.fillMaxWidth()
+        verticalArrangement = Arrangement.spacedBy(12.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 32.dp)
     ) {
-        if (!isDefaultDialer || !isDefaultLauncher) {
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 24.dp)
+        if (!isDefaultDialer) {
+            androidx.compose.material3.Button(
+                onClick = { requestDefaultDialer() },
+                modifier = Modifier.fillMaxWidth(),
+                colors = androidx.compose.material3.ButtonDefaults.buttonColors(
+                    containerColor = androidx.compose.material3.MaterialTheme.colorScheme.primary,
+                    contentColor = androidx.compose.material3.MaterialTheme.colorScheme.onPrimary
+                )
             ) {
-                if (!isDefaultDialer) {
-                    SetupButton(
-                        icon = Icons.Default.Phone,
-                        text = stringResource(R.string.activate_calls),
-                        modifier = Modifier.weight(1f),
-                        onClick = { requestDefaultDialer() }
-                    )
-                }
-
-                if (!isDefaultLauncher) {
-                    SetupButton(
-                        icon = Icons.Default.Home,
-                        text = stringResource(R.string.activate_launcher),
-                        modifier = Modifier.weight(1f),
-                        onClick = { requestDefaultLauncher() }
-                    )
-                }
+                Icon(
+                    imageVector = Icons.Default.Phone,
+                    contentDescription = null,
+                    modifier = Modifier.size(18.dp)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = stringResource(R.string.activate_calls),
+                    textAlign = TextAlign.Center
+                )
             }
         }
-    }
-}
 
-@Composable
-private fun SetupButton(
-    icon: ImageVector,
-    text: String,
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit
-) {
-    Surface(
-        color = Color.Transparent,
-        shape = RoundedCornerShape(16.dp),
-        border = BorderStroke(2.dp, AccentBlue),
-        modifier = modifier.clickable { onClick() }
-    ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.padding(vertical = 20.dp, horizontal = 16.dp)
-        ) {
-            Icon(
-                imageVector = icon,
-                contentDescription = null,
-                tint = AccentBlue,
-                modifier = Modifier.size(36.dp)
-            )
-            Spacer(modifier = Modifier.size(12.dp))
-            Text(
-                text = text,
-                color = White,
-                fontSize = 15.sp,
-                fontWeight = FontWeight.SemiBold,
-                textAlign = TextAlign.Center,
-                lineHeight = 18.sp
-            )
+        if (!isDefaultLauncher) {
+            androidx.compose.material3.Button(
+                onClick = { requestDefaultLauncher() },
+                modifier = Modifier.fillMaxWidth(),
+                colors = androidx.compose.material3.ButtonDefaults.buttonColors(
+                    containerColor = androidx.compose.material3.MaterialTheme.colorScheme.primary,
+                    contentColor = androidx.compose.material3.MaterialTheme.colorScheme.onPrimary
+                )
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Home,
+                    contentDescription = null,
+                    modifier = Modifier.size(18.dp)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = stringResource(R.string.activate_launcher),
+                    textAlign = TextAlign.Center
+                )
+            }
         }
     }
 }

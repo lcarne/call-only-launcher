@@ -84,7 +84,7 @@ fun RingerControl(
     } else {
         // Day Mode - Interactive Ringer Toggle with text
         Surface(
-            color = if (isRingerEnabled) accentColor else DarkGray,
+            color = if (isRingerEnabled) accentColor else com.incomingcallonly.launcher.ui.theme.Red,
             shape = RoundedCornerShape(24.dp),
             modifier = Modifier
                 .padding(horizontal = 32.dp)

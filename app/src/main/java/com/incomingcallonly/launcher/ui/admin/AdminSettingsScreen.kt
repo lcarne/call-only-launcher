@@ -481,7 +481,7 @@ fun SettingsSection(viewModel: AdminViewModel) {
         
         // Clock Color
         val colors = listOf(
-            MaterialTheme.colorScheme.primary,       // M3 Primary
+            HighContrastButtonBg,                    // Default Blue
             MaterialTheme.colorScheme.secondary,     // M3 Secondary
             MaterialTheme.colorScheme.tertiary,      // M3 Tertiary
             Color(0xFFD32F2F),                       // Soft Red

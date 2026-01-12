@@ -27,7 +27,7 @@
     <string name="ringer_active">SONNERIE ACTIVE</string>
     <string name="ringer_disabled">SONNERIE DÉSACTIVÉE</string>
     <string name="activate_calls">ACTIVER LES APPELS</string>
-    <string name="activate_launcher">DÉFINIR EN LAUNCHER</string>
+    <string name="activate_launcher">DÉFINIR EN LAUNCHER PAR DÉFAUT</string>
 
     <!-- ==================== INCOMING CALL ==================== -->
     <string name="incoming_call">Appel entrant</string>
@@ -154,7 +154,7 @@
     <string name="onboarding_auth_location_request_message">Veuillez autoriser l\'accès à la localisation pour l\'affichage du réseau.</string>
     <string name="onboarding_default_dialer_title">Activer les appels</string>
     <string name="onboarding_default_dialer_message">Pour gérer les appels entrants, cette application doit être définie comme votre *application par défaut*.</string>
-    <string name="onboarding_default_launcher_title">D\'efinir en launcher</string>
+    <string name="onboarding_default_launcher_title">Définir en launcher</string>
     <string name="onboarding_default_launcher_message">Pour que l\'application démarre automatiquement, définissez-la comme votre *launcher*.</string>
 
 </resources>
