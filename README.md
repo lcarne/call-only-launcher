@@ -251,7 +251,7 @@ This action is irreversible without ADB access.
 ### ADB command
 
 ```bash
-adb shell dpm set-device-owner com.callonly.launcher/.receivers.CallOnlyAdminReceiver
+adb shell dpm set-device-owner com.incomingcallonly.launcher/.receivers.IncomingCallOnlyAdminReceiver
 
 ```
 
@@ -279,13 +279,13 @@ From the Admin interface you can:
 If you cannot access the Admin unlock button, remove the Device Owner via ADB:
 
 ```bash
-adb shell dpm remove-active-admin com.callonly.launcher/.receivers.CallOnlyAdminReceiver
+adb shell dpm remove-active-admin com.incomingcallonly.launcher/.receivers.IncomingCallOnlyAdminReceiver
 ```
 
 ## Notes & Implementation Details
 
 - The app verifies the Admin PIN in code (`AdminViewModel` currently checks for `"1234"`).
-- The Admin receiver is `com.callonly.launcher.receivers.CallOnlyAdminReceiver` and is declared in the manifest with `BIND_DEVICE_ADMIN` permission.
+- The Admin receiver is `com.incomingcallonly.launcher.receivers.IncomingCallOnlyAdminReceiver` and is declared in the manifest with `BIND_DEVICE_ADMIN` permission.
 - Kiosk behavior (lock task packages, disabling the status bar) is controlled via `DevicePolicyManager` in `MainActivity`.
 
 ## Contributing
