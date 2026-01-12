@@ -219,6 +219,22 @@ fun SettingsSection(viewModel: AdminViewModel) {
     val nightStartMin by viewModel.nightModeStartMinute.collectAsState()
     val nightEnd by viewModel.nightModeEndHour.collectAsState()
     val nightEndMin by viewModel.nightModeEndMinute.collectAsState()
+    val timeFormat by viewModel.timeFormat.collectAsState()
+
+    // Helper function to format time based on user preference
+    fun formatTime(hour: Int, minute: Int): String {
+        return if (timeFormat == "12") {
+            val period = if (hour < 12) "AM" else "PM"
+            val hour12 = when {
+                hour == 0 -> 12
+                hour > 12 -> hour - 12
+                else -> hour
+            }
+            String.format("%d:%02d %s", hour12, minute, period)
+        } else {
+            String.format("%02dh%02d", hour, minute)
+        }
+    }
 
 
     Column(modifier = Modifier.fillMaxWidth()) {
@@ -392,7 +408,7 @@ fun SettingsSection(viewModel: AdminViewModel) {
                     headlineContent = { Text(stringResource(id = R.string.night_start_label)) },
                     trailingContent = {
                         Text(
-                            text = String.format("%02dh%02d", nightStart, nightStartMin),
+                            text = formatTime(nightStart, nightStartMin),
                             style = MaterialTheme.typography.titleMedium,
                             color = MaterialTheme.colorScheme.primary
                         )
@@ -403,7 +419,7 @@ fun SettingsSection(viewModel: AdminViewModel) {
                     headlineContent = { Text(stringResource(id = R.string.night_end_label)) },
                     trailingContent = {
                          Text(
-                            text = String.format("%02dh%02d", nightEnd, nightEndMin),
+                            text = formatTime(nightEnd, nightEndMin),
                             style = MaterialTheme.typography.titleMedium,
                             color = MaterialTheme.colorScheme.primary
                         )

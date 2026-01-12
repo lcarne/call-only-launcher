@@ -343,6 +343,7 @@ fun HomeScreen(
                     nightEnd = nightEnd,
                     nightEndMin = nightEndMin,
                     accentColor = clockColor,
+                    timeFormat = savedFormat,
                     onToggleRinger = { viewModel.setRingerEnabled(!isRingerEnabled) }
                 )
 

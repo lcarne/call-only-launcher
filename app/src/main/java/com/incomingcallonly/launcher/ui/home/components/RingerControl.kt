@@ -1,13 +1,11 @@
 package com.incomingcallonly.launcher.ui.home.components
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
@@ -34,8 +32,24 @@ fun RingerControl(
     nightEnd: Int,
     nightEndMin: Int,
     accentColor: Color,
+    timeFormat: String,
     onToggleRinger: () -> Unit
 ) {
+    // Helper function to format time based on user preference
+    fun formatTime(hour: Int, minute: Int): String {
+        return if (timeFormat == "12") {
+            val period = if (hour < 12) "AM" else "PM"
+            val hour12 = when {
+                hour == 0 -> 12
+                hour > 12 -> hour - 12
+                else -> hour
+            }
+            String.format("%d:%02d %s", hour12, minute, period)
+        } else {
+            String.format("%02d:%02d", hour, minute)
+        }
+    }
+
     if (isNight) {
         // Night Mode Info - Read Only
         Surface(
@@ -57,8 +71,8 @@ fun RingerControl(
                 Text(
                     text = stringResource(
                         R.string.night_mode_active_ringer_off,
-                        String.format("%02d:%02d", nightStart, nightStartMin),
-                        String.format("%02d:%02d", nightEnd, nightEndMin)
+                        formatTime(nightStart, nightStartMin),
+                        formatTime(nightEnd, nightEndMin)
                     ),
                     color = White,
                     fontSize = 18.sp,
@@ -68,25 +82,35 @@ fun RingerControl(
             }
         }
     } else {
-        // Day Mode - Interactive Ringer Toggle
+        // Day Mode - Interactive Ringer Toggle with text
         Surface(
-            color = if (isRingerEnabled) White else DarkGray,
-            shape = CircleShape,
-            modifier = Modifier.clickable { onToggleRinger() }
+            color = if (isRingerEnabled) accentColor else DarkGray,
+            shape = RoundedCornerShape(24.dp),
+            modifier = Modifier
+                .padding(horizontal = 32.dp)
+                .clickable { onToggleRinger() }
         ) {
-            Box(
-                modifier = Modifier
-                    .padding(24.dp)
-                    .size(64.dp),
-                contentAlignment = Alignment.Center
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.padding(horizontal = 48.dp, vertical = 24.dp)
             ) {
                 Icon(
                     painter = painterResource(
                         id = if (isRingerEnabled) R.drawable.ic_volume_up else R.drawable.ic_volume_off
                     ),
                     contentDescription = "Toggle Ringer",
-                    tint = if (isRingerEnabled) accentColor else White,
+                    tint = White,
                     modifier = Modifier.size(48.dp)
+                )
+                Spacer(modifier = Modifier.height(12.dp))
+                Text(
+                    text = stringResource(
+                        if (isRingerEnabled) R.string.ringer_active else R.string.ringer_disabled
+                    ),
+                    color = White,
+                    fontSize = 22.sp,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = androidx.compose.ui.text.style.TextAlign.Center
                 )
             }
         }
