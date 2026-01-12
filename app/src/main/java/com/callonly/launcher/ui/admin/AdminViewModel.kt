@@ -217,7 +217,7 @@ class AdminViewModel @Inject constructor(
         }
     }
 
-    private val _importExportState = MutableStateFlow<com.callonly.launcher.util.Result<String>?>(null)
+    private val _importExportState = MutableStateFlow<Result<String>?>(null)
     val importExportState = _importExportState.asStateFlow()
 
     fun resetImportExportState() {
@@ -233,32 +233,32 @@ class AdminViewModel @Inject constructor(
 
     fun exportContacts(uri: android.net.Uri) {
         viewModelScope.launch(kotlinx.coroutines.Dispatchers.IO) {
-            _importExportState.value = com.callonly.launcher.util.Result.Loading
+            _importExportState.value = Result.Loading
             try {
                 val json = repository.exportContacts()
                 context.contentResolver.openOutputStream(uri)?.use { outputStream ->
                     outputStream.write(json.toByteArray())
                 }
-                _importExportState.value = com.callonly.launcher.util.Result.Success("Contacts exported successfully")
+                _importExportState.value = Result.Success("Contacts exported successfully")
             } catch (e: Exception) {
                 e.printStackTrace()
-                _importExportState.value = com.callonly.launcher.util.Result.Error(e, "Failed to export contacts")
+                _importExportState.value = Result.Error(e, "Failed to export contacts")
             }
         }
     }
 
     fun importContacts(uri: android.net.Uri) {
         viewModelScope.launch(kotlinx.coroutines.Dispatchers.IO) {
-            _importExportState.value = com.callonly.launcher.util.Result.Loading
+            _importExportState.value = Result.Loading
             try {
                 context.contentResolver.openInputStream(uri)?.use { inputStream ->
                     val json = inputStream.bufferedReader().use { it.readText() }
                     val count = repository.importContacts(json)
-                    _importExportState.value = com.callonly.launcher.util.Result.Success("$count contacts imported successfully")
+                    _importExportState.value = Result.Success("$count contacts imported successfully")
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
-                _importExportState.value = com.callonly.launcher.util.Result.Error(e, "Failed to import contacts")
+                _importExportState.value = Result.Error(e, "Failed to import contacts")
             }
         }
     }
