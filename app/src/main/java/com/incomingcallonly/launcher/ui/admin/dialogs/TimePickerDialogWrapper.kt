@@ -19,13 +19,14 @@ import com.incomingcallonly.launcher.R
 fun TimePickerDialogWrapper(
     initialHour: Int,
     initialMinute: Int,
+    is24HourFormat: Boolean,
     onDismiss: () -> Unit,
     onConfirm: (Int, Int) -> Unit
 ) {
     val timePickerState = rememberTimePickerState(
         initialHour = initialHour,
         initialMinute = initialMinute,
-        is24Hour = true
+        is24Hour = is24HourFormat
     )
 
     AlertDialog(

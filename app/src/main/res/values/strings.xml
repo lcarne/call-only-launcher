@@ -152,4 +152,8 @@
     <string name="onboarding_auth_location_intro_message">Android requires location permission to read network signal strength (bars). The app *does not track* your GPS location.</string>
     <string name="onboarding_auth_location_request_title">Location Access</string>
     <string name="onboarding_auth_location_request_message">Please allow location access for network display.</string>
+    <string name="onboarding_default_dialer_title">Enable Calls</string>
+    <string name="onboarding_default_dialer_message">To handle incoming calls effectively, this app needs to be set as your *default phone app*.</string>
+    <string name="onboarding_default_launcher_title">Set as Home App</string>
+    <string name="onboarding_default_launcher_message">To complete the setup, define this app as your *home launcher* so it starts automatically.</string>
 </resources>

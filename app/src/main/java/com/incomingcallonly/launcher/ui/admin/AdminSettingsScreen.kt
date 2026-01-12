@@ -454,6 +454,7 @@ fun SettingsSection(viewModel: AdminViewModel) {
                 TimePickerDialogWrapper(
                     initialHour = nightStart,
                     initialMinute = nightStartMin,
+                    is24HourFormat = timeFormat == "24",
                     onDismiss = { showStartPicker = false },
                     onConfirm = { hour, minute ->
                         viewModel.setNightModeStartHour(hour)
@@ -467,6 +468,7 @@ fun SettingsSection(viewModel: AdminViewModel) {
                 TimePickerDialogWrapper(
                     initialHour = nightEnd,
                     initialMinute = nightEndMin,
+                    is24HourFormat = timeFormat == "24",
                     onDismiss = { showEndPicker = false },
                     onConfirm = { hour, minute ->
                         viewModel.setNightModeEndHour(hour)

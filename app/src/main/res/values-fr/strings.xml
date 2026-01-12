@@ -152,4 +152,9 @@
     <string name="onboarding_auth_location_intro_message">Android exige l\'autorisation de localisation pour lire la puissance du signal réseau (les barres). L\'application *ne suit pas* votre position GPS.</string>
     <string name="onboarding_auth_location_request_title">Accès à la Localisation</string>
     <string name="onboarding_auth_location_request_message">Veuillez autoriser l\'accès à la localisation pour l\'affichage du réseau.</string>
+    <string name="onboarding_default_dialer_title">Activer les appels</string>
+    <string name="onboarding_default_dialer_message">Pour gérer les appels entrants, cette application doit être définie comme votre *application par défaut*.</string>
+    <string name="onboarding_default_launcher_title">D\'efinir en launcher</string>
+    <string name="onboarding_default_launcher_message">Pour que l\'application démarre automatiquement, définissez-la comme votre *launcher*.</string>
+
 </resources>

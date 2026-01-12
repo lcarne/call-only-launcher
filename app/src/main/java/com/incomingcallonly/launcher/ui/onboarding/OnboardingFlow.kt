@@ -19,6 +19,7 @@ import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -42,6 +43,7 @@ import kotlinx.coroutines.delay
 @Composable
 fun OnboardingFlow(onDismiss: () -> Unit) {
     var step by remember { mutableStateOf(0) }
+    val context = androidx.compose.ui.platform.LocalContext.current
 
     // 0: Presentation
     // 1: Authorization Requests Explanation
@@ -49,7 +51,9 @@ fun OnboardingFlow(onDismiss: () -> Unit) {
     // 3: Request Phone State
     // 4: Location Explanation
     // 5: Request Location
-    // 6: Admin Explanation
+    // 6: Default Dialer
+    // 7: Default Launcher
+    // 8: Admin Explanation
 
     val contactLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission(),
@@ -66,16 +70,22 @@ fun OnboardingFlow(onDismiss: () -> Unit) {
         onResult = { _ -> step++ }
     )
 
+    val dialerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult(),
+        onResult = { _ -> step++ }
+    )
+
     AlertDialog(
         onDismissRequest = { /* Prevent dismissal */ },
         icon = {
             androidx.compose.material3.Icon(
                 imageVector = when (step) {
                     0 -> Icons.Default.Info
-                    1, 6 -> Icons.Default.Lock
+                    1, 8 -> Icons.Default.Lock
                     2 -> Icons.Default.Person
-                    3 -> Icons.Default.Phone
+                    3, 6 -> Icons.Default.Phone
                     4, 5 -> Icons.Default.LocationOn
+                    7 -> Icons.Default.Home // Need Home icon import
                     else -> Icons.Default.Info
                 },
                 contentDescription = null
@@ -90,6 +100,8 @@ fun OnboardingFlow(onDismiss: () -> Unit) {
                     3 -> R.string.onboarding_auth_calls_title
                     4 -> R.string.onboarding_auth_location_intro_title
                     5 -> R.string.onboarding_auth_location_request_title
+                    6 -> R.string.onboarding_default_dialer_title
+                    7 -> R.string.onboarding_default_launcher_title
                     else -> R.string.onboarding_admin_intro_title
                 }),
                 style = MaterialTheme.typography.headlineSmall,
@@ -106,6 +118,8 @@ fun OnboardingFlow(onDismiss: () -> Unit) {
                         3 -> R.string.onboarding_auth_calls_message
                         4 -> R.string.onboarding_auth_location_intro_message
                         5 -> R.string.onboarding_auth_location_request_message
+                        6 -> R.string.onboarding_default_dialer_message
+                        7 -> R.string.onboarding_default_launcher_message
                         else -> R.string.onboarding_admin_intro_message
                     })),
                     style = MaterialTheme.typography.bodyMedium,
@@ -113,7 +127,7 @@ fun OnboardingFlow(onDismiss: () -> Unit) {
                 )
                 Spacer(modifier = Modifier.height(16.dp))
 
-                if (step == 6) {
+                if (step == 8) {
                     Text(
                         text = stringResource(id = R.string.onboarding_important),
                         style = MaterialTheme.typography.titleMedium,
@@ -125,7 +139,7 @@ fun OnboardingFlow(onDismiss: () -> Unit) {
             }
         },
         confirmButton = {
-            if (step == 6) {
+            if (step == 8) {
                 // Final Step Logic (Double Tap)
                 var tapCount by remember { mutableStateOf(0) }
 
@@ -179,6 +193,40 @@ fun OnboardingFlow(onDismiss: () -> Unit) {
                                 phoneLauncher.launch(permissions.toTypedArray())
                             }
                             5 -> locationLauncher.launch(android.Manifest.permission.ACCESS_FINE_LOCATION)
+                            6 -> {
+                                // Request Default Dialer
+                                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+                                    val roleManager = context.getSystemService(android.app.role.RoleManager::class.java)
+                                    if (roleManager?.isRoleAvailable(android.app.role.RoleManager.ROLE_DIALER) == true &&
+                                        !roleManager.isRoleHeld(android.app.role.RoleManager.ROLE_DIALER)) {
+                                        val intent = roleManager.createRequestRoleIntent(android.app.role.RoleManager.ROLE_DIALER)
+                                        dialerLauncher.launch(intent)
+                                    } else {
+                                        step++
+                                    }
+                                } else {
+                                    val telecomManager = context.getSystemService(android.telecom.TelecomManager::class.java)
+                                    if (telecomManager?.defaultDialerPackage != context.packageName) {
+                                        @Suppress("DEPRECATION")
+                                        val intent = android.content.Intent(android.telecom.TelecomManager.ACTION_CHANGE_DEFAULT_DIALER).apply {
+                                            putExtra(android.telecom.TelecomManager.EXTRA_CHANGE_DEFAULT_DIALER_PACKAGE_NAME, context.packageName)
+                                        }
+                                        dialerLauncher.launch(intent)
+                                    } else {
+                                        step++
+                                    }
+                                }
+                            }
+                            7 -> {
+                                // Request Default Launcher
+                                // For launcher, we can't easily check if we are default *before* launching intent inside a generic function without more context/logic,
+                                // but we can just launch the settings.
+                                // Unlike dialer, there is no result callback that guarantees we are set.
+                                // We'll just launch it and move next.
+                                val intent = android.content.Intent(android.provider.Settings.ACTION_HOME_SETTINGS)
+                                context.startActivity(intent)
+                                step++
+                            }
                         }
                     },
                     modifier = Modifier
@@ -186,7 +234,7 @@ fun OnboardingFlow(onDismiss: () -> Unit) {
                         .heightIn(min = 56.dp)
                 ) {
                     Text(
-                        text = stringResource(id = if (step in listOf(2, 3, 5)) R.string.validate else R.string.next),
+                        text = stringResource(id = if (step in listOf(2, 3, 5, 6, 7)) R.string.validate else R.string.next),
                         fontSize = 18.sp
                     )
                 }
