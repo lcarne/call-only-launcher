@@ -3,7 +3,7 @@
     <!-- ==================== APP ==================== -->
     <string name="app_name">Incoming Call Only Launcher</string>
 
-    <!-- ==================== GENERIC ==================== -->
+    <!-- ==================== GENERIC / NAVIGATION ==================== -->
     <string name="add">Ajouter</string>
     <string name="back">Retour</string>
     <string name="back_arrow">Retour</string>
@@ -15,6 +15,8 @@
     <string name="understood">Compris</string>
     <string name="unlock">Déverrouiller</string>
     <string name="validate">Valider</string>
+    <string name="press_again">Appuyez encore %1$d fois</string>
+    <string name="press_again_to_confirm">Appuyez à nouveau pour confirmer</string>
 
     <!-- ==================== HOME SCREEN ==================== -->
     <string name="battery_level_desc">Niveau de la batterie</string>
@@ -23,7 +25,6 @@
     <string name="ringer_disabled">SONNERIE DÉSACTIVÉE</string>
     <string name="activate_calls">ACTIVER LES APPELS</string>
     <string name="activate_launcher">DÉFINIR EN LAUNCHER</string>
-    <string name="taps_remaining">Encore %1$d appuis</string>
 
     <!-- ==================== INCOMING CALL ==================== -->
     <string name="incoming_call">Appel entrant</string>
@@ -32,26 +33,25 @@
     <string name="hang_up">RACCROCHER</string>
     <string name="speaker">HAUT\nPARLEUR</string>
     <string name="earpiece">À\nL\'OREILLE</string>
+    <string name="taps_remaining">Encore %1$d appuis</string>
 
     <!-- ==================== SIM LOCK ==================== -->
     <string name="sim_locked_title">SIM VERROUILLÉE</string>
     <string name="sim_locked_message">Veuillez saisir le code PIN de la carte SIM pour continuer.</string>
     <string name="sim_unlock_button">DÉVERROUILLER</string>
 
-    <!-- ==================== ADMIN - PIN ENTRY ==================== -->
+    <!-- ==================== ADMIN: AUTHENTICATION ==================== -->
     <string name="admin_mode">Mode Administrateur</string>
-    <string name="enter_pin">Entrez le PIN (1234)</string>
     <string name="incorrect_pin">Code incorrect</string>
-    <string name="pin_label">PIN</string>
 
-    <!-- ==================== ADMIN - SETTINGS ==================== -->
+    <!-- ==================== ADMIN: MAIN SETTINGS ==================== -->
     <string name="settings">Paramètres</string>
     <string name="settings_section_content">Contenu</string>
     <string name="settings_section_system">Système</string>
     <string name="settings_section_display_power">Affichage \&amp; Alimentation</string>
     <string name="settings_section_localization">Localisation</string>
-    <string name="data_management">Gestion des données</string>
 
+    <!-- ==================== ADMIN: SYSTEM SETTINGS ==================== -->
     <!-- Call Security -->
     <string name="accept_all_calls">Accepter tous les appels</string>
     <string name="accept_all_calls_desc">Si désactivé, seuls les contacts sont autorisés</string>
@@ -61,6 +61,10 @@
     <string name="ringer_volume">Volume de la sonnerie</string>
     <string name="test_ringer">Tester la sonnerie</string>
 
+    <!-- Data -->
+    <string name="data_management">Gestion des données</string>
+
+    <!-- ==================== ADMIN: DISPLAY & POWER ==================== -->
     <!-- Screen Behavior -->
     <string name="screen_behavior_battery">Batterie</string>
     <string name="screen_behavior_plugged">Branché</string>
@@ -78,8 +82,10 @@
     <string name="next_day">(jusqu\'au lendemain)</string>
     <string name="select_hour">Choisir l\'heure</string>
 
-    <!-- Clock & Localization -->
+    <!-- Clock -->
     <string name="clock_color">Couleur de l\'horloge</string>
+
+    <!-- ==================== ADMIN: LOCALIZATION ==================== -->
     <string name="time_format_title">Format de l\'heure</string>
     <string name="time_format_12">AM/PM</string>
     <string name="time_format_24">24h</string>
@@ -87,7 +93,7 @@
     <string name="language_french">Français</string>
     <string name="language_english">English</string>
 
-    <!-- ==================== ADMIN - CONTACTS ==================== -->
+    <!-- ==================== ADMIN: CONTACTS ==================== -->
     <string name="manage_contacts">Gérer les contacts</string>
     <string name="contacts">Contacts</string>
     <string name="new_contact">Nouveau Contact</string>
@@ -107,10 +113,8 @@
     <string name="import_contacts">Importer les contacts</string>
     <string name="export_contacts">Exporter les contacts</string>
     <string name="import_from_directory">Importer du répertoire</string>
-    <string name="press_again">Appuyez encore %1$d fois</string>
-    <string name="press_again_to_confirm">Appuyez à nouveau pour confirmer</string>
 
-    <!-- ==================== ADMIN - CALL HISTORY ==================== -->
+    <!-- ==================== ADMIN: CALL HISTORY ==================== -->
     <string name="call_history">Historique des appels</string>
     <string name="no_call_history">Aucun appel dans l\'historique</string>
     <string name="clear_history_title">Supprimer l\'historique</string>
@@ -124,10 +128,14 @@
     <string name="onboarding_title">Bienvenue</string>
     <string name="onboarding_message">Pour accéder aux réglages ou au mode Admin :\n\nTapez *15 fois sur la date*, puis *code PIN 1234*.</string>
     <string name="onboarding_important">Important : Ce message ne s\'affichera plus.</string>
+
+    <!-- Slides -->
     <string name="onboarding_presentation_title">Présentation</string>
     <string name="onboarding_presentation_message">Ce launcher est conçu pour simplifier l\'usage du téléphone. Il permet de recevoir des appels uniquement. Avant de commencer, nous allons configurer l\'application ensemble.</string>
     <string name="onboarding_admin_intro_title">Mode Administrateur</string>
     <string name="onboarding_admin_intro_message">Pour accéder aux réglages ou quitter l\'application, il existe un menu caché :\n\nTapez *15 fois sur la date*, puis le code *1234*.</string>
+
+    <!-- Permissions -->
     <string name="onboarding_auth_intro_title">Pourquoi ces autorisations ?</string>
     <string name="onboarding_auth_intro_message">L\'application doit accéder à certaines fonctionnalités de votre téléphone pour fonctionner correctement :\n\n• *Contacts* : Pour l\'import de vos contacts.\n• *Appels* : Pour détecter les appels entrants et créer un historique.\n• *Notifications* : Pour vous alerter des appels entrants.\n• *Localisation* : Pour afficher les barres de réseau (imposé par Android).</string>
     <string name="onboarding_auth_contacts_title">Accès aux Contacts</string>
@@ -138,5 +146,4 @@
     <string name="onboarding_auth_location_intro_message">Android exige l\'autorisation de localisation pour lire la puissance du signal réseau (les barres). L\'application *ne suit pas* votre position GPS.</string>
     <string name="onboarding_auth_location_request_title">Accès à la Localisation</string>
     <string name="onboarding_auth_location_request_message">Veuillez autoriser l\'accès à la localisation pour l\'affichage du réseau.</string>
-
 </resources>
