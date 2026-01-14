@@ -23,6 +23,8 @@ class ContactRepositoryImpl @Inject constructor(
 
     override suspend fun deleteContact(contact: Contact) = contactDao.deleteContact(contact)
 
+    override suspend fun deleteAllContacts() = contactDao.deleteAllContacts()
+
     override suspend fun exportContacts(): String {
         val contacts = contactDao.getContactsList()
         val exportList = contacts.map { contact ->

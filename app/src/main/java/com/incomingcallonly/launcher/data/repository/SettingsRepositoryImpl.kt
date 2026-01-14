@@ -176,6 +176,23 @@ class SettingsRepositoryImpl @Inject constructor(
         _adminPin.value = pin
     }
 
+    override fun resetToDefaults() {
+        setScreenBehaviorPlugged(SettingsRepository.SCREEN_BEHAVIOR_AWAKE)
+        setScreenBehaviorBattery(SettingsRepository.SCREEN_BEHAVIOR_OFF)
+        setNightModeStartHour(DEFAULT_NIGHT_START_HOUR)
+        setNightModeStartMinute(0)
+        setNightModeEndHour(DEFAULT_NIGHT_END_HOUR)
+        setNightModeEndMinute(0)
+        setNightModeEnabled(true)
+        setClockColor(0)
+        setAllowAllCalls(false)
+        setRingerEnabled(true)
+        setRingerVolume(DEFAULT_RINGER_VOLUME)
+        setDefaultSpeakerEnabled(true)
+        setLanguage(defaultLang)
+        setTimeFormat("24")
+    }
+
 
     companion object {
         private const val KEY_NIGHT_START = "night_mode_start"

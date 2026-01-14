@@ -39,6 +39,7 @@ interface SettingsRepository {
     fun setDefaultSpeakerEnabled(enabled: Boolean)
     fun setHasSeenOnboarding(hasSeen: Boolean)
     fun setAdminPin(pin: String)
+    fun resetToDefaults()
 
     companion object {
         const val SCREEN_BEHAVIOR_OFF = 0

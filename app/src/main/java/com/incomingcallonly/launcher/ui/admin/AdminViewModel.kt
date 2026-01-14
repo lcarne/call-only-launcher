@@ -230,6 +230,23 @@ class AdminViewModel @Inject constructor(
         _importExportState.value = null
     }
 
+    fun deleteAllData() {
+        viewModelScope.launch {
+            // Delete all contact images first
+            val currentContacts = repository.getContactsList()
+            currentContacts.forEach { contact ->
+                imageStorageManager.deleteImage(contact.photoUri)
+            }
+            // Delete contacts and history
+            repository.deleteAllContacts()
+            callLogRepository.clearHistory()
+        }
+    }
+
+    fun resetSettings() {
+        settingsRepository.resetToDefaults()
+    }
+
     override fun onCleared() {
         super.onCleared()
         if (currentRingtone?.isPlaying == true) {

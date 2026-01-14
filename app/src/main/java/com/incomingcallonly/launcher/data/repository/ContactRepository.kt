@@ -10,6 +10,7 @@ interface ContactRepository {
     suspend fun insertContact(contact: Contact)
     suspend fun updateContact(contact: Contact)
     suspend fun deleteContact(contact: Contact)
+    suspend fun deleteAllContacts()
 
     suspend fun exportContacts(): String
 

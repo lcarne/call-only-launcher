@@ -74,6 +74,10 @@
 
     <!-- Data -->
     <string name="data_management">Data Management</string>
+    <string name="reset_all_data">Delete all data</string>
+    <string name="confirm_reset_all_data">Are you sure you want to delete all data (contacts, call history)? This action is irreversible.</string>
+    <string name="reset_settings">Reset settings</string>
+    <string name="confirm_reset_settings">Are you sure you want to reset all settings to default?</string>
 
     <!-- ==================== ADMIN: DISPLAY & POWER ==================== -->
     <!-- Screen Behavior -->

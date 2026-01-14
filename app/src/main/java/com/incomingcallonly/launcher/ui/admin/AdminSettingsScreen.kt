@@ -12,8 +12,12 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Share
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -40,6 +44,54 @@ fun AdminSettingsScreen(
     onShowHistory: () -> Unit
 ) {
     val scrollState = rememberScrollState()
+    var showResetDataDialog by remember { androidx.compose.runtime.mutableStateOf(false) }
+    var showResetSettingsDialog by remember { androidx.compose.runtime.mutableStateOf(false) }
+
+    if (showResetDataDialog) {
+        AlertDialog(
+            onDismissRequest = { showResetDataDialog = false },
+            title = { Text(stringResource(R.string.reset_all_data)) },
+            text = { Text(stringResource(R.string.confirm_reset_all_data)) },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        viewModel.deleteAllData()
+                        showResetDataDialog = false
+                    }
+                ) {
+                    Text(stringResource(R.string.confirm))
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showResetDataDialog = false }) {
+                    Text(stringResource(R.string.cancel))
+                }
+            }
+        )
+    }
+
+    if (showResetSettingsDialog) {
+        AlertDialog(
+            onDismissRequest = { showResetSettingsDialog = false },
+            title = { Text(stringResource(R.string.reset_settings)) },
+            text = { Text(stringResource(R.string.confirm_reset_settings)) },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        viewModel.resetSettings()
+                        showResetSettingsDialog = false
+                    }
+                ) {
+                    Text(stringResource(R.string.confirm))
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showResetSettingsDialog = false }) {
+                    Text(stringResource(R.string.cancel))
+                }
+            }
+        )
+    }
 
     val exportLauncher = androidx.activity.compose.rememberLauncherForActivityResult(
         contract = androidx.activity.result.contract.ActivityResultContracts.CreateDocument("application/json"),
@@ -170,6 +222,20 @@ fun AdminSettingsScreen(
                 headlineContent = { Text(stringResource(id = R.string.import_contacts)) },
                 leadingContent = { Icon(Icons.Default.Add, contentDescription = null) },
                 modifier = Modifier.clickable { importLauncher.launch(arrayOf("application/json")) }
+            )
+
+            HorizontalDivider()
+
+            ListItem(
+                headlineContent = { Text(stringResource(id = R.string.reset_all_data)) },
+                leadingContent = { Icon(Icons.Default.Delete, contentDescription = null, tint = MaterialTheme.colorScheme.error) },
+                modifier = Modifier.clickable { showResetDataDialog = true }
+            )
+
+            ListItem(
+                headlineContent = { Text(stringResource(id = R.string.reset_settings)) },
+                leadingContent = { Icon(Icons.Default.Refresh, contentDescription = null) },
+                modifier = Modifier.clickable { showResetSettingsDialog = true }
             )
             
             Spacer(modifier = Modifier.height(32.dp))
