@@ -41,8 +41,8 @@ fun SettingsSystemSection(viewModel: AdminViewModel) {
             supportingContent = { Text(stringResource(id = R.string.accept_all_calls_desc)) },
             trailingContent = {
                 Switch(
-                    checked = allowAllCalls,
-                    onCheckedChange = { viewModel.setAllowAllCalls(it) }
+                    checked = !allowAllCalls,
+                    onCheckedChange = { viewModel.setAllowAllCalls(!it) }
                 )
             }
         )

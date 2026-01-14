@@ -60,8 +60,8 @@
 
     <!-- ==================== ADMIN: SYSTEM SETTINGS ==================== -->
     <!-- Call Security -->
-    <string name="accept_all_calls">Accepter tous les appels</string>
-    <string name="accept_all_calls_desc">Si désactivé, seuls les contacts sont autorisés</string>
+    <string name="accept_all_calls">Restreindre aux favoris uniquement</string>
+    <string name="accept_all_calls_desc">Si désactivé, tous les appels sont autorisés</string>
     <string name="change_pin">Modifier le code PIN</string>
     <string name="change_pin_desc">Modifier le code d\'accès administrateur</string>
     <string name="new_pin">Nouveau code PIN</string>
