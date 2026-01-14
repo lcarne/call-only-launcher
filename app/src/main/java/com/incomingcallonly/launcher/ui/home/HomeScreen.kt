@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -41,6 +42,7 @@ import com.incomingcallonly.launcher.ui.onboarding.OnboardingFlow
 import com.incomingcallonly.launcher.ui.theme.Black
 import com.incomingcallonly.launcher.ui.theme.DimmedClockColor
 import com.incomingcallonly.launcher.ui.theme.HighContrastButtonBg
+import com.incomingcallonly.launcher.ui.theme.SystemBarsColor
 import java.util.Calendar
 
 private const val MINUTES_IN_HOUR = 60
@@ -69,7 +71,7 @@ fun HomeScreen(
     val isRingerEnabled by viewModel.isRingerEnabled.collectAsState()
     
     val savedClockColor by viewModel.clockColor.collectAsState()
-    val clockColor = if (savedClockColor != 0) Color(savedClockColor) else HighContrastButtonBg
+    val clockColor = if (savedClockColor != 0) Color(savedClockColor) else MaterialTheme.colorScheme.primary
     
     val savedFormat by viewModel.timeFormat.collectAsState()
     val hasSeenOnboarding by viewModel.hasSeenOnboarding.collectAsState()
@@ -112,7 +114,14 @@ fun HomeScreen(
         viewModel.refreshDefaultAppStatus(context)
     }
 
-    // 6. UI Composition
+    // 6. System Bars Configuration
+    SystemBarsColor(
+        statusBarColor = Black,
+        navigationBarColor = Black,
+        darkIcons = false // Light icons on dark background
+    )
+
+    // 7. UI Composition
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -189,7 +198,7 @@ private fun HomeContentNormal(
                 .fillMaxWidth()
                 .padding(bottom = 16.dp)
         ) {
-            NetworkSignalDisplay()
+            NetworkSignalDisplay(iconSize = 40.dp)
             Spacer(modifier = Modifier.width(32.dp))
             BatteryLevelDisplay()
         }

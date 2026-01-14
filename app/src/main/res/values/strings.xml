@@ -22,8 +22,6 @@
     <string name="press_again_to_confirm">Press again to confirm</string>
 
     <!-- ==================== HOME SCREEN ==================== -->
-    <string name="battery_level_desc">Battery level</string>
-    <string name="signal_level_desc">Signal level</string>
     <string name="ringer_active">RINGER ON</string>
     <string name="ringer_disabled">RINGER OFF</string>
     <string name="activate_calls">ENABLE CALLS</string>
@@ -57,18 +55,24 @@
     <string name="settings_section_system">System</string>
     <string name="settings_section_display_power">Display &amp; Power</string>
     <string name="settings_section_localization">Localization</string>
+    <string name="settings_section_audio">Audio</string>
 
     <!-- ==================== ADMIN: SYSTEM SETTINGS ==================== -->
     <!-- Call Security -->
-    <string name="accept_all_calls">Restrict to favorites only</string>
+    <string name="accept_all_calls">Restrict to contacts only</string>
     <string name="accept_all_calls_desc">If disabled, all calls are allowed</string>
     <string name="change_pin">Change PIN</string>
     <string name="change_pin_desc">Change the administrator access code</string>
     <string name="new_pin">New PIN</string>
-    <string name="pin_changed">PIN changed successfully</string>
+    <string name="previous_pin">Current PIN</string>
+    <string name="confirm_new_pin">Confirm New PIN</string>
+    <string name="pins_do_not_match">PINs do not match</string>
+    <string name="incorrect_previous_pin">Incorrect current PIN</string>
 
     <!-- Audio -->
     <string name="default_audio_output">Default audio output</string>
+    <string name="earpiece_setting">Earpiece</string>
+    <string name="speaker_setting">Speaker</string>
     <string name="ringer_volume">Ringer volume</string>
     <string name="test_ringer">Test Ringer</string>
 
@@ -146,8 +150,8 @@
     <string name="call_rejected_auto_label">Rejected (auto)</string>
 
     <!-- ==================== ONBOARDING ==================== -->
-    <string name="onboarding_title">Welcome</string>
-    <string name="onboarding_message">To check the settings or access Admin Mode:\n\nTap *15 times on the date*, then enter *PIN 1234*.</string>
+
+
     <string name="onboarding_important">Important: This message will not be shown again.</string>
 
     <!-- Slides -->
@@ -171,4 +175,6 @@
     <string name="onboarding_default_dialer_message">To handle incoming calls effectively, this app needs to be set as your *default phone app*.</string>
     <string name="onboarding_default_launcher_title">Set as Home App</string>
     <string name="onboarding_default_launcher_message">To complete the setup, define this app as your *home launcher* so it starts automatically.</string>
+    <string name="onboarding_pinned_mode_title">Exit Pinned Mode</string>
+    <string name="onboarding_pinned_mode_message">If the app is pinned, hold *Back* + *Overview* (classic navigation) or hold the bottom of the screen (gesture navigation) to unpin.</string>
 </resources>

@@ -24,93 +24,35 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.incomingcallonly.launcher.R
+import com.incomingcallonly.launcher.ui.admin.components.AdminSelectionDialog
 import com.incomingcallonly.launcher.ui.theme.Spacing
 
 @Composable
 fun ScreenBehaviorDialog(
     title: String,
-    iconRes: Int? = null,
+    icon: Any? = null,
     currentValue: Int,
     onConfirm: (Int) -> Unit,
     onDismiss: () -> Unit
 ) {
-    AlertDialog(
+    val options = listOf(0, 1, 2)
+    
+    AdminSelectionDialog(
+        title = title,
+        options = options,
+        selectedOption = currentValue,
+        onOptionSelected = {
+            onConfirm(it)
+        },
         onDismissRequest = onDismiss,
-        title = {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                if (iconRes != null) {
-                    Icon(
-                        painter = painterResource(id = iconRes),
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.size(Spacing.iconExtraLarge)  // 32dp for prominence
-                    )
-                    Spacer(modifier = Modifier.width(16.dp))
-                }
-                Text(
-                    text = title,
-                    style = MaterialTheme.typography.headlineSmall
-                )
+        headerIcon = icon,
+        labelProvider = { mode ->
+            when (mode) {
+                0 -> stringResource(id = R.string.mode_off)
+                1 -> stringResource(id = R.string.mode_dim)
+                2 -> stringResource(id = R.string.mode_awake)
+                else -> ""
             }
-        },
-        text = {
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(12.dp)  // More breathing room
-            ) {
-                listOf(
-                    0 to stringResource(id = R.string.mode_off),
-                    1 to stringResource(id = R.string.mode_dim),
-                    2 to stringResource(id = R.string.mode_awake)
-                ).forEach { (value, label) ->
-                    val isSelected = currentValue == value
-                    Surface(
-                        onClick = { onConfirm(value) },
-                        shape = RoundedCornerShape(16.dp),  // More rounded for premium feel
-                        color = if (isSelected)
-                            MaterialTheme.colorScheme.primaryContainer
-                        else
-                            MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
-                        tonalElevation = if (isSelected) 2.dp else 0.dp,  // Subtle lift when selected
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Row(
-                            modifier = Modifier
-                                .padding(horizontal = 20.dp, vertical = 16.dp),  // More generous padding
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(
-                                text = label,
-                                style = MaterialTheme.typography.bodyLarge,  // Larger text
-                                color = if (isSelected)
-                                    MaterialTheme.colorScheme.onPrimaryContainer
-                                else
-                                    MaterialTheme.colorScheme.onSurface,
-                                modifier = Modifier.weight(1f)
-                            )
-                            RadioButton(
-                                selected = isSelected,
-                                onClick = null
-                            )
-                        }
-                    }
-                }
-            }
-        },
-        confirmButton = {},
-        dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text(
-                    stringResource(id = R.string.cancel),
-                    style = MaterialTheme.typography.labelLarge
-                )
-            }
-        },
-        shape = RoundedCornerShape(28.dp),  // Material 3 extra-large shape
-        containerColor = MaterialTheme.colorScheme.surface,
-        tonalElevation = 6.dp
+        }
     )
 }

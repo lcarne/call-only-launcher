@@ -22,14 +22,13 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.SuggestionChip
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -54,6 +53,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.incomingcallonly.launcher.R
 import com.incomingcallonly.launcher.data.model.Contact
+import com.incomingcallonly.launcher.ui.admin.components.AdminDialog
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -197,10 +197,10 @@ fun ContactDialog(
     }
 
     if (showDiscardConfirmation) {
-        AlertDialog(
+        AdminDialog(
             onDismissRequest = { showDiscardConfirmation = false },
-            title = { Text(stringResource(R.string.discard_changes_title)) },
-            text = { Text(stringResource(R.string.discard_changes_message)) },
+            title = stringResource(R.string.discard_changes_title),
+            content = { Text(stringResource(R.string.discard_changes_message)) },
             confirmButton = {
                 TextButton(
                     onClick = {
@@ -219,28 +219,89 @@ fun ContactDialog(
         )
     }
 
-    AlertDialog(
+    // Photo Source Dialog
+    if (showPhotoSourceDialog) {
+        AdminDialog(
+            onDismissRequest = { showPhotoSourceDialog = false },
+            title = stringResource(id = R.string.photo_source),
+            content = {
+                Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    Surface(
+                        onClick = {
+                            showPhotoSourceDialog = false
+                            photoPicker.launch(
+                                androidx.activity.result.PickVisualMediaRequest(
+                                    androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia.ImageOnly
+                                )
+                            )
+                        },
+                        shape = RoundedCornerShape(12.dp),
+                        modifier = Modifier.fillMaxWidth(),
+                        color = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.5f)
+                    ) {
+                        Row(
+                            modifier = Modifier.padding(16.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(painter = painterResource(id = R.drawable.ic_photo_library), contentDescription = null, tint = MaterialTheme.colorScheme.primary)
+                            Spacer(modifier = Modifier.width(16.dp))
+                            Text(stringResource(id = R.string.gallery), style = MaterialTheme.typography.bodyLarge)
+                        }
+                    }
+                    Surface(
+                        onClick = {
+                            showPhotoSourceDialog = false
+                            val permission = android.Manifest.permission.CAMERA
+                            if (androidx.core.content.ContextCompat.checkSelfPermission(
+                                    context,
+                                    permission
+                                ) == android.content.pm.PackageManager.PERMISSION_GRANTED
+                            ) {
+                                onOpenCamera { uri -> photoUri = uri }
+                            } else {
+                                cameraPermissionLauncher.launch(permission)
+                            }
+                        },
+                        shape = RoundedCornerShape(12.dp),
+                        modifier = Modifier.fillMaxWidth(),
+                        color = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.5f)
+                    ) {
+                        Row(
+                            modifier = Modifier.padding(16.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(painter = painterResource(id = R.drawable.ic_photo_camera), contentDescription = null, tint = MaterialTheme.colorScheme.primary)
+                            Spacer(modifier = Modifier.width(16.dp))
+                            Text(stringResource(id = R.string.camera), style = MaterialTheme.typography.bodyLarge)
+                        }
+                    }
+                }
+            },
+            confirmButton = {},
+            dismissButton = {
+                TextButton(onClick = { showPhotoSourceDialog = false }) {
+                    Text(stringResource(id = R.string.cancel))
+                }
+            }
+        )
+    }
+
+    AdminDialog(
         onDismissRequest = attemptDismiss,
-        title = {
-            Text(
-                text = if (contactToEdit == null) stringResource(id = R.string.new_contact) else stringResource(
-                    id = R.string.edit_contact
-                ),
-                style = MaterialTheme.typography.headlineSmall
-            )
-        },
-        text = {
+        title = if (contactToEdit == null) stringResource(id = R.string.new_contact) else stringResource(id = R.string.edit_contact),
+        icon = null,
+        content = {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .verticalScroll(rememberScrollState()),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
+                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 val focusManager = LocalFocusManager.current
 
                 // Compact Import Button
                 if (contactToEdit == null) {
-                    SuggestionChip(
+                    androidx.compose.material3.OutlinedButton(
                         onClick = {
                             val permission = android.Manifest.permission.READ_CONTACTS
                             if (androidx.core.content.ContextCompat.checkSelfPermission(
@@ -253,18 +314,16 @@ fun ContactDialog(
                                 permissionLauncher.launch(permission)
                             }
                         },
-                        label = { 
-                            Text(
-                                stringResource(id = R.string.import_from_directory),
-                                style = MaterialTheme.typography.labelMedium
-                            ) 
-                        },
-                        icon = { Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.size(16.dp)) },
-                        modifier = Modifier.align(Alignment.CenterHorizontally)
-                    )
+                        modifier = Modifier.align(Alignment.CenterHorizontally),
+                        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
+                    ) {
+                         Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.size(18.dp))
+                         Spacer(modifier = Modifier.width(8.dp))
+                         Text(stringResource(id = R.string.import_from_directory))
+                    }
                 }
 
-                // Compact Photo Selection
+                // Photo Selection
                 Column(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally
@@ -272,7 +331,7 @@ fun ContactDialog(
                     val hasPhoto = photoUri != null
                     Box(
                         modifier = Modifier
-                            .size(64.dp)
+                            .size(80.dp) // Larger photo
                             .clip(CircleShape)
                             .background(MaterialTheme.colorScheme.surfaceVariant)
                             .clickable { showPhotoSourceDialog = true },
@@ -289,21 +348,18 @@ fun ContactDialog(
                             Icon(
                                 Icons.Default.Person,
                                 contentDescription = null,
-                                modifier = Modifier.size(28.dp),
+                                modifier = Modifier.size(40.dp),
                                 tint = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
                     }
                     
                     TextButton(
-                        onClick = { showPhotoSourceDialog = true },
-                        modifier = Modifier.height(32.dp),
-                        contentPadding = PaddingValues(horizontal = 8.dp)
+                        onClick = { showPhotoSourceDialog = true }
                     ) {
                         Text(
                             text = if (hasPhoto) stringResource(id = R.string.photo_selected)
-                                   else stringResource(id = R.string.add_photo),
-                            style = MaterialTheme.typography.labelSmall
+                                   else stringResource(id = R.string.add_photo)
                         )
                     }
                 }
@@ -320,7 +376,8 @@ fun ContactDialog(
                     keyboardActions = KeyboardActions(
                         onNext = { focusManager.moveFocus(androidx.compose.ui.focus.FocusDirection.Down) }
                     ),
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(12.dp)
                 )
 
                 OutlinedTextField(
@@ -335,7 +392,8 @@ fun ContactDialog(
                     keyboardActions = KeyboardActions(
                         onNext = { focusManager.moveFocus(androidx.compose.ui.focus.FocusDirection.Down) }
                     ),
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(12.dp)
                 )
 
                 OutlinedTextField(
@@ -350,72 +408,9 @@ fun ContactDialog(
                     keyboardActions = KeyboardActions(
                         onDone = { focusManager.clearFocus() }
                     ),
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(12.dp)
                 )
-
-                if (showPhotoSourceDialog) {
-                    AlertDialog(
-                        onDismissRequest = { showPhotoSourceDialog = false },
-                        title = { Text(stringResource(id = R.string.photo_source), style = MaterialTheme.typography.titleMedium) },
-                        text = {
-                            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                                Surface(
-                                    onClick = {
-                                        showPhotoSourceDialog = false
-                                        photoPicker.launch(
-                                            androidx.activity.result.PickVisualMediaRequest(
-                                                androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia.ImageOnly
-                                            )
-                                        )
-                                    },
-                                    shape = RoundedCornerShape(8.dp),
-                                    modifier = Modifier.fillMaxWidth()
-                                ) {
-                                    Row(
-                                        modifier = Modifier.padding(12.dp),
-                                        verticalAlignment = Alignment.CenterVertically
-                                    ) {
-                                        Icon(painter = painterResource(id = R.drawable.ic_photo_library), contentDescription = null)
-                                        Spacer(modifier = Modifier.width(16.dp))
-                                        Text(stringResource(id = R.string.gallery))
-                                    }
-                                }
-                                Surface(
-                                    onClick = {
-                                        showPhotoSourceDialog = false
-                                        val permission = android.Manifest.permission.CAMERA
-                                        if (androidx.core.content.ContextCompat.checkSelfPermission(
-                                                context,
-                                                permission
-                                            ) == android.content.pm.PackageManager.PERMISSION_GRANTED
-                                        ) {
-                                            onOpenCamera { uri -> photoUri = uri }
-                                        } else {
-                                            cameraPermissionLauncher.launch(permission)
-                                        }
-                                    },
-                                    shape = RoundedCornerShape(8.dp),
-                                    modifier = Modifier.fillMaxWidth()
-                                ) {
-                                    Row(
-                                        modifier = Modifier.padding(12.dp),
-                                        verticalAlignment = Alignment.CenterVertically
-                                    ) {
-                                        Icon(painter = painterResource(id = R.drawable.ic_photo_camera), contentDescription = null)
-                                        Spacer(modifier = Modifier.width(16.dp))
-                                        Text(stringResource(id = R.string.camera))
-                                    }
-                                }
-                            }
-                        },
-                        confirmButton = {},
-                        dismissButton = {
-                            TextButton(onClick = { showPhotoSourceDialog = false }) {
-                                Text(stringResource(id = R.string.cancel))
-                            }
-                        }
-                    )
-                }
             }
         },
         confirmButton = {

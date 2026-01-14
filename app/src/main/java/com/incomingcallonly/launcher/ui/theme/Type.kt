@@ -8,14 +8,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.incomingcallonly.launcher.R
 
-/**
- * Enhanced typography system optimized for senior users with improved readability.
- * All sizes increased by 1-2sp compared to Material 3 defaults.
- * Stronger font weights for better visual hierarchy.
- * 
- * Uses Inter font family for modern, clean, and highly readable typography.
- */
-
 // Inter font family with proper weights
 private val AppFontFamily = FontFamily(
     Font(R.font.inter_regular, FontWeight.Normal),

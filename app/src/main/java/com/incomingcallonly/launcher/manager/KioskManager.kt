@@ -22,8 +22,9 @@ class KioskManager @Inject constructor(
     fun hideSystemUI(activity: Activity) {
         val windowInsetsController =
             WindowCompat.getInsetsController(activity.window, activity.window.decorView)
+        // Use BEHAVIOR_DEFAULT instead of deprecated BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
         windowInsetsController.systemBarsBehavior =
-            WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+            WindowInsetsControllerCompat.BEHAVIOR_DEFAULT
         windowInsetsController.hide(WindowInsetsCompat.Type.systemBars())
     }
 

@@ -39,6 +39,8 @@ import java.util.Date
 import java.util.Locale
 
 import androidx.activity.compose.BackHandler
+import com.incomingcallonly.launcher.ui.theme.SystemBarsColor
+import com.incomingcallonly.launcher.ui.components.DepthIcon
 
 private const val DATE_FORMAT_HISTORY = "dd/MM HH:mm"
 private const val DURATION_FORMAT_HMS = "%02d:%02d:%02d"
@@ -61,13 +63,20 @@ fun CallHistoryScreen(
     BackHandler(onBack = onBack)
     var showDeleteConfirmation by remember { mutableStateOf(false) }
 
+    // System Bars Configuration
+    SystemBarsColor(
+        statusBarColor = MaterialTheme.colorScheme.background,
+        navigationBarColor = MaterialTheme.colorScheme.background,
+        darkIcons = true
+    )
+
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text(stringResource(id = com.incomingcallonly.launcher.R.string.call_history)) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(
+                        DepthIcon(
                             painter = androidx.compose.ui.res.painterResource(id = com.incomingcallonly.launcher.R.drawable.ic_arrow_back),
                             contentDescription = stringResource(id = com.incomingcallonly.launcher.R.string.back)
                         )
@@ -75,7 +84,7 @@ fun CallHistoryScreen(
                 },
                 actions = {
                     IconButton(onClick = { showDeleteConfirmation = true }) {
-                        Icon(
+                        DepthIcon(
                             Icons.Default.Delete,
                             contentDescription = stringResource(id = com.incomingcallonly.launcher.R.string.clear_history_title),
                             tint = MaterialTheme.colorScheme.error
@@ -172,7 +181,7 @@ fun CallLogItem(log: CallLog) {
 
     ListItem(
         leadingContent = {
-            Icon(
+            DepthIcon(
                 painter = androidx.compose.ui.res.painterResource(id = iconRes),
                 contentDescription = null,
                 tint = color,

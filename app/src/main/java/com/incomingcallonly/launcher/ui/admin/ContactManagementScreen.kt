@@ -1,16 +1,17 @@
 package com.incomingcallonly.launcher.ui.admin
 
+import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -27,12 +28,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import com.incomingcallonly.launcher.R
 import com.incomingcallonly.launcher.data.model.Contact
+import com.incomingcallonly.launcher.ui.admin.components.AdminDangerButton
+import com.incomingcallonly.launcher.ui.admin.components.AdminDialog
+import com.incomingcallonly.launcher.ui.admin.components.AdminLargeButton
 import com.incomingcallonly.launcher.ui.admin.components.ContactListItem
 import com.incomingcallonly.launcher.ui.admin.dialogs.ContactDialog
-
-import androidx.activity.compose.BackHandler
+import com.incomingcallonly.launcher.ui.theme.Spacing
+import com.incomingcallonly.launcher.ui.theme.SystemBarsColor
+import com.incomingcallonly.launcher.ui.components.DepthIcon
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -42,76 +48,96 @@ fun ContactManagementScreen(
     onOpenCamera: ((android.net.Uri) -> Unit) -> Unit
 ) {
     val contacts by viewModel.contacts.collectAsState()
+
     BackHandler(onBack = onBack)
+
     var showAddDialog by remember { mutableStateOf(false) }
     var contactToEdit by remember { mutableStateOf<Contact?>(null) }
     var contactToDelete by remember { mutableStateOf<Contact?>(null) }
 
+    // System Bars Configuration
+    SystemBarsColor(
+        statusBarColor = MaterialTheme.colorScheme.background,
+        navigationBarColor = MaterialTheme.colorScheme.background,
+        darkIcons = true
+    )
+
     Scaffold(
+        contentWindowInsets = WindowInsets.systemBars,
         topBar = {
             TopAppBar(
-                title = { Text(stringResource(id = R.string.contacts)) },
+                title = { Text(stringResource(R.string.contacts)) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_arrow_back),
-                            contentDescription = stringResource(id = R.string.back)
+                        DepthIcon(
+                            painter = painterResource(R.drawable.ic_arrow_back),
+                            contentDescription = stringResource(R.string.back)
                         )
                     }
                 }
             )
-        },
-        floatingActionButton = {
-            FloatingActionButton(onClick = { showAddDialog = true }) {
-                Icon(
-                    Icons.Default.Add,
-                    contentDescription = stringResource(id = R.string.add_contact)
-                )
-            }
         }
-    ) { padding ->
-        LazyColumn(
+    ) { paddingValues ->
+        Column(
             modifier = Modifier
-                .padding(padding)
                 .fillMaxSize()
+                .padding(paddingValues)
         ) {
-            items(contacts) { contact ->
-                ContactListItem(
-                    contact = contact,
-                    onClick = { contactToEdit = contact },
-                    onDelete = { contactToDelete = contact }
+            AdminLargeButton(
+                text = stringResource(R.string.add_contact),
+                icon = Icons.Default.Add,
+                onClick = { showAddDialog = true },
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                modifier = Modifier.padding(
+                    top = Spacing.md,
+                    bottom = Spacing.xs
                 )
+            )
+
+            LazyColumn(
+                modifier = Modifier.fillMaxSize()
+            ) {
+                items(contacts) { contact ->
+                    ContactListItem(
+                        contact = contact,
+                        onClick = { contactToEdit = contact },
+                        onDelete = { contactToDelete = contact }
+                    )
+                }
             }
         }
 
-        if (contactToDelete != null) {
-            AlertDialog(
+        contactToDelete?.let { contact ->
+            AdminDialog(
                 onDismissRequest = { contactToDelete = null },
-                title = { Text(stringResource(id = R.string.delete_contact)) },
-                text = {
+                title = stringResource(R.string.delete_contact),
+                icon = Icons.Default.Delete,
+                iconContainerColor = MaterialTheme.colorScheme.errorContainer,
+                iconTint = MaterialTheme.colorScheme.error,
+                animated = false,
+                content = {
                     Text(
-                        stringResource(
-                            id = R.string.confirm_delete_contact,
-                            contactToDelete?.name ?: ""
-                        )
+                        text = stringResource(
+                            R.string.confirm_delete_contact,
+                            contact.name
+                        ),
+                        style = MaterialTheme.typography.bodyMedium,
+                        textAlign = TextAlign.Center
                     )
                 },
                 confirmButton = {
-                    Button(
+                    AdminDangerButton(
+                        text = stringResource(R.string.delete),
                         onClick = {
-                            contactToDelete?.let { viewModel.deleteContact(it) }
+                            viewModel.deleteContact(contact)
                             contactToDelete = null
-                        },
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.error
-                        )
-                    ) {
-                        Text(stringResource(id = R.string.delete))
-                    }
+                        }
+                    )
                 },
                 dismissButton = {
                     TextButton(onClick = { contactToDelete = null }) {
-                        Text(stringResource(id = R.string.cancel))
+                        Text(stringResource(R.string.cancel))
                     }
                 }
             )
@@ -121,11 +147,7 @@ fun ContactManagementScreen(
             ContactDialog(
                 contactToEdit = null,
                 onDismiss = { showAddDialog = false },
-                onOpenCamera = { onCaptured ->
-                    onOpenCamera { uri ->
-                        onCaptured(uri)
-                    }
-                },
+                onOpenCamera = onOpenCamera,
                 onConfirm = { name, number, photoUri ->
                     viewModel.addContact(name, number, photoUri)
                     showAddDialog = false
@@ -133,18 +155,14 @@ fun ContactManagementScreen(
             )
         }
 
-        if (contactToEdit != null) {
+        contactToEdit?.let { contact ->
             ContactDialog(
-                contactToEdit = contactToEdit,
+                contactToEdit = contact,
                 onDismiss = { contactToEdit = null },
-                onOpenCamera = { onCaptured ->
-                    onOpenCamera { uri ->
-                        onCaptured(uri)
-                    }
-                },
+                onOpenCamera = onOpenCamera,
                 onConfirm = { name, number, photoUri ->
                     viewModel.updateContact(
-                        contactToEdit!!.copy(
+                        contact.copy(
                             name = name,
                             phoneNumber = number,
                             photoUri = photoUri

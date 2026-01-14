@@ -1,6 +1,8 @@
 package com.incomingcallonly.launcher.ui.theme
 
 import android.app.Activity
+import android.content.Context
+import android.content.ContextWrapper
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
@@ -97,12 +99,7 @@ fun IncomingCallOnlyTheme(
 
     val view = LocalView.current
     if (!view.isInEditMode) {
-        SideEffect {
-            val window = (view.context as Activity).window
-            @Suppress("DEPRECATION")
-            window.statusBarColor = colorScheme.background.toArgb()
-            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = !darkTheme
-        }
+        // SideEffect removed to allow per-screen control
     }
 
     MaterialTheme(
@@ -111,3 +108,5 @@ fun IncomingCallOnlyTheme(
         content = content
     )
 }
+
+

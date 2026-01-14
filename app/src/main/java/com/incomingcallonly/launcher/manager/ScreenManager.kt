@@ -17,10 +17,6 @@ class ScreenManager @Inject constructor(
     private val powerManager = context.getSystemService(Context.POWER_SERVICE) as PowerManager
     private var wakeLock: PowerManager.WakeLock? = null
 
-    /**
-     * Wakes up the screen from deep sleep using a WakeLock.
-     * The wake lock is automatically released after 3 seconds.
-     */
     @Suppress("DEPRECATION")
     fun wakeUpScreen() {
         try {

@@ -45,7 +45,9 @@ import coil.compose.AsyncImage
 import com.incomingcallonly.launcher.data.model.Contact
 import com.incomingcallonly.launcher.ui.components.BatteryLevelDisplay
 import com.incomingcallonly.launcher.R
+import com.incomingcallonly.launcher.ui.components.DepthIcon
 import kotlinx.coroutines.delay
+
 
 private const val RESET_AMBIGUOUS_TAP_DELAY = 3000L
 private const val TAP_CONFIRMATION_COUNT = 2
@@ -159,7 +161,7 @@ fun CallLayout(
                         error = rememberVectorPainter(Icons.Default.Person)
                     )
                 } else {
-                    Icon(
+                    DepthIcon(
                         imageVector = Icons.Default.Person,
                         contentDescription = null,
                         modifier = Modifier
@@ -232,7 +234,7 @@ fun CallLayout(
                         shape = CircleShape,
                         modifier = Modifier.size(110.dp)
                     ) {
-                        Icon(
+                        DepthIcon(
                             painter = androidx.compose.ui.res.painterResource(id = R.drawable.ic_call_end),
                             contentDescription = "Refuse",
                             tint = Color.White,
@@ -255,7 +257,7 @@ fun CallLayout(
                         shape = CircleShape,
                         modifier = Modifier.size(160.dp)
                     ) {
-                        Icon(
+                        DepthIcon(
                             imageVector = Icons.Default.Call,
                             contentDescription = "Answer",
                             tint = Color.White,
@@ -303,7 +305,7 @@ fun CallLayout(
                     shape = CircleShape,
                     elevation = ButtonDefaults.buttonElevation(defaultElevation = 8.dp)
                 ) {
-                    Icon(
+                    DepthIcon(
                         painter = androidx.compose.ui.res.painterResource(id = R.drawable.ic_call_end),
                         contentDescription = "End Call",
                         tint = Color.White,
@@ -339,7 +341,7 @@ fun CallLayout(
                         shape = RoundedCornerShape(24.dp),
                         modifier = Modifier.size(110.dp)
                     ) {
-                        Icon(
+                        DepthIcon(
                             painter = androidx.compose.ui.res.painterResource(id = R.drawable.ic_hearing),
                             contentDescription = "Earpiece",
                             tint = if (!isSpeakerOn) Color.White else Color.Gray,
@@ -366,7 +368,7 @@ fun CallLayout(
                         shape = RoundedCornerShape(24.dp),
                         modifier = Modifier.size(110.dp)
                     ) {
-                        Icon(
+                        DepthIcon(
                             painter = androidx.compose.ui.res.painterResource(id = R.drawable.ic_speaker),
                             contentDescription = "Speaker",
                             tint = if (isSpeakerOn) Color.Black else Color.White,

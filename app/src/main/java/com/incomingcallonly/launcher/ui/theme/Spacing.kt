@@ -3,10 +3,6 @@ package com.incomingcallonly.launcher.ui.theme
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
-/**
- * Semantic spacing system based on 8dp grid.
- * Provides consistent spacing throughout the app with named values for common use cases.
- */
 object Spacing {
     // Base spacing scale (8dp grid)
     val none: Dp = 0.dp

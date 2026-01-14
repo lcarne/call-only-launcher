@@ -41,12 +41,12 @@ class CallScreeningServiceImpl : CallScreeningService() {
                 val contacts = contactRepository.getContactsList()
 
                 // Check if any contact matches the incoming number
-                val isFavorite = contacts.any { contact ->
+                val isContact = contacts.any { contact ->
                     @Suppress("DEPRECATION")
                     PhoneNumberUtils.compare(contact.phoneNumber, incomingNumber)
                 }
 
-                if (isFavorite || settingsRepository.allowAllCalls.value) {
+                if (isContact || settingsRepository.allowAllCalls.value) {
                     allowCall(callDetails)
                 } else {
                     logBlockedCall(incomingNumber)

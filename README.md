@@ -23,7 +23,7 @@ Incoming Call Only Launcher locks the user into a **single-purpose interface** f
 
 The user can:
 - View the current date and time with a **large, high-contrast display**
-- Receive **incoming calls only** from a curated list of trusted contacts (Favorites)
+- Receive **incoming calls only** from a curated list of trusted contacts
 
 Everything else is intentionally hidden or restricted:
 - No outgoing calls
@@ -69,7 +69,7 @@ This design minimizes confusion and prevents misuse.
   Incoming calls start on **speakerphone by default**, helping users with hearing or dexterity challenges. Switch between speaker and earpiece using large, clear buttons.
 
 - **Safe Call Handling**  
-  - Incoming calls ring only for contacts marked as Favorites.
+  - Incoming calls ring only for contacts.
   - Unknown callers are **automatically silenced or rejected**.
   - **2-Tap Safety**: Hang-up and Refuse actions require two taps to prevent accidental call termination.
 
@@ -268,7 +268,7 @@ The Admin interface is intentionally hidden to prevent accidental access by the 
 - Enter the default PIN: `1234` (default PIN, can be changed in Admin Settings)
 
 From the Admin interface you can:
-- Add or remove Favorites (trusted contacts).
+- Add or remove contacts.
 - Configure screen behavior dependent on power state (Plugged In vs On Battery):
   - **Off**: Standard Android timeout.
   - **Dim**: Screen stays on with reduced brightness, showing only the clock (in soothing #B4BEB0 color).

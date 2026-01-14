@@ -6,6 +6,7 @@ import android.view.KeyEvent
 import androidx.activity.ComponentActivity
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.collectAsState
@@ -23,6 +24,8 @@ import com.incomingcallonly.launcher.ui.call.IncomingCallViewModel
 import com.incomingcallonly.launcher.ui.components.SimLockOverlay
 import com.incomingcallonly.launcher.ui.navigation.IncomingCallOnlyNavGraph
 import com.incomingcallonly.launcher.ui.theme.IncomingCallOnlyTheme
+import com.incomingcallonly.launcher.ui.theme.SystemBarsColor
+import androidx.compose.material3.MaterialTheme
 import com.incomingcallonly.launcher.util.LocaleHelper
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -42,6 +45,9 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        // Enable modern edge-to-edge display (Android 15+)
+        enableEdgeToEdge()
+
         ringerManager.startObserving(lifecycleScope)
 
         // Block back button
@@ -56,6 +62,13 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             IncomingCallOnlyTheme {
+                // Default System Bars Color (can be overridden by screens)
+                SystemBarsColor(
+                    statusBarColor = MaterialTheme.colorScheme.background,
+                    navigationBarColor = MaterialTheme.colorScheme.background,
+                    darkIcons = !isSystemInDarkTheme()
+                )
+
                 Box(modifier = Modifier.fillMaxSize()) {
                     // Main App Content
                     IncomingCallOnlyNavGraph(

@@ -11,14 +11,14 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.material.icons.automirrored.filled.OpenInNew
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Share
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -26,19 +26,36 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.incomingcallonly.launcher.R
-import com.incomingcallonly.launcher.ui.admin.components.SectionDivider
-import com.incomingcallonly.launcher.ui.admin.components.SectionHeader
+import com.incomingcallonly.launcher.ui.admin.components.AdminDangerButton
+import com.incomingcallonly.launcher.ui.admin.components.AdminDivider
+import com.incomingcallonly.launcher.ui.admin.components.AdminDialog
+import com.incomingcallonly.launcher.ui.admin.components.AdminSectionHeader
+import com.incomingcallonly.launcher.ui.admin.components.AdminSettingsCard
+import com.incomingcallonly.launcher.ui.admin.components.AdminIcon
+import com.incomingcallonly.launcher.ui.admin.components.AdminNavigationItem
+import com.incomingcallonly.launcher.ui.admin.components.SettingsAudioSection
+import com.incomingcallonly.launcher.ui.admin.components.SettingsDisplaySection
+import com.incomingcallonly.launcher.ui.admin.components.SettingsLocalizationSection
+import com.incomingcallonly.launcher.ui.admin.components.SettingsSystemSection
 import com.incomingcallonly.launcher.ui.theme.Spacing
+import com.incomingcallonly.launcher.ui.theme.SystemBarsColor
+import com.incomingcallonly.launcher.ui.components.DepthIcon
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -54,20 +71,38 @@ fun AdminSettingsScreen(
     var showResetDataDialog by remember { androidx.compose.runtime.mutableStateOf(false) }
     var showResetSettingsDialog by remember { androidx.compose.runtime.mutableStateOf(false) }
 
+    // System Bars Configuration
+    SystemBarsColor(
+        statusBarColor = Color.White,
+        navigationBarColor = Color.White,
+        darkIcons = true // Dark icons on light background
+    )
+
+    // Modern Dialogs
     if (showResetDataDialog) {
-        AlertDialog(
+        AdminDialog(
             onDismissRequest = { showResetDataDialog = false },
-            title = { Text(stringResource(R.string.reset_all_data)) },
-            text = { Text(stringResource(R.string.confirm_reset_all_data)) },
+            title = stringResource(R.string.reset_all_data),
+            icon = Icons.Default.Delete,
+            iconContainerColor = MaterialTheme.colorScheme.errorContainer,
+            iconTint = MaterialTheme.colorScheme.error,
+            animated = false,
+            content = {
+                Text(
+                    stringResource(R.string.confirm_reset_all_data),
+                    modifier = Modifier.padding(horizontal = 8.dp),
+                    textAlign = TextAlign.Center,
+                    color = MaterialTheme.colorScheme.error
+                )
+            },
             confirmButton = {
-                TextButton(
+            AdminDangerButton(
+                    text = stringResource(R.string.confirm),
                     onClick = {
                         viewModel.deleteAllData()
                         showResetDataDialog = false
                     }
-                ) {
-                    Text(stringResource(R.string.confirm))
-                }
+                )
             },
             dismissButton = {
                 TextButton(onClick = { showResetDataDialog = false }) {
@@ -78,19 +113,27 @@ fun AdminSettingsScreen(
     }
 
     if (showResetSettingsDialog) {
-        AlertDialog(
+        AdminDialog(
             onDismissRequest = { showResetSettingsDialog = false },
-            title = { Text(stringResource(R.string.reset_settings)) },
-            text = { Text(stringResource(R.string.confirm_reset_settings)) },
+            title = stringResource(R.string.reset_settings),
+            icon = Icons.Default.Refresh,
+            animated = false,
+            content = {
+                Text(
+                    stringResource(R.string.confirm_reset_settings),
+                    modifier = Modifier.padding(horizontal = 8.dp),
+                    textAlign = TextAlign.Center,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+            },
             confirmButton = {
-                TextButton(
+            AdminDangerButton( // Changed to DangerButton as requested
+                    text = stringResource(R.string.confirm),
                     onClick = {
                         viewModel.resetSettings()
                         showResetSettingsDialog = false
                     }
-                ) {
-                    Text(stringResource(R.string.confirm))
-                }
+                )
             },
             dismissButton = {
                 TextButton(onClick = { showResetSettingsDialog = false }) {
@@ -115,9 +158,19 @@ fun AdminSettingsScreen(
     )
 
     Scaffold(
+        containerColor = Color.White,
         topBar = {
             TopAppBar(
-                title = { Text(stringResource(id = R.string.settings)) }
+                title = { 
+                    Text(
+                        stringResource(id = R.string.settings),
+                        style = MaterialTheme.typography.headlineMedium
+                    ) 
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.background,
+                    scrolledContainerColor = MaterialTheme.colorScheme.surface
+                )
             )
         }
     ) { padding ->
@@ -127,134 +180,201 @@ fun AdminSettingsScreen(
                 .fillMaxSize()
                 .verticalScroll(scrollState)
         ) {
-            // General Actions
-            ListItem(
-                headlineContent = { Text(stringResource(id = R.string.unlock)) },
-                leadingContent = {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_lock_open),
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.error
-                    )
-                },
-                modifier = Modifier
-                    .clickable {
+            // Quick Actions - Now more prominent
+            AdminSettingsCard {
+                ListItem(
+                    headlineContent = { 
+                        Text(
+                            stringResource(id = R.string.unlock),
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold
+                        ) 
+                    },
+                    leadingContent = {
+                        AdminIcon(
+                            painter = painterResource(id = R.drawable.ic_lock_open),
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.error,
+                            containerColor = MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.3f)
+                        )
+                    },
+                    modifier = Modifier.clickable {
                         onUnpin()
                         viewModel.logout()
                         onExit()
                     }
-            )
-            ListItem(
-                headlineContent = { Text(stringResource(id = R.string.back_arrow)) },
-                leadingContent = {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_arrow_back),
-                        contentDescription = null
-                    )
-                },
-                modifier = Modifier.clickable {
-                    viewModel.logout()
-                    onExit()
-                }
-            )
-
-            SectionDivider()
+                )
+                AdminDivider()
+                ListItem(
+                    headlineContent = { 
+                        Text(
+                            stringResource(id = R.string.back_arrow),
+                            style = MaterialTheme.typography.titleMedium
+                        ) 
+                    },
+                    leadingContent = {
+                        AdminIcon(
+                            painter = painterResource(id = R.drawable.ic_arrow_back),
+                            contentDescription = null
+                        )
+                    },
+                    modifier = Modifier.clickable {
+                        viewModel.logout()
+                        onExit()
+                    }
+                )
+            }
 
             // Content Management
-            SectionHeader(text = stringResource(id = R.string.settings_section_content))
-
-            ListItem(
-                headlineContent = { Text(stringResource(id = R.string.manage_contacts)) },
-                leadingContent = {
-                    Icon(
+            AdminSectionHeader(text = stringResource(id = R.string.settings_section_content))
+            
+            // Standalone buttons for Content Management (as requested)
+            AdminNavigationItem(
+                headlineText = stringResource(id = R.string.manage_contacts),
+                leadingIcon = {
+                    AdminIcon(
                         painter = painterResource(id = R.drawable.ic_list),
-                        contentDescription = null
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.primary,
+                        containerColor = MaterialTheme.colorScheme.primaryContainer
                     )
                 },
-                trailingContent = {
-                     Icon(
-                        imageVector = Icons.Default.PlayArrow,
+                onClick = onManageContacts,
+                trailingIcon = {
+                    DepthIcon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowForward,
                         contentDescription = null,
-                        modifier = Modifier.size(Spacing.iconSmall)
-                     )
+                        modifier = Modifier.size(Spacing.iconSmall),
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
                 },
-                modifier = Modifier.clickable(onClick = onManageContacts)
+                modifier = Modifier.padding(horizontal = Spacing.md)
             )
 
-            ListItem(
-                headlineContent = { Text(stringResource(id = R.string.call_history)) },
-                leadingContent = {
-                    Icon(
+            Spacer(modifier = Modifier.height(Spacing.xs))
+
+            AdminNavigationItem(
+                headlineText = stringResource(id = R.string.call_history),
+                leadingIcon = {
+                    AdminIcon(
                         painter = painterResource(id = R.drawable.ic_call),
-                        contentDescription = null
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.primary,
+                        containerColor = MaterialTheme.colorScheme.primaryContainer
                     )
                 },
-                trailingContent = {
-                     Icon(
-                        imageVector = Icons.Default.PlayArrow,
+                onClick = onShowHistory,
+                trailingIcon = {
+                    DepthIcon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowForward,
                         contentDescription = null,
-                        modifier = Modifier.size(16.dp)
-                     )
+                        modifier = Modifier.size(Spacing.iconSmall),
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
                 },
-                modifier = Modifier.clickable(onClick = onShowHistory)
+                modifier = Modifier.padding(horizontal = Spacing.md)
             )
 
-            SectionDivider()
-
-            // Settings Section (Refactored below)
+            // Settings Section
             SettingsSection(viewModel)
 
-            SectionDivider()
-
             // Data Management
-            SectionHeader(text = stringResource(id = R.string.data_management))
+            AdminSectionHeader(text = stringResource(id = R.string.data_management))
 
-            ListItem(
-                headlineContent = { Text(stringResource(id = R.string.export_contacts)) },
-                leadingContent = { Icon(Icons.Default.Share, contentDescription = null) },
-                modifier = Modifier.clickable { exportLauncher.launch("contacts_backup.json") }
-            )
+            AdminSettingsCard {
+                ListItem(
+                    headlineContent = { Text(stringResource(id = R.string.export_contacts)) },
+                    leadingContent = { 
+                        AdminIcon(
+                            imageVector = Icons.Default.Share,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.primary
+                        ) 
+                    },
+                    modifier = Modifier.clickable { exportLauncher.launch("contacts_backup.json") }
+                )
 
-            ListItem(
-                headlineContent = { Text(stringResource(id = R.string.import_contacts)) },
-                leadingContent = { Icon(Icons.Default.Add, contentDescription = null) },
-                modifier = Modifier.clickable { importLauncher.launch(arrayOf("application/json")) }
-            )
+                HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp))
 
-            SectionDivider()
+                ListItem(
+                    headlineContent = { Text(stringResource(id = R.string.import_contacts)) },
+                    leadingContent = { 
+                        AdminIcon(
+                            imageVector = Icons.Default.Add,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.primary
+                        ) 
+                    },
+                    modifier = Modifier.clickable { importLauncher.launch(arrayOf("application/json")) }
+                )
+            }
+            
+            Spacer(modifier = Modifier.height(Spacing.md))
+            
+            // Dangerous Zone - Same style as export/import section
+            AdminSettingsCard {
+                ListItem(
+                    headlineContent = { Text(stringResource(id = R.string.reset_settings)) },
+                    leadingContent = { 
+                        AdminIcon(
+                            imageVector = Icons.Default.Refresh,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.primary,
+                            containerColor = MaterialTheme.colorScheme.primaryContainer
+                        ) 
+                    },
+                    modifier = Modifier.clickable { showResetSettingsDialog = true }
+                )
 
-            ListItem(
-                headlineContent = { Text(stringResource(id = R.string.reset_all_data)) },
-                leadingContent = { Icon(Icons.Default.Delete, contentDescription = null, tint = MaterialTheme.colorScheme.error) },
-                modifier = Modifier.clickable { showResetDataDialog = true }
-            )
+                HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp))
 
-            ListItem(
-                headlineContent = { Text(stringResource(id = R.string.reset_settings)) },
-                leadingContent = { Icon(Icons.Default.Refresh, contentDescription = null) },
-                modifier = Modifier.clickable { showResetSettingsDialog = true }
-            )
-
-            SectionDivider()
+                ListItem(
+                    headlineContent = { 
+                        Text(
+                            stringResource(id = R.string.reset_all_data),
+                            color = MaterialTheme.colorScheme.error,
+                            fontWeight = FontWeight.Bold
+                        ) 
+                    },
+                    leadingContent = { 
+                        AdminIcon(
+                            imageVector = Icons.Default.Delete,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.error,
+                            containerColor = MaterialTheme.colorScheme.errorContainer
+                        ) 
+                    },
+                    modifier = Modifier.clickable { showResetDataDialog = true }
+                )
+            }
 
             // Support Section
-            SectionHeader(text = stringResource(id = R.string.support))
+            AdminSectionHeader(text = stringResource(id = R.string.support))
 
-            SettingsCard {
-            ListItem(
-                headlineContent = { Text(stringResource(id = R.string.buy_me_coffee)) },
+            AdminSettingsCard {
+                ListItem(
+                    headlineContent = { Text(stringResource(id = R.string.buy_me_coffee)) },
                     leadingContent = { 
-                        PremiumIcon(
+                        AdminIcon(
                             imageVector = Icons.Default.Favorite,
                             contentDescription = null,
-                            tint = androidx.compose.ui.graphics.Color(0xFFFFDD00)
+                            tint = androidx.compose.ui.graphics.Color(0xFFFFDD00), // Gold
+                            containerColor = androidx.compose.ui.graphics.Color(0xFFFFDD00).copy(alpha = 0.1f)
                         ) 
+                    },
+                    trailingContent = {
+                        DepthIcon(
+                            imageVector = Icons.AutoMirrored.Filled.OpenInNew,
+                            contentDescription = null,
+                            modifier = Modifier.size(Spacing.iconLarge),
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+                        )
                     },
                     modifier = Modifier.clickable {
                         onUnpin()
                         uriHandler.openUri("https://buymeacoffee.com/leocarne") 
                     }
-            )
+                )
             }
             
             Spacer(modifier = Modifier.height(Spacing.xxxl))
@@ -266,11 +386,9 @@ fun AdminSettingsScreen(
 @Composable
 fun SettingsSection(viewModel: AdminViewModel) {
     Column(modifier = Modifier.fillMaxWidth()) {
-        com.incomingcallonly.launcher.ui.admin.components.SettingsSystemSection(viewModel)
-        com.incomingcallonly.launcher.ui.admin.components.SettingsAudioSection(viewModel)
-        HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp))
-        com.incomingcallonly.launcher.ui.admin.components.SettingsDisplaySection(viewModel)
-        HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp))
-        com.incomingcallonly.launcher.ui.admin.components.SettingsLocalizationSection(viewModel)
+        SettingsSystemSection(viewModel)
+        SettingsAudioSection(viewModel)
+        SettingsDisplaySection(viewModel)
+        SettingsLocalizationSection(viewModel)
     }
 }

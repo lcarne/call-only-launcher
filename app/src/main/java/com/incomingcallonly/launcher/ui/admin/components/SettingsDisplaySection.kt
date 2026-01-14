@@ -1,5 +1,10 @@
 package com.incomingcallonly.launcher.ui.admin.components
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -8,16 +13,20 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.BatteryChargingFull
+import androidx.compose.material.icons.filled.BatteryFull
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -32,98 +41,115 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.incomingcallonly.launcher.R
 import com.incomingcallonly.launcher.ui.admin.AdminViewModel
 import com.incomingcallonly.launcher.ui.admin.dialogs.ScreenBehaviorDialog
 import com.incomingcallonly.launcher.ui.admin.dialogs.TimePickerDialogWrapper
 import com.incomingcallonly.launcher.ui.theme.HighContrastButtonBg
+import com.incomingcallonly.launcher.ui.theme.Spacing
 import com.incomingcallonly.launcher.util.TimeFormatUtils
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun SettingsDisplaySection(viewModel: AdminViewModel) {
+    // Top-level state hoisting
+    val screenBehaviorPlugged by viewModel.screenBehaviorPlugged.collectAsState()
+    var showPluggedDialog by remember { mutableStateOf(false) }
+    
+    val screenBehaviorBattery by viewModel.screenBehaviorBattery.collectAsState()
+    var showBatteryDialog by remember { mutableStateOf(false) }
+    
+    val isNightModeEnabled by viewModel.isNightModeEnabled.collectAsState()
+
     Column {
-        Text(
-            text = stringResource(id = R.string.settings_section_display_power),
-            style = MaterialTheme.typography.labelLarge,
-            color = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp)
-        )
+        AdminSectionHeader(text = stringResource(id = R.string.settings_section_display_power))
 
-        // Plugged Behavior
-        val screenBehaviorPlugged by viewModel.screenBehaviorPlugged.collectAsState()
-        var showPluggedDialog by remember { mutableStateOf(false) }
-        ListItem(
-            headlineContent = { Text(stringResource(id = R.string.screen_behavior_plugged)) },
-            leadingContent = {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_battery_charging),
-                    contentDescription = null
-                )
-            },
-            supportingContent = {
-                Text(
-                    when (screenBehaviorPlugged) {
-                        0 -> stringResource(id = R.string.mode_off)
-                        1 -> stringResource(id = R.string.mode_dim)
-                        2 -> stringResource(id = R.string.mode_awake)
-                        else -> ""
-                    }
-                )
-            },
-            modifier = Modifier.clickable { showPluggedDialog = true }
-        )
+        AdminSettingsCard {
+            // Plugged Behavior
+            ListItem(
+                headlineContent = { Text(stringResource(id = R.string.screen_behavior_plugged)) },
+                leadingContent = {
+                    Icon(
+                        imageVector = Icons.Default.BatteryChargingFull,
+                        contentDescription = null
+                    )
+                },
+                supportingContent = {
+                    Text(
+                        when (screenBehaviorPlugged) {
+                            0 -> stringResource(id = R.string.mode_off)
+                            1 -> stringResource(id = R.string.mode_dim)
+                            2 -> stringResource(id = R.string.mode_awake)
+                            else -> ""
+                        }
+                    )
+                },
+                modifier = Modifier.clickable { showPluggedDialog = true }
+            )
 
-        // Battery Behavior
-        val screenBehaviorBattery by viewModel.screenBehaviorBattery.collectAsState()
-        var showBatteryDialog by remember { mutableStateOf(false) }
-        ListItem(
-            headlineContent = { Text(stringResource(id = R.string.screen_behavior_battery)) },
-            leadingContent = {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_battery_full),
-                    contentDescription = null
-                )
-            },
-            supportingContent = {
-                Text(
-                    when (screenBehaviorBattery) {
-                        0 -> stringResource(id = R.string.mode_off)
-                        1 -> stringResource(id = R.string.mode_dim)
-                        2 -> stringResource(id = R.string.mode_awake)
-                        else -> ""
-                    }
-                )
-            },
-            modifier = Modifier.clickable { showBatteryDialog = true }
-        )
+            AdminDivider()
 
-        // Night Mode
-        val isNightModeEnabled by viewModel.isNightModeEnabled.collectAsState()
-        ListItem(
-            headlineContent = { Text(stringResource(id = R.string.night_mode)) },
-            supportingContent = { Text(stringResource(id = R.string.night_mode_desc)) },
-            trailingContent = {
-                Switch(
-                    checked = isNightModeEnabled,
-                    onCheckedChange = { viewModel.setNightModeEnabled(it) }
-                )
+            // Battery Behavior
+            ListItem(
+                headlineContent = { Text(stringResource(id = R.string.screen_behavior_battery)) },
+                leadingContent = {
+                    Icon(
+                        imageVector = Icons.Default.BatteryFull,
+                        contentDescription = null
+                    )
+                },
+                supportingContent = {
+                    Text(
+                        when (screenBehaviorBattery) {
+                            0 -> stringResource(id = R.string.mode_off)
+                            1 -> stringResource(id = R.string.mode_dim)
+                            2 -> stringResource(id = R.string.mode_awake)
+                            else -> ""
+                        }
+                    )
+                },
+                modifier = Modifier.clickable { showBatteryDialog = true }
+            )
+        }
+        
+        // Night Mode Group
+        AdminSettingsCard {
+            ListItem(
+                headlineContent = { Text(stringResource(id = R.string.night_mode)) },
+                supportingContent = { Text(stringResource(id = R.string.night_mode_desc)) },
+                trailingContent = {
+                    AdminSwitch(
+                        checked = isNightModeEnabled,
+                        onCheckedChange = { viewModel.setNightModeEnabled(it) }
+                    )
+                }
+            )
+            
+            // Expandable settings INSIDE the card
+            AnimatedVisibility(
+                visible = isNightModeEnabled,
+                enter = expandVertically() + fadeIn(),
+                exit = shrinkVertically() + fadeOut()
+            ) {
+                Column {
+                    AdminDivider()
+                    NightModeSettings(viewModel)
+                }
             }
-        )
-
-        if (isNightModeEnabled) {
-            NightModeSettings(viewModel)
         }
 
-        // Clock Color
-        ClockColorSelector(viewModel)
+        // Clock Color Group
+        AdminSettingsCard {
+            ClockColorSelector(viewModel)
+        }
 
         // Dialogs
         if (showPluggedDialog) {
             ScreenBehaviorDialog(
                 title = stringResource(id = R.string.screen_behavior_plugged),
-                iconRes = R.drawable.ic_battery_charging,
+                icon = Icons.Default.BatteryChargingFull,
                 currentValue = screenBehaviorPlugged,
                 onConfirm = { viewModel.setScreenBehaviorPlugged(it); showPluggedDialog = false },
                 onDismiss = { showPluggedDialog = false }
@@ -133,7 +159,7 @@ fun SettingsDisplaySection(viewModel: AdminViewModel) {
         if (showBatteryDialog) {
             ScreenBehaviorDialog(
                 title = stringResource(id = R.string.screen_behavior_battery),
-                iconRes = R.drawable.ic_battery_full,
+                icon = Icons.Default.BatteryFull,
                 currentValue = screenBehaviorBattery,
                 onConfirm = { viewModel.setScreenBehaviorBattery(it); showBatteryDialog = false },
                 onDismiss = { showBatteryDialog = false }
@@ -154,26 +180,30 @@ fun NightModeSettings(viewModel: AdminViewModel) {
     var showStartPicker by remember { mutableStateOf(false) }
     var showEndPicker by remember { mutableStateOf(false) }
 
-    // Indent for nested settings
-    Column(modifier = Modifier.padding(start = 16.dp)) {
+    Column {
         ListItem(
             headlineContent = { Text(stringResource(id = R.string.night_start_label)) },
             trailingContent = {
                 Text(
                     text = TimeFormatUtils.formatTime(nightStart, nightStartMin, is24Hour),
                     style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.primary
+                    color = MaterialTheme.colorScheme.primary,
+                    fontWeight = FontWeight.Bold
                 )
             },
             modifier = Modifier.clickable { showStartPicker = true }
         )
+        
+        AdminDivider() // Divider between start and end
+        
         ListItem(
             headlineContent = { Text(stringResource(id = R.string.night_end_label)) },
             trailingContent = {
                 Text(
                     text = TimeFormatUtils.formatTime(nightEnd, nightEndMin, is24Hour),
                     style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.primary
+                    color = MaterialTheme.colorScheme.primary,
+                    fontWeight = FontWeight.Bold
                 )
             },
             modifier = Modifier.clickable { showEndPicker = true }
@@ -189,17 +219,32 @@ fun NightModeSettings(viewModel: AdminViewModel) {
         val nextDay =
             if (endTotalMinutes <= startTotalMinutes) stringResource(id = R.string.next_day) else ""
 
-        Text(
-            text = stringResource(
-                id = R.string.night_mode_duration_desc,
-                durationHours,
-                if (durationMinsOnly > 0) String.format("%02d", durationMinsOnly) else "",
-                nextDay
-            ),
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
-        )
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = Spacing.listItemHorizontal, vertical = Spacing.sm)
+                .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f), RoundedCornerShape(8.dp))
+                .padding(12.dp),
+             verticalAlignment = Alignment.CenterVertically
+        ) {
+              Icon(
+                  imageVector = Icons.Default.DateRange, // Reusing date range icon as clock/duration icon
+                  contentDescription = null,
+                  modifier = Modifier.size(16.dp),
+                  tint = MaterialTheme.colorScheme.onSurfaceVariant
+              )
+              androidx.compose.foundation.layout.Spacer(modifier = Modifier.size(8.dp))
+              Text(
+                text = stringResource(
+                    id = R.string.night_mode_duration_desc,
+                    durationHours,
+                    if (durationMinsOnly > 0) String.format("%02d", durationMinsOnly) else "",
+                    nextDay
+                ),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
     }
 
     if (showStartPicker) {
@@ -252,8 +297,8 @@ fun ClockColorSelector(viewModel: AdminViewModel) {
         Color(0xFFFF6F00),  // Orange 800 (deeper for contrast)
         Color.White         // Pure white
     )
-    val currentColor =
-        if (viewModel.clockColor.collectAsState().value != 0) Color(viewModel.clockColor.collectAsState().value) else HighContrastButtonBg
+    val storedColorValue by viewModel.clockColor.collectAsState()
+    val currentColor = if (storedColorValue != 0) Color(storedColorValue) else MaterialTheme.colorScheme.primary
 
     ListItem(
         headlineContent = { Text(stringResource(id = R.string.clock_color)) },
@@ -273,7 +318,7 @@ fun ClockColorSelector(viewModel: AdminViewModel) {
                             .clip(CircleShape)
                             .background(color)
                             .border(
-                                width = 2.dp,
+                                width = 1.dp,
                                 color = if (color == Color.White) Color.LightGray else Color.Transparent,
                                 shape = CircleShape
                             )

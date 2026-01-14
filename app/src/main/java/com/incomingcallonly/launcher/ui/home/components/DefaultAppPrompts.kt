@@ -26,6 +26,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.incomingcallonly.launcher.R
+import com.incomingcallonly.launcher.ui.components.DepthIcon
 
 @Composable
 fun DefaultAppPrompts(
@@ -82,7 +83,7 @@ fun DefaultAppPrompts(
                     contentColor = androidx.compose.material3.MaterialTheme.colorScheme.onPrimary
                 )
             ) {
-                Icon(
+                DepthIcon(
                     imageVector = Icons.Default.Phone,
                     contentDescription = null,
                     modifier = Modifier.size(18.dp)
@@ -104,7 +105,7 @@ fun DefaultAppPrompts(
                     contentColor = androidx.compose.material3.MaterialTheme.colorScheme.onPrimary
                 )
             ) {
-                Icon(
+                DepthIcon(
                     imageVector = Icons.Default.Home,
                     contentDescription = null,
                     modifier = Modifier.size(18.dp)

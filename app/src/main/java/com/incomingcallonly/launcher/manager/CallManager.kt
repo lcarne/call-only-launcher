@@ -99,11 +99,11 @@ class CallManager @Inject constructor(
 
         scope.launch {
             val contacts = contactRepository.getContactsList()
-            val isFavorite = number != null && contacts.any { contact ->
+            val isContact = number != null && contacts.any { contact ->
                 @Suppress("DEPRECATION")
                 PhoneNumberUtils.compare(contact.phoneNumber, number)
             }
-            if (isFavorite || settingsRepository.allowAllCalls.value) {
+            if (isContact || settingsRepository.allowAllCalls.value) {
                 _incomingNumber.value = number
                 _isCallAllowed.value = true
                 updateState(call.details.state)

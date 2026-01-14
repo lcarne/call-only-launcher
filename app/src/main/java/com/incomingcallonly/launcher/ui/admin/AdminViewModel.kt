@@ -71,6 +71,10 @@ class AdminViewModel @Inject constructor(
         }
     }
 
+    fun clearPinError() {
+        _pinError.value = false
+    }
+
     fun changePin(newPin: String) {
         settingsRepository.setAdminPin(newPin)
     }
