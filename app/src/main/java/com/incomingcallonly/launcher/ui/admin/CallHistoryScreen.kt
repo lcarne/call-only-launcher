@@ -38,6 +38,8 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
+import androidx.activity.compose.BackHandler
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CallHistoryScreen(
@@ -45,6 +47,7 @@ fun CallHistoryScreen(
     onBack: () -> Unit
 ) {
     val callLogs by viewModel.callLogs.collectAsState()
+    BackHandler(onBack = onBack)
     var showDeleteConfirmation by remember { mutableStateOf(false) }
 
     Scaffold(

@@ -32,6 +32,8 @@ import com.incomingcallonly.launcher.data.model.Contact
 import com.incomingcallonly.launcher.ui.admin.components.ContactListItem
 import com.incomingcallonly.launcher.ui.admin.dialogs.ContactDialog
 
+import androidx.activity.compose.BackHandler
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ContactManagementScreen(
@@ -40,6 +42,7 @@ fun ContactManagementScreen(
     onOpenCamera: ((android.net.Uri) -> Unit) -> Unit
 ) {
     val contacts by viewModel.contacts.collectAsState()
+    BackHandler(onBack = onBack)
     var showAddDialog by remember { mutableStateOf(false) }
     var contactToEdit by remember { mutableStateOf<Contact?>(null) }
     var contactToDelete by remember { mutableStateOf<Contact?>(null) }

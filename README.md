@@ -262,7 +262,7 @@ If successful, the launcher will be pinned and the status bar/navigation will be
 The Admin interface is intentionally hidden to prevent accidental access by the end user.
 
 - On the home screen, **tap the date/time area 15 times rapidly** to open the Admin entry point.
-- Enter the default PIN: `1234` (The default PIN is hardcoded for simplicity. Feel free to adjust it in the source code and build your own version).
+- Enter the default PIN: `1234` (default PIN, can be changed in Admin Settings)
 
 From the Admin interface you can:
 - Add or remove Favorites (trusted contacts).
@@ -284,7 +284,6 @@ adb shell dpm remove-active-admin com.incomingcallonly.launcher/.receivers.Incom
 
 ## Notes & Implementation Details
 
-- The app verifies the Admin PIN in code (`AdminViewModel` currently checks for `"1234"`).
 - The Admin receiver is `com.incomingcallonly.launcher.receivers.IncomingCallOnlyAdminReceiver` and is declared in the manifest with `BIND_DEVICE_ADMIN` permission.
 - Kiosk behavior (lock task packages, disabling the status bar) is controlled via `DevicePolicyManager` in `MainActivity`.
 

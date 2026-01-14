@@ -60,13 +60,19 @@ class AdminViewModel @Inject constructor(
     private val _pinError = MutableStateFlow(false)
     val pinError = _pinError.asStateFlow()
 
+    val adminPin = settingsRepository.adminPin
+
     fun verifyPin(pin: String) {
-        if (pin == "1234") { // Simple PIN, change it here if you want
+        if (pin == adminPin.value) { // Use PIN from settings
             _isAuthenticated.value = true
             _pinError.value = false
         } else {
             _pinError.value = true
         }
+    }
+
+    fun changePin(newPin: String) {
+        settingsRepository.setAdminPin(newPin)
     }
 
     fun logout() {

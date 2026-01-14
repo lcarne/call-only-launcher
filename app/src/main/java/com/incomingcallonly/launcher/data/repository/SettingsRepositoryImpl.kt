@@ -80,6 +80,9 @@ class SettingsRepositoryImpl @Inject constructor(
         MutableStateFlow(prefs.getBoolean(KEY_HAS_SEEN_ONBOARDING, false))
     override val hasSeenOnboarding: StateFlow<Boolean> = _hasSeenOnboarding.asStateFlow()
 
+    private val _adminPin = MutableStateFlow(prefs.getString(KEY_ADMIN_PIN, "1234") ?: "1234")
+    override val adminPin: StateFlow<String> = _adminPin.asStateFlow()
+
 
     override fun setScreenBehaviorPlugged(behavior: Int) {
         prefs.edit().putInt(KEY_SCREEN_BEHAVIOR_PLUGGED, behavior).apply()
@@ -168,6 +171,11 @@ class SettingsRepositoryImpl @Inject constructor(
         _hasSeenOnboarding.value = hasSeen
     }
 
+    override fun setAdminPin(pin: String) {
+        prefs.edit().putString(KEY_ADMIN_PIN, pin).apply()
+        _adminPin.value = pin
+    }
+
 
     companion object {
         private const val KEY_NIGHT_START = "night_mode_start"
@@ -187,5 +195,6 @@ class SettingsRepositoryImpl @Inject constructor(
         private const val KEY_TIME_FORMAT = "time_format"
         private const val KEY_DEFAULT_SPEAKER_ENABLED = "default_speaker_enabled"
         private const val KEY_HAS_SEEN_ONBOARDING = "has_seen_onboarding"
+        private const val KEY_ADMIN_PIN = "admin_pin"
     }
 }

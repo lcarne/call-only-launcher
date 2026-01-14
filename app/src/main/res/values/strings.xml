@@ -61,6 +61,10 @@
     <!-- Call Security -->
     <string name="accept_all_calls">Accept all calls</string>
     <string name="accept_all_calls_desc">If disabled, only contacts are allowed</string>
+    <string name="change_pin">Change PIN</string>
+    <string name="change_pin_desc">Change the administrator access code</string>
+    <string name="new_pin">New PIN</string>
+    <string name="pin_changed">PIN changed successfully</string>
 
     <!-- Audio -->
     <string name="default_audio_output">Default audio output</string>

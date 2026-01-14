@@ -19,6 +19,7 @@ interface SettingsRepository {
     val timeFormat: StateFlow<String>
     val isDefaultSpeakerEnabled: StateFlow<Boolean>
     val hasSeenOnboarding: StateFlow<Boolean>
+    val adminPin: StateFlow<String>
 
     fun setScreenBehaviorPlugged(behavior: Int)
     fun setScreenBehaviorBattery(behavior: Int)
@@ -37,6 +38,7 @@ interface SettingsRepository {
     fun setTimeFormat(format: String)
     fun setDefaultSpeakerEnabled(enabled: Boolean)
     fun setHasSeenOnboarding(hasSeen: Boolean)
+    fun setAdminPin(pin: String)
 
     companion object {
         const val SCREEN_BEHAVIOR_OFF = 0
