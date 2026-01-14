@@ -72,17 +72,9 @@ fun SettingsAudioSection(viewModel: AdminViewModel) {
             }
         )
 
-        // Ringer Active
-        val isRingerEnabled by viewModel.isRingerEnabled.collectAsState()
-        ListItem(
-            headlineContent = { Text(stringResource(id = R.string.ringer_active)) },
-            trailingContent = {
-                Switch(
-                    checked = isRingerEnabled,
-                    onCheckedChange = { viewModel.setRingerEnabled(it) }
-                )
-            }
-        )
+
+
+            InsetDivider()
 
         // Ringer Volume with Enhanced Display
         val ringerVolume by viewModel.ringerVolume.collectAsState()
