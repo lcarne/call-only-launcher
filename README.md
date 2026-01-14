@@ -104,11 +104,14 @@ All contacts, settings, and call history are stored **locally on the device only
 
 - **Language**: Kotlin  
 - **UI**: Jetpack Compose (Material 3)  
+- **Typography**: [Inter font family](https://rsms.me/inter/) (SIL Open Font License)  
 - **Architecture**: MVVM + Hilt  
 - **Storage**: Room Database  
 - **Security**:
   - `DevicePolicyManager` (Device Owner / Kiosk mode)
   - `CallScreeningService` (incoming call filtering)
+
+See [ATTRIBUTIONS.md](ATTRIBUTIONS.md) for third-party licenses.
 
 ---
 

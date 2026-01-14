@@ -24,6 +24,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.incomingcallonly.launcher.R
+import com.incomingcallonly.launcher.ui.theme.Spacing
 
 @Composable
 fun ScreenBehaviorDialog(
@@ -45,7 +46,7 @@ fun ScreenBehaviorDialog(
                         painter = painterResource(id = iconRes),
                         contentDescription = null,
                         tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.size(24.dp)
+                        modifier = Modifier.size(Spacing.iconExtraLarge)  // 32dp for prominence
                     )
                     Spacer(modifier = Modifier.width(16.dp))
                 }
@@ -58,7 +59,7 @@ fun ScreenBehaviorDialog(
         text = {
             Column(
                 modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                verticalArrangement = Arrangement.spacedBy(12.dp)  // More breathing room
             ) {
                 listOf(
                     0 to stringResource(id = R.string.mode_off),
@@ -68,19 +69,26 @@ fun ScreenBehaviorDialog(
                     val isSelected = currentValue == value
                     Surface(
                         onClick = { onConfirm(value) },
-                        shape = RoundedCornerShape(12.dp),
-                        color = if (isSelected) MaterialTheme.colorScheme.primaryContainer else Color.Transparent,
+                        shape = RoundedCornerShape(16.dp),  // More rounded for premium feel
+                        color = if (isSelected)
+                            MaterialTheme.colorScheme.primaryContainer
+                        else
+                            MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+                        tonalElevation = if (isSelected) 2.dp else 0.dp,  // Subtle lift when selected
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Row(
                             modifier = Modifier
-                                .padding(horizontal = 16.dp, vertical = 12.dp),
+                                .padding(horizontal = 20.dp, vertical = 16.dp),  // More generous padding
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
                                 text = label,
-                                style = MaterialTheme.typography.bodyLarge,
-                                color = if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurface,
+                                style = MaterialTheme.typography.bodyLarge,  // Larger text
+                                color = if (isSelected)
+                                    MaterialTheme.colorScheme.onPrimaryContainer
+                                else
+                                    MaterialTheme.colorScheme.onSurface,
                                 modifier = Modifier.weight(1f)
                             )
                             RadioButton(
@@ -95,8 +103,14 @@ fun ScreenBehaviorDialog(
         confirmButton = {},
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text(stringResource(id = R.string.cancel))
+                Text(
+                    stringResource(id = R.string.cancel),
+                    style = MaterialTheme.typography.labelLarge
+                )
             }
-        }
+        },
+        shape = RoundedCornerShape(28.dp),  // Material 3 extra-large shape
+        containerColor = MaterialTheme.colorScheme.surface,
+        tonalElevation = 6.dp
     )
 }

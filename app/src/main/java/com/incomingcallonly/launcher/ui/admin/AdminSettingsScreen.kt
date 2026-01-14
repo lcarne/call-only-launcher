@@ -36,6 +36,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.incomingcallonly.launcher.R
+import com.incomingcallonly.launcher.ui.admin.components.SectionDivider
+import com.incomingcallonly.launcher.ui.admin.components.SectionHeader
+import com.incomingcallonly.launcher.ui.theme.Spacing
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -155,15 +158,10 @@ fun AdminSettingsScreen(
                 }
             )
 
-            HorizontalDivider()
+            SectionDivider()
 
             // Content Management
-            Text(
-                text = stringResource(id = R.string.settings_section_content),
-                style = MaterialTheme.typography.labelLarge,
-                color = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp)
-            )
+            SectionHeader(text = stringResource(id = R.string.settings_section_content))
 
             ListItem(
                 headlineContent = { Text(stringResource(id = R.string.manage_contacts)) },
@@ -177,7 +175,7 @@ fun AdminSettingsScreen(
                      Icon(
                         imageVector = Icons.Default.PlayArrow,
                         contentDescription = null,
-                        modifier = Modifier.size(16.dp)
+                        modifier = Modifier.size(Spacing.iconSmall)
                      )
                 },
                 modifier = Modifier.clickable(onClick = onManageContacts)
@@ -201,20 +199,15 @@ fun AdminSettingsScreen(
                 modifier = Modifier.clickable(onClick = onShowHistory)
             )
 
-            HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
+            SectionDivider()
 
             // Settings Section (Refactored below)
             SettingsSection(viewModel)
 
-            HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
+            SectionDivider()
 
             // Data Management
-            Text(
-                text = stringResource(id = R.string.data_management),
-                style = MaterialTheme.typography.labelLarge,
-                color = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp)
-            )
+            SectionHeader(text = stringResource(id = R.string.data_management))
 
             ListItem(
                 headlineContent = { Text(stringResource(id = R.string.export_contacts)) },
@@ -228,7 +221,7 @@ fun AdminSettingsScreen(
                 modifier = Modifier.clickable { importLauncher.launch(arrayOf("application/json")) }
             )
 
-            HorizontalDivider()
+            SectionDivider()
 
             ListItem(
                 headlineContent = { Text(stringResource(id = R.string.reset_all_data)) },
@@ -242,15 +235,10 @@ fun AdminSettingsScreen(
                 modifier = Modifier.clickable { showResetSettingsDialog = true }
             )
 
-            HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
+            SectionDivider()
 
             // Support Section
-            Text(
-                text = stringResource(id = R.string.support),
-                style = MaterialTheme.typography.labelLarge,
-                color = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp)
-            )
+            SectionHeader(text = stringResource(id = R.string.support))
 
             ListItem(
                 headlineContent = { Text(stringResource(id = R.string.buy_me_coffee)) },
@@ -258,7 +246,7 @@ fun AdminSettingsScreen(
                 modifier = Modifier.clickable { uriHandler.openUri("https://buymeacoffee.com/leocarne") }
             )
             
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(Spacing.xxxl))
         }
     }
 }

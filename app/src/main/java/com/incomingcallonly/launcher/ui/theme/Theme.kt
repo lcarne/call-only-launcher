@@ -107,7 +107,7 @@ fun IncomingCallOnlyTheme(
 
     MaterialTheme(
         colorScheme = colorScheme,
-        typography = Typography,
+        typography = AppTypography,  // Use enhanced typography with larger sizes
         content = content
     )
 }

@@ -78,3 +78,11 @@ val HighContrastButtonBg = PrimaryBlue
 val DarkGray = Color(0xFF333333)
 val Red = ErrorRed
 val DimmedClockColor = Color(0xFFB4BEB0)
+
+// Semantic colors for enhanced UI expressiveness
+val SuccessGreen = Color(0xFF2E7D32)          // Dark green for success states
+val SuccessGreenContainer = Color(0xFFC8E6C9)  // Light green container
+val WarningOrange = Color(0xFFEF6C00)          // Vibrant orange for warnings
+val WarningOrangeContainer = Color(0xFFFFE0B2) // Light orange container
+val InfoBlue = Color(0xFF0277BD)               // Informational blue
+val InfoBlueContainer = Color(0xFFB3E5FC)      // Light blue container

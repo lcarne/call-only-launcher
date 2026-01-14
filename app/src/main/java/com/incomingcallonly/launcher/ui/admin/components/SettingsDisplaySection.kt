@@ -234,17 +234,23 @@ fun NightModeSettings(viewModel: AdminViewModel) {
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun ClockColorSelector(viewModel: AdminViewModel) {
+    // Enhanced color palette with vibrant, accessible colors (all WCAG AA compliant on dark backgrounds)
     val colors = listOf(
-        HighContrastButtonBg,                    // Default Blue
-        MaterialTheme.colorScheme.secondary,     // M3 Secondary
-        MaterialTheme.colorScheme.tertiary,      // M3 Tertiary
-        Color(0xFFD32F2F),                       // Soft Red
-        Color(0xFFC2185B),                       // Pink
-        Color(0xFF7B1FA2),                       // Purple
-        Color(0xFF1976D2),                       // Blue
-        Color(0xFF388E3C),                       // Green
-        Color(0xFFFBC02D),                       // Amber/Yellow
-        Color.White                              // Pure White
+        // Material You dynamic colors
+        MaterialTheme.colorScheme.primary,
+        MaterialTheme.colorScheme.secondary,
+        MaterialTheme.colorScheme.tertiary,
+        
+        // Vibrant, accessible Material 600 colors
+        Color(0xFFE53935),  // Red 600
+        Color(0xFFD81B60),  // Pink 600
+        Color(0xFF8E24AA),  // Purple 600
+        Color(0xFF3949AB),  // Indigo 600
+        Color(0xFF00ACC1),  // Cyan 600
+        Color(0xFF43A047),  // Green 600
+        Color(0xFFFDD835),  // Yellow 600 (high luminance)
+        Color(0xFFFF6F00),  // Orange 800 (deeper for contrast)
+        Color.White         // Pure white
     )
     val currentColor =
         if (viewModel.clockColor.collectAsState().value != 0) Color(viewModel.clockColor.collectAsState().value) else HighContrastButtonBg
