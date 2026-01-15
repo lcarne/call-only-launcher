@@ -85,6 +85,12 @@ This design minimizes confusion and prevents misuse.
 - **Simple PIN Access**  
   Admin access is protected by a PIN (default: `1234`) for quick and controlled caregiver access.
 
+- **Call History**
+  View a detailed log of incoming, missed, and rejected calls with duration and timestamps.
+
+- **Local Backup & Restore**
+  Easily export your contacts list to a JSON file and restore it on another device or after a reset.
+
 ---
 
 ## Privacy & Data
@@ -166,16 +172,20 @@ See [ATTRIBUTIONS.md](ATTRIBUTIONS.md) for third-party licenses.
 <table>
   <tr>
     <td align="center">
-      <img src="images/settings_1.png" width="320" alt="Unlock & Call Security"/><br/>
-      <strong>Unlock & Call Security</strong>
+      <img src="images/settings_1.png" width="320" alt="Unlock, Content & System"/><br/>
+      <strong>Unlock, Content & System</strong>
     </td>
     <td align="center">
-      <img src="images/settings_2.png" width="320" alt="Screen settings"/><br/>
-      <strong>Screen settings</strong>
+      <img src="images/settings_2.png" width="320" alt="Audio, Display & Power"/><br/>
+      <strong>Audio, Display & Power</strong>
+    </td> 
+    <td align="center">
+      <img src="images/settings_3.png" width="320" alt="Display & Localization"/><br/>
+      <strong>Display & Localization</strong>
     </td>
     <td align="center">
-      <img src="images/settings_3.png" width="320" alt="Language & Data Management"/><br/>
-      <strong>Language & Data Management</strong>
+      <img src="images/settings_4.png" width="320" alt="Data Management & Support"/><br/>
+      <strong>Data Management & Support</strong>
     </td>
   </tr>
 </table>
@@ -268,14 +278,17 @@ The Admin interface is intentionally hidden to prevent accidental access by the 
 - Enter the default PIN: `1234` (default PIN, can be changed in Admin Settings)
 
 From the Admin interface you can:
-- Add or remove contacts.
-- Configure screen behavior dependent on power state (Plugged In vs On Battery):
+- **Manage Contacts**: Add, edit, or remove trusted contacts.
+- **View Call History**: Check recent activity including blocked calls.
+- **Data Management**:
+  - **Export/Import Contacts**: Backup your trusted list to a JSON file.
+  - **Reset Data**: Clear call history or factory reset app settings.
+- **Screen & Power**: Configure behavior dependent on power state (Plugged In vs On Battery):
   - **Off**: Standard Android timeout.
-  - **Dim**: Screen stays on with reduced brightness, showing only the clock (in soothing #B4BEB0 color).
+  - **Dim**: Screen stays on with reduced brightness, showing only the clock.
   - **Awake**: Screen stays on at normal brightness.
-- Configure Night mode, Clock color, Ringer volume.
-- Temporarily unpin/unlock the device (an "Unlock" button is available in Admin Settings to exit Kiosk mode).
-- Set app as Default Launcher via a dedicated prompt if not already set.
+- **Customization**: Configure Night mode, Clock color, Ringer volume.
+- **System Control**: Temporarily unpin/unlock the device or set as Default Launcher.
 
 ## Emergency Unlock / Remove Device Owner
 

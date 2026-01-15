@@ -27,6 +27,17 @@ class KioskManager @Inject constructor(
         windowInsetsController.systemBarsBehavior =
             WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
         windowInsetsController.hide(WindowInsetsCompat.Type.systemBars())
+        // Enforce edge-to-edge mode to prevent black bars when returning from other apps
+        WindowCompat.setDecorFitsSystemWindows(activity.window, false)
+        
+        // Force transparent colors
+        // Deprecated in API 35 (Vanilla Ice Cream) as edge-to-edge is enforced
+        if (Build.VERSION.SDK_INT < 35) {
+            @Suppress("DEPRECATION")
+            activity.window.statusBarColor = android.graphics.Color.TRANSPARENT
+            @Suppress("DEPRECATION")
+            activity.window.navigationBarColor = android.graphics.Color.TRANSPARENT
+        }
     }
 
     fun showSystemUI(activity: Activity) {

@@ -151,8 +151,6 @@
     <string name="call_rejected_auto_label">Refusé (auto)</string>
 
     <!-- ==================== ONBOARDING ==================== -->
-
-
     <string name="onboarding_important">Important : Ce message ne s\'affichera plus.</string>
 
     <!-- Slides -->

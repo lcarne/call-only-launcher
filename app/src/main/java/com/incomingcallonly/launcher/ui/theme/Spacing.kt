@@ -17,8 +17,8 @@ object Spacing {
     val xxxxl: Dp = 40.dp
     
     // Semantic spacing for specific UI patterns
-    val sectionHeaderTop: Dp = xxl        // 24dp - breathing room before sections
-    val sectionHeaderBottom: Dp = md      // 12dp - tighter connection to content
+    val sectionHeaderTop: Dp = lg        // 16dp - breathing room before sections
+    val sectionHeaderBottom: Dp = sm      // 8dp - tighter connection to content
     val listItemVertical: Dp = lg         // 16dp - comfortable list spacing
     val listItemHorizontal: Dp = lg       // 16dp - edge margins
     val nestedIndent: Dp = xl             // 20dp - clear visual nesting

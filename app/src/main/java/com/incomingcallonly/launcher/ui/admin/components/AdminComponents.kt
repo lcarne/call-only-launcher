@@ -268,8 +268,8 @@ fun AdminSectionHeader(
         modifier = modifier
             .padding(
                 start = Spacing.md,
-                top = Spacing.xxl,
-                bottom = Spacing.sm
+                top = Spacing.sectionHeaderTop,
+                bottom = Spacing.sectionHeaderBottom
             )
     ) {
         Surface(

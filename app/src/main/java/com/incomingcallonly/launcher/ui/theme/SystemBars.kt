@@ -9,6 +9,8 @@ import androidx.core.view.WindowCompat
 import android.content.Context
 import android.content.ContextWrapper
 import android.app.Activity
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LifecycleEventEffect
 
 /**
  * Sets the color of the system bars (status bar and navigation bar).
@@ -24,17 +26,32 @@ fun SystemBarsColor(
     darkIcons: Boolean = false
 ) {
     val view = LocalView.current
+    
+    // Lambda to apply system bar colors
+    val applySystemBarsColors: () -> Unit = applyColors@ {
+        val window = view.context.findActivity()?.window ?: return@applyColors
+        @Suppress("DEPRECATION")
+        statusBarColor?.let { window.statusBarColor = it.toArgb() }
+        @Suppress("DEPRECATION")
+        navigationBarColor?.let { window.navigationBarColor = it.toArgb() }
+        
+        val windowInsetsController = WindowCompat.getInsetsController(window, view)
+        windowInsetsController.isAppearanceLightStatusBars = darkIcons
+        windowInsetsController.isAppearanceLightNavigationBars = darkIcons
+        
+        // Enforce edge-to-edge to ensure background extends behind bars
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+    }
+    
     if (!view.isInEditMode) {
+        // Apply on initial composition
         SideEffect {
-            val window = view.context.findActivity()?.window ?: return@SideEffect
-            @Suppress("DEPRECATION")
-            statusBarColor?.let { window.statusBarColor = it.toArgb() }
-            @Suppress("DEPRECATION")
-            navigationBarColor?.let { window.navigationBarColor = it.toArgb() }
-            
-            val windowInsetsController = WindowCompat.getInsetsController(window, view)
-            windowInsetsController.isAppearanceLightStatusBars = darkIcons
-            windowInsetsController.isAppearanceLightNavigationBars = darkIcons
+            applySystemBarsColors()
+        }
+        
+        // Re-apply when activity resumes (e.g., returning from file picker)
+        LifecycleEventEffect(Lifecycle.Event.ON_RESUME) {
+            applySystemBarsColors()
         }
     }
 }

@@ -36,7 +36,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -168,12 +171,22 @@ fun AdminSettingsScreen(
                 title = { 
                     Text(
                         stringResource(id = R.string.settings),
-                        style = MaterialTheme.typography.headlineMedium
+                        style = MaterialTheme.typography.headlineMedium.copy(
+                            shadow = Shadow(
+                                color = Color.Black.copy(alpha = 0.25f),
+                                offset = Offset(2f, 2f),
+                                blurRadius = 4f
+                            )
+                        )
                     ) 
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.Transparent,
-                    scrolledContainerColor = Color.Transparent
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    scrolledContainerColor = MaterialTheme.colorScheme.surface
+                ),
+                modifier = Modifier.shadow(
+                    elevation = 4.dp,
+                    spotColor = Color.Black.copy(alpha = 0.15f)
                 )
             )
         }
