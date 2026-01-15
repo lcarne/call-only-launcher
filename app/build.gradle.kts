@@ -13,7 +13,7 @@ android {
         applicationId = "com.incomingcallonly.launcher"
         minSdk = 26 // Android 8.0
         targetSdk = 35
-        versionCode = 6
+        versionCode = 7
         versionName = "1.2.3"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
