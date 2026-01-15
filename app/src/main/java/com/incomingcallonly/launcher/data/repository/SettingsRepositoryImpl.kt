@@ -6,6 +6,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import com.incomingcallonly.launcher.manager.NightModeScheduler
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -97,26 +98,31 @@ class SettingsRepositoryImpl @Inject constructor(
     override fun setNightModeStartHour(hour: Int) {
         prefs.edit().putInt(KEY_NIGHT_START, hour).apply()
         _nightModeStartHour.value = hour
+        NightModeScheduler.scheduleNightModeEnd(context)
     }
 
     override fun setNightModeStartMinute(minute: Int) {
         prefs.edit().putInt(KEY_NIGHT_START_MINUTE, minute).apply()
         _nightModeStartMinute.value = minute
+        NightModeScheduler.scheduleNightModeEnd(context)
     }
 
     override fun setNightModeEndHour(hour: Int) {
         prefs.edit().putInt(KEY_NIGHT_END, hour).apply()
         _nightModeEndHour.value = hour
+        NightModeScheduler.scheduleNightModeEnd(context)
     }
 
     override fun setNightModeEndMinute(minute: Int) {
         prefs.edit().putInt(KEY_NIGHT_END_MINUTE, minute).apply()
         _nightModeEndMinute.value = minute
+        NightModeScheduler.scheduleNightModeEnd(context)
     }
 
     override fun setNightModeEnabled(enabled: Boolean) {
         prefs.edit().putBoolean(KEY_NIGHT_MODE_ENABLED, enabled).apply()
         _isNightModeEnabled.value = enabled
+        NightModeScheduler.scheduleNightModeEnd(context)
     }
 
     override fun setClockColor(color: Int) {

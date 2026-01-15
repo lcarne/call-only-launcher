@@ -9,7 +9,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -27,6 +29,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
 import com.incomingcallonly.launcher.data.repository.SettingsRepository
+import com.incomingcallonly.launcher.manager.NightModeScheduler
 import com.incomingcallonly.launcher.ui.components.BatteryLevelDisplay
 import com.incomingcallonly.launcher.ui.components.NetworkSignalDisplay
 import com.incomingcallonly.launcher.ui.home.components.ClockDisplay
@@ -112,6 +115,8 @@ fun HomeScreen(
     }
     LaunchedEffect(Unit) {
         viewModel.refreshDefaultAppStatus(context)
+        // Schedule the night mode end alarm on app start
+        NightModeScheduler.scheduleNightModeEnd(context)
     }
 
     // 6. System Bars Configuration
@@ -126,6 +131,9 @@ fun HomeScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(Black)
+            // Add stable padding for system bars to prevent layout jumps
+            .statusBarsPadding()
+            .navigationBarsPadding()
             .pointerInput(Unit) {
                 awaitPointerEventScope {
                     while (true) {

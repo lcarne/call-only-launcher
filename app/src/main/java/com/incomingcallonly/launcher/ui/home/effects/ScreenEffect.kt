@@ -47,7 +47,8 @@ fun ScreenEffect(
                     SettingsRepository.SCREEN_BEHAVIOR_DIM -> {
                         // Keep screen on
                         activity.window.addFlags(LayoutParams.FLAG_KEEP_SCREEN_ON)
-                        if (isDimmed) {
+                        // When transitioning from night to day, or already dimmed, use low brightness
+                        if (isTransitioningFromNightToDay || isDimmed) {
                             params.screenBrightness = BRIGHTNESS_DIM // Lowest brightness
                         } else {
                             params.screenBrightness = LayoutParams.BRIGHTNESS_OVERRIDE_NONE

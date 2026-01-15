@@ -3,9 +3,11 @@ package com.incomingcallonly.launcher.ui.home.effects
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import com.incomingcallonly.launcher.data.repository.SettingsRepository
 import java.util.Date
 
@@ -26,17 +28,27 @@ fun rememberInactivityState(
 ): InactivityState {
     val lastInteractionTime = remember { mutableLongStateOf(System.currentTimeMillis()) }
     val isDimmed = remember { mutableStateOf(false) }
+    var previousIsNight by remember { mutableStateOf(isNight) }
 
     LaunchedEffect(currentTime, currentBehavior, isNight) {
+        val isTransitioningFromNightToDay = previousIsNight && !isNight
+        
         // Only monitor for dimming if we are in DIM mode and not in Night Mode
         if (currentBehavior == SettingsRepository.SCREEN_BEHAVIOR_DIM && !isNight) {
-            val timeSinceLastInteraction = System.currentTimeMillis() - lastInteractionTime.longValue
-            if (timeSinceLastInteraction > INACTIVITY_TIMEOUT_MS) {
+            // When transitioning from night to day in DIM mode, start dimmed immediately
+            if (isTransitioningFromNightToDay) {
                 isDimmed.value = true
+            } else {
+                val timeSinceLastInteraction = System.currentTimeMillis() - lastInteractionTime.longValue
+                if (timeSinceLastInteraction > INACTIVITY_TIMEOUT_MS) {
+                    isDimmed.value = true
+                }
             }
         } else {
             isDimmed.value = false
         }
+        
+        previousIsNight = isNight
     }
 
     return remember {

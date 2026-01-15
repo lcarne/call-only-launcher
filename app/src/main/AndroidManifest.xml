@@ -22,6 +22,7 @@
     <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
 
     <uses-feature
         android:name="android.hardware.camera"
@@ -106,6 +107,14 @@
                 android:resource="@xml/device_admin_policies" />
             <intent-filter>
                 <action android:name="android.app.action.DEVICE_ADMIN_ENABLED" />
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name=".receivers.NightModeEndReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.incomingcallonly.launcher.ACTION_NIGHT_MODE_END" />
             </intent-filter>
         </receiver>
         <service

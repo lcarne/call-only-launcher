@@ -93,7 +93,7 @@
     <string name="screen_behavior_battery">Batterie</string>
     <string name="screen_behavior_plugged">Branché</string>
     <string name="mode_off">Éteint</string>
-    <string name="mode_dim">Veille</string>
+    <string name="mode_dim">Veille (Dim)</string>
     <string name="mode_awake">Éveillé</string>
 
     <!-- Night Mode -->
