@@ -63,14 +63,16 @@ fun CallHistoryScreen(
     BackHandler(onBack = onBack)
     var showDeleteConfirmation by remember { mutableStateOf(false) }
 
-    // System Bars Configuration
+    // System Bars Configuration - Transparent for edge-to-edge
+    val isDarkTheme = androidx.compose.foundation.isSystemInDarkTheme()
     SystemBarsColor(
-        statusBarColor = MaterialTheme.colorScheme.background,
-        navigationBarColor = MaterialTheme.colorScheme.background,
-        darkIcons = true
+        statusBarColor = Color.Transparent,
+        navigationBarColor = Color.Transparent,
+        darkIcons = !isDarkTheme
     )
 
     Scaffold(
+        contentWindowInsets = androidx.compose.foundation.layout.WindowInsets(0, 0, 0, 0),
         topBar = {
             TopAppBar(
                 title = { Text(stringResource(id = com.incomingcallonly.launcher.R.string.call_history)) },

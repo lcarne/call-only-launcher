@@ -46,8 +46,8 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Enable modern edge-to-edge display (Android 15+)
-        // enableEdgeToEdge() removed to keep status bar black and separate
+        // Enable modern edge-to-edge display for stable background color extension
+        enableEdgeToEdge()
 
         ringerManager.startObserving(lifecycleScope)
 
@@ -63,10 +63,11 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             IncomingCallOnlyTheme {
-                // Default System Bars Color: Set Status Bar to Black for Home/Lock screens
-                // Admin/Settings screens will override this to White
+                // Default System Bars Color: Transparent for edge-to-edge
+                // This allows background colors to extend behind system bars
                 SystemBarsColor(
-                    statusBarColor = androidx.compose.ui.graphics.Color.Black,
+                    statusBarColor = androidx.compose.ui.graphics.Color.Transparent,
+                    navigationBarColor = androidx.compose.ui.graphics.Color.Transparent,
                     darkIcons = false
                 )
 
@@ -75,6 +76,12 @@ class MainActivity : ComponentActivity() {
                     IncomingCallOnlyNavGraph(
                         onUnpin = {
                             kioskManager.stopKioskMode(this@MainActivity)
+                        },
+                        onShowSystemUI = {
+                            kioskManager.showSystemUI(this@MainActivity)
+                        },
+                        onHideSystemUI = {
+                            kioskManager.hideSystemUI(this@MainActivity)
                         }
                     )
 

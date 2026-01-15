@@ -10,7 +10,9 @@ import com.incomingcallonly.launcher.ui.home.HomeScreen
 
 @Composable
 fun IncomingCallOnlyNavGraph(
-    onUnpin: () -> Unit // Callback to exit Kiosk mode
+    onUnpin: () -> Unit, // Callback to exit Kiosk mode
+    onShowSystemUI: () -> Unit = {},
+    onHideSystemUI: () -> Unit = {}
 ) {
     val navController = rememberNavController()
 
@@ -25,7 +27,9 @@ fun IncomingCallOnlyNavGraph(
         composable("admin") {
             AdminScreen(
                 onExit = { navController.popBackStack() },
-                onUnpin = onUnpin
+                onUnpin = onUnpin,
+                onShowSystemUI = onShowSystemUI,
+                onHideSystemUI = onHideSystemUI
             )
         }
     }

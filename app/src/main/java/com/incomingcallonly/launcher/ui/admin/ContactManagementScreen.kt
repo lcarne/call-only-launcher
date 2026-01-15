@@ -26,6 +26,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -55,11 +56,12 @@ fun ContactManagementScreen(
     var contactToEdit by remember { mutableStateOf<Contact?>(null) }
     var contactToDelete by remember { mutableStateOf<Contact?>(null) }
 
-    // System Bars Configuration
+    // System Bars Configuration - Transparent for edge-to-edge
+    val isDarkTheme = androidx.compose.foundation.isSystemInDarkTheme()
     SystemBarsColor(
-        statusBarColor = MaterialTheme.colorScheme.background,
-        navigationBarColor = MaterialTheme.colorScheme.background,
-        darkIcons = true
+        statusBarColor = Color.Transparent,
+        navigationBarColor = Color.Transparent,
+        darkIcons = !isDarkTheme
     )
 
     Scaffold(

@@ -297,3 +297,12 @@ Contributions and corrections are welcome. Please open issues or pull requests f
 ## License
 
 This project is licensed under the MIT License, see the [LICENSE](LICENSE) file.
+
+## Credits
+
+- [Inter font family](https://rsms.me/inter/) (SIL Open Font License)
+- [Material You](https://material.io/you)
+
+---
+
+*100% free, 100% open source, made with ❤️ for my grandmother*

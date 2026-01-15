@@ -81,19 +81,19 @@
     <string name="reset_all_data">Supprimer toutes les données</string>
     <string name="confirm_reset_all_data">Êtes-vous sûr de vouloir supprimer toutes les données (contacts, historique) ?\nCette action est irréversible.</string>
     <string name="reset_settings">Réinitialiser les réglages</string>
-    <string name="confirm_reset_settings">Êtes-vous sûr de vouloir réinitialiser tous les réglages par défaut ?</string>
+    <string name="confirm_reset_settings">Êtes-vous sûr de vouloir réinitialiser tous les réglages par défaut ?\nCette action est irréversible.</string>
 
     <!-- Support-->
     <string name="support">Soutien</string>
     <string name="buy_me_coffee">M\'offrir un café</string>
-    <string name="settings_footer_message">100% gratuit, 100% open source,\nfait avec amour pour ma grand mère</string>
+    <string name="settings_footer_message">100% gratuit, 100% open source,\ndéveloppé avec ❤️ pour ma grand mère</string>
 
     <!-- ==================== ADMIN: DISPLAY & POWER ==================== -->
     <!-- Screen Behavior -->
     <string name="screen_behavior_battery">Batterie</string>
     <string name="screen_behavior_plugged">Branché</string>
     <string name="mode_off">Éteint</string>
-    <string name="mode_dim">Assombri</string>
+    <string name="mode_dim">Veille</string>
     <string name="mode_awake">Éveillé</string>
 
     <!-- Night Mode -->

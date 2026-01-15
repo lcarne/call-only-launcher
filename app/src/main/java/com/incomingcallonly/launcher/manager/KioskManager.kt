@@ -22,10 +22,19 @@ class KioskManager @Inject constructor(
     fun hideSystemUI(activity: Activity) {
         val windowInsetsController =
             WindowCompat.getInsetsController(activity.window, activity.window.decorView)
-        // Use BEHAVIOR_DEFAULT instead of deprecated BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        // Use immersive sticky mode for stable edge-to-edge display
+        @Suppress("DEPRECATION")
         windowInsetsController.systemBarsBehavior =
-            WindowInsetsControllerCompat.BEHAVIOR_DEFAULT
+            WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
         windowInsetsController.hide(WindowInsetsCompat.Type.systemBars())
+    }
+
+    fun showSystemUI(activity: Activity) {
+        val windowInsetsController =
+            WindowCompat.getInsetsController(activity.window, activity.window.decorView)
+        windowInsetsController.show(WindowInsetsCompat.Type.systemBars())
+        // Set edge-to-edge mode with visible system bars
+        WindowCompat.setDecorFitsSystemWindows(activity.window, false)
     }
 
     fun startKioskMode(activity: Activity) {

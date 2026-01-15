@@ -1,7 +1,9 @@
 package com.incomingcallonly.launcher.ui.admin
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -17,9 +19,19 @@ import androidx.hilt.navigation.compose.hiltViewModel
 fun AdminScreen(
     onExit: () -> Unit,
     onUnpin: () -> Unit,
+    onShowSystemUI: () -> Unit = {},
+    onHideSystemUI: () -> Unit = {},
     viewModel: AdminViewModel = hiltViewModel()
 ) {
     val isAuthenticated by viewModel.isAuthenticated.collectAsState()
+
+    // Show system bars when entering admin screens
+    androidx.compose.runtime.DisposableEffect(Unit) {
+        onShowSystemUI()
+        onDispose {
+            onHideSystemUI()
+        }
+    }
 
     if (!isAuthenticated) {
         PinEntryScreen(
@@ -45,7 +57,11 @@ fun AdminContent(
     var pendingPhotoCaptured: ((android.net.Uri) -> Unit)? by remember { mutableStateOf(null) }
     var isCameraOpen by remember { mutableStateOf(false) }
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
+    ) {
         when (currentView) {
             "CONTACTS" -> {
                 ContactManagementScreen(
