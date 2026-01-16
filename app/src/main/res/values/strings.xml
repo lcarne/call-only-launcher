@@ -9,9 +9,11 @@
     <string name="back_arrow">Back</string>
     <string name="cancel">Cancel</string>
     <string name="confirm">Confirm</string>
+    <string name="configure">Configure</string>
     <string name="delete">Delete</string>
     <string name="edit">Edit</string>
     <string name="next">Next</string>
+    <string name="not_now">Not now</string>
     <string name="understood">Understood</string>
     <string name="unlock">Unlock</string>
     <string name="validate">Validate</string>

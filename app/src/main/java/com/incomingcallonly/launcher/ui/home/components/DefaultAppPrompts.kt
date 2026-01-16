@@ -50,6 +50,7 @@ fun DefaultAppPrompts(
     onPinClick: () -> Unit = {}
 ) {
     val context = LocalContext.current
+    var showDialerModal by remember { mutableStateOf(false) }
     var showLauncherModal by remember { mutableStateOf(false) }
 
     // Launcher for dialer role request
@@ -93,7 +94,7 @@ fun DefaultAppPrompts(
     ) {
         if (!isDefaultDialer) {
             androidx.compose.material3.Button(
-                onClick = { requestDefaultDialer() },
+                onClick = { showDialerModal = true },
                 modifier = Modifier.fillMaxWidth(),
                 colors = androidx.compose.material3.ButtonDefaults.buttonColors(
                     containerColor = androidx.compose.material3.MaterialTheme.colorScheme.primary,
@@ -159,6 +160,54 @@ fun DefaultAppPrompts(
         }
     }
 
+    if (showDialerModal) {
+        AlertDialog(
+            onDismissRequest = { showDialerModal = false },
+            title = {
+                Text(
+                    text = stringResource(id = R.string.onboarding_default_dialer_title),
+                    style = MaterialTheme.typography.headlineSmall,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            },
+            text = {
+                Text(
+                    text = parseBoldString(stringResource(id = R.string.onboarding_default_dialer_message)),
+                    style = MaterialTheme.typography.bodyMedium,
+                    textAlign = TextAlign.Center
+                )
+            },
+            confirmButton = {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Button(
+                        onClick = { showDialerModal = false },
+                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary),
+                        modifier = Modifier.padding(end = 8.dp)
+                    ) {
+                        Text(stringResource(id = R.string.not_now))
+                    }
+                    Button(
+                        onClick = {
+                            showDialerModal = false
+                            requestDefaultDialer()
+                        },
+                        colors = ButtonDefaults.buttonColors(containerColor = ConfirmGreen),
+                        modifier = Modifier.padding(start = 8.dp)
+                    ) {
+                        Text(stringResource(id = R.string.configure))
+                    }
+                }
+            },
+            containerColor = MaterialTheme.colorScheme.surface,
+            titleContentColor = MaterialTheme.colorScheme.onSurface,
+            textContentColor = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+    }
+
     if (showLauncherModal) {
         AlertDialog(
             onDismissRequest = { showLauncherModal = false },
@@ -166,14 +215,15 @@ fun DefaultAppPrompts(
                 Text(
                     text = stringResource(id = R.string.onboarding_default_launcher_title),
                     style = MaterialTheme.typography.headlineSmall,
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
                 )
             },
             text = {
                 Text(
                     text = parseBoldString(stringResource(id = R.string.onboarding_default_launcher_message)),
                     style = MaterialTheme.typography.bodyMedium,
-                    textAlign = TextAlign.Start
+                    textAlign = TextAlign.Center
                 )
             },
             confirmButton = {
@@ -183,10 +233,10 @@ fun DefaultAppPrompts(
                 ) {
                     Button(
                         onClick = { showLauncherModal = false },
-                        colors = ButtonDefaults.buttonColors(containerColor = ErrorRed),
+                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary),
                         modifier = Modifier.padding(end = 8.dp)
                     ) {
-                        Text(stringResource(id = R.string.cancel))
+                        Text(stringResource(id = R.string.not_now))
                     }
                     Button(
                         onClick = {
@@ -196,7 +246,7 @@ fun DefaultAppPrompts(
                         colors = ButtonDefaults.buttonColors(containerColor = ConfirmGreen),
                         modifier = Modifier.padding(start = 8.dp)
                     ) {
-                        Text(stringResource(id = R.string.validate))
+                        Text(stringResource(id = R.string.configure))
                     }
                 }
             },

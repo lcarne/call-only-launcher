@@ -200,14 +200,15 @@ fun HomeScreen(
                     Text(
                         text = stringResource(id = R.string.onboarding_pinned_mode_title),
                         style = MaterialTheme.typography.headlineSmall,
-                        textAlign = TextAlign.Center
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth()
                     )
                 },
                 text = {
                     Text(
                         text = parseBoldString(stringResource(id = R.string.onboarding_pinned_mode_message)),
                         style = MaterialTheme.typography.bodyMedium,
-                        textAlign = TextAlign.Start
+                        textAlign = TextAlign.Center
                     )
                 },
                 confirmButton = {
@@ -217,10 +218,10 @@ fun HomeScreen(
                     ) {
                         Button(
                             onClick = { showPinConfirmation = false },
-                            colors = ButtonDefaults.buttonColors(containerColor = ErrorRed),
+                            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary),
                             modifier = Modifier.padding(end = 8.dp)
                         ) {
-                            Text(stringResource(id = R.string.cancel))
+                            Text(stringResource(id = R.string.not_now))
                         }
                         Button(
                             onClick = {
@@ -230,7 +231,7 @@ fun HomeScreen(
                             colors = ButtonDefaults.buttonColors(containerColor = ConfirmGreen),
                             modifier = Modifier.padding(start = 8.dp)
                         ) {
-                            Text(stringResource(id = R.string.validate))
+                            Text(stringResource(id = R.string.configure))
                         }
                     }
                 },

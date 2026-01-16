@@ -8,10 +8,12 @@
     <string name="back">Retour</string>
     <string name="back_arrow">Retour</string>
     <string name="cancel">Annuler</string>
+    <string name="configure">Configurer</string>
     <string name="confirm">Confirmer</string>
     <string name="delete">Supprimer</string>
     <string name="edit">Modifier</string>
     <string name="next">Suivant</string>
+    <string name="not_now">Plus tard</string>
     <string name="understood">Compris</string>
     <string name="unlock">Déverrouiller</string>
     <string name="validate">Valider</string>
