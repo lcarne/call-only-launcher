@@ -231,7 +231,7 @@ fun HomeScreen(
                             colors = ButtonDefaults.buttonColors(containerColor = ConfirmGreen),
                             modifier = Modifier.padding(start = 8.dp)
                         ) {
-                            Text(stringResource(id = R.string.configure))
+                            Text(stringResource(id = R.string.understood))
                         }
                     }
                 },

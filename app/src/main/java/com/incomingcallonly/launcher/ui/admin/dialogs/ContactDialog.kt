@@ -54,6 +54,13 @@ import coil.compose.AsyncImage
 import com.incomingcallonly.launcher.R
 import com.incomingcallonly.launcher.data.model.Contact
 import com.incomingcallonly.launcher.ui.admin.components.AdminDialog
+import com.incomingcallonly.launcher.ui.theme.ConfirmGreen
+import com.incomingcallonly.launcher.ui.onboarding.parseBoldString
+import android.provider.Settings
+import android.content.Intent
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.AlertDialog
+import androidx.compose.ui.text.style.TextAlign
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -93,6 +100,58 @@ fun ContactDialog(
     )
 
     var showPhotoSourceDialog by remember { mutableStateOf(false) }
+    var showContactPermissionRationale by remember { mutableStateOf(false) }
+
+    if (showContactPermissionRationale) {
+        AlertDialog(
+            onDismissRequest = { showContactPermissionRationale = false },
+            title = {
+                Text(
+                    text = stringResource(id = R.string.onboarding_auth_contacts_title),
+                    style = MaterialTheme.typography.headlineSmall,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            },
+            text = {
+                Text(
+                    text = parseBoldString(stringResource(id = R.string.onboarding_auth_contacts_message)),
+                    style = MaterialTheme.typography.bodyMedium,
+                    textAlign = TextAlign.Center
+                )
+            },
+            confirmButton = {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Button(
+                        onClick = { showContactPermissionRationale = false },
+                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary),
+                        modifier = Modifier.padding(end = 8.dp)
+                    ) {
+                        Text(stringResource(id = R.string.not_now))
+                    }
+                    Button(
+                        onClick = {
+                            showContactPermissionRationale = false
+                            val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                                data = android.net.Uri.fromParts("package", context.packageName, null)
+                            }
+                            context.startActivity(intent)
+                        },
+                        colors = ButtonDefaults.buttonColors(containerColor = ConfirmGreen),
+                        modifier = Modifier.padding(start = 8.dp)
+                    ) {
+                        Text(stringResource(id = R.string.understood))
+                    }
+                }
+            },
+            containerColor = MaterialTheme.colorScheme.surface,
+            titleContentColor = MaterialTheme.colorScheme.onSurface,
+            textContentColor = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+    }
 
     val contactPicker = androidx.activity.compose.rememberLauncherForActivityResult(
         contract = androidx.activity.result.contract.ActivityResultContracts.PickContact(),
@@ -162,14 +221,7 @@ fun ContactDialog(
         }
     )
 
-    val permissionLauncher = androidx.activity.compose.rememberLauncherForActivityResult(
-        contract = androidx.activity.result.contract.ActivityResultContracts.RequestPermission(),
-        onResult = { isGranted ->
-            if (isGranted) {
-                contactPicker.launch(null)
-            }
-        }
-    )
+
 
     var showDiscardConfirmation by remember { mutableStateOf(false) }
     
@@ -311,7 +363,7 @@ fun ContactDialog(
                             ) {
                                 contactPicker.launch(null)
                             } else {
-                                permissionLauncher.launch(permission)
+                                showContactPermissionRationale = true
                             }
                         },
                         modifier = Modifier.align(Alignment.CenterHorizontally),

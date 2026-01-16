@@ -164,7 +164,7 @@
 
     <!-- Permissions -->
     <string name="onboarding_auth_intro_title">Why these permissions?</string>
-    <string name="onboarding_auth_intro_message">The app needs access to certain features of your phone to work correctly:\n\n• *Contacts*: To import them in contacts list.\n• *Calls*: To detect incoming calls and create a history.\n• *Notifications*: To alert you of incoming calls.\n• *Location*: To display network signal bars (required by Android).</string>
+    <string name="onboarding_auth_intro_message">The app needs access to certain features of your phone to work correctly:\n\n• *Calls*: To detect incoming calls and create a history.\n• *Notifications*: To alert you of incoming calls.\n• *Location*: To display network signal bars (required by Android).</string>
     <string name="onboarding_auth_contacts_title">Contacts Access</string>
     <string name="onboarding_auth_contacts_message">Please allow access to your contacts so the app can tell you who is calling.</string>
     <string name="onboarding_auth_calls_title">Calls &amp; Notifications Access</string>

@@ -168,7 +168,9 @@ fun OnboardingFlow(onDismiss: () -> Unit) {
                 Button(
                     onClick = {
                         when (step) {
-                            0, 1, 4 -> step++
+                            0, 4 -> step++
+                            1 -> step = 3
+
                             2 -> contactLauncher.launch(android.Manifest.permission.READ_CONTACTS)
                             3 -> {
                                 val permissions = mutableListOf(
