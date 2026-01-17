@@ -2,16 +2,21 @@ package com.incomingcallonly.launcher.ui.onboarding
 
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.ui.Alignment
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.draw.shadow
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.ui.window.DialogProperties
 import androidx.compose.material3.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
@@ -19,11 +24,10 @@ import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material.icons.filled.LocationOn
-import androidx.compose.material.icons.filled.Home
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -42,8 +46,7 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun OnboardingFlow(onDismiss: () -> Unit) {
-    var step by remember { mutableStateOf(0) }
-    val context = androidx.compose.ui.platform.LocalContext.current
+    var step by remember { mutableIntStateOf(0) }
 
     // 0: Presentation
     // 1: Authorization Requests Explanation
@@ -65,7 +68,7 @@ fun OnboardingFlow(onDismiss: () -> Unit) {
 
     val locationLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission(),
-        onResult = { _ -> step++ }
+        onResult = { _ -> step = 6 }
     )
 
     AlertDialog(
@@ -77,7 +80,7 @@ fun OnboardingFlow(onDismiss: () -> Unit) {
                     1, 6 -> Icons.Default.Lock
                     2 -> Icons.Default.Person
                     3 -> Icons.Default.Phone
-                    4, 5 -> Icons.Default.LocationOn
+                    4 -> Icons.Default.LocationOn
                     else -> Icons.Default.Info
                 },
                 contentDescription = null
@@ -91,11 +94,11 @@ fun OnboardingFlow(onDismiss: () -> Unit) {
                     2 -> R.string.onboarding_auth_contacts_title
                     3 -> R.string.onboarding_auth_calls_title
                     4 -> R.string.onboarding_auth_location_intro_title
-                    5 -> R.string.onboarding_auth_location_request_title
                     else -> R.string.onboarding_admin_intro_title
                 }),
                 style = MaterialTheme.typography.headlineSmall,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth()
             )
         },
         text = {
@@ -107,7 +110,6 @@ fun OnboardingFlow(onDismiss: () -> Unit) {
                         2 -> R.string.onboarding_auth_contacts_message
                         3 -> R.string.onboarding_auth_calls_message
                         4 -> R.string.onboarding_auth_location_intro_message
-                        5 -> R.string.onboarding_auth_location_request_message
                         else -> R.string.onboarding_admin_intro_message
                     })),
                     style = MaterialTheme.typography.bodyMedium,
@@ -129,7 +131,7 @@ fun OnboardingFlow(onDismiss: () -> Unit) {
         confirmButton = {
             if (step == 6) {
                 // Admin Step Logic (Double Tap)
-                var tapCount by remember { mutableStateOf(0) }
+                var tapCount by remember { mutableIntStateOf(0) }
 
                 LaunchedEffect(tapCount) {
                     if (tapCount > 0) {
@@ -168,7 +170,7 @@ fun OnboardingFlow(onDismiss: () -> Unit) {
                 Button(
                     onClick = {
                         when (step) {
-                            0, 4 -> step++
+                            0 -> step++
                             1 -> step = 3
 
                             2 -> contactLauncher.launch(android.Manifest.permission.READ_CONTACTS)
@@ -182,24 +184,41 @@ fun OnboardingFlow(onDismiss: () -> Unit) {
                                 }
                                 phoneLauncher.launch(permissions.toTypedArray())
                             }
-                            5 -> locationLauncher.launch(android.Manifest.permission.ACCESS_FINE_LOCATION)
+                            4 -> locationLauncher.launch(android.Manifest.permission.ACCESS_FINE_LOCATION)
                         }
                     },
                     modifier = Modifier
                         .fillMaxWidth()
                         .heightIn(min = 56.dp)
                 ) {
+                    val currentStep = when(step) {
+                        0 -> 1
+                        1 -> 2
+                        3 -> 3
+                        4 -> 4
+                        else -> 0
+                    }
+                    val buttonText = stringResource(id = if (step in listOf(2, 3, 4)) R.string.validate else R.string.next)
                     Text(
-                        text = stringResource(id = if (step in listOf(2, 3, 5)) R.string.validate else R.string.next),
+                        text = if (currentStep > 0) "$buttonText ($currentStep/5)" else buttonText,
                         fontSize = 18.sp
                     )
                 }
             }
         },
-        modifier = Modifier.padding(16.dp),
+        shape = RoundedCornerShape(24.dp),
+        modifier = Modifier
+            .fillMaxWidth(0.90f)
+            .shadow(
+                elevation = 12.dp,
+                shape = RoundedCornerShape(24.dp),
+                spotColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f),
+                ambientColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
+            ),
         containerColor = MaterialTheme.colorScheme.surface,
         titleContentColor = MaterialTheme.colorScheme.onSurface,
-        textContentColor = MaterialTheme.colorScheme.onSurfaceVariant
+        textContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+        properties = DialogProperties(usePlatformDefaultWidth = false)
     )
 }
 

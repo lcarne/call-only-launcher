@@ -102,57 +102,6 @@ fun ContactDialog(
     var showPhotoSourceDialog by remember { mutableStateOf(false) }
     var showContactPermissionRationale by remember { mutableStateOf(false) }
 
-    if (showContactPermissionRationale) {
-        AlertDialog(
-            onDismissRequest = { showContactPermissionRationale = false },
-            title = {
-                Text(
-                    text = stringResource(id = R.string.onboarding_auth_contacts_title),
-                    style = MaterialTheme.typography.headlineSmall,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.fillMaxWidth()
-                )
-            },
-            text = {
-                Text(
-                    text = parseBoldString(stringResource(id = R.string.onboarding_auth_contacts_message)),
-                    style = MaterialTheme.typography.bodyMedium,
-                    textAlign = TextAlign.Center
-                )
-            },
-            confirmButton = {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    Button(
-                        onClick = { showContactPermissionRationale = false },
-                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary),
-                        modifier = Modifier.padding(end = 8.dp)
-                    ) {
-                        Text(stringResource(id = R.string.not_now))
-                    }
-                    Button(
-                        onClick = {
-                            showContactPermissionRationale = false
-                            val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-                                data = android.net.Uri.fromParts("package", context.packageName, null)
-                            }
-                            context.startActivity(intent)
-                        },
-                        colors = ButtonDefaults.buttonColors(containerColor = ConfirmGreen),
-                        modifier = Modifier.padding(start = 8.dp)
-                    ) {
-                        Text(stringResource(id = R.string.understood))
-                    }
-                }
-            },
-            containerColor = MaterialTheme.colorScheme.surface,
-            titleContentColor = MaterialTheme.colorScheme.onSurface,
-            textContentColor = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-    }
-
     val contactPicker = androidx.activity.compose.rememberLauncherForActivityResult(
         contract = androidx.activity.result.contract.ActivityResultContracts.PickContact(),
         onResult = { contactUri ->
@@ -212,6 +161,63 @@ fun ContactDialog(
             }
         }
     )
+
+    val requestContactPermissionLauncher = androidx.activity.compose.rememberLauncherForActivityResult(
+        contract = androidx.activity.result.contract.ActivityResultContracts.RequestPermission(),
+        onResult = { isGranted ->
+            if (isGranted) {
+                contactPicker.launch(null)
+            }
+        }
+    )
+
+    if (showContactPermissionRationale) {
+        AlertDialog(
+            onDismissRequest = { showContactPermissionRationale = false },
+            title = {
+                Text(
+                    text = stringResource(id = R.string.onboarding_auth_contacts_title),
+                    style = MaterialTheme.typography.headlineSmall,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            },
+            text = {
+                Text(
+                    text = parseBoldString(stringResource(id = R.string.onboarding_auth_contacts_message)),
+                    style = MaterialTheme.typography.bodyMedium,
+                    textAlign = TextAlign.Center
+                )
+            },
+            confirmButton = {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Button(
+                        onClick = { showContactPermissionRationale = false },
+                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary),
+                        modifier = Modifier.padding(end = 8.dp)
+                    ) {
+                        Text(stringResource(id = R.string.not_now))
+                    }
+                    Button(
+                        onClick = {
+                            showContactPermissionRationale = false
+                            requestContactPermissionLauncher.launch(android.Manifest.permission.READ_CONTACTS)
+                        },
+                        colors = ButtonDefaults.buttonColors(containerColor = ConfirmGreen),
+                        modifier = Modifier.padding(start = 8.dp)
+                    ) {
+                        Text(stringResource(id = R.string.understood))
+                    }
+                }
+            },
+            containerColor = MaterialTheme.colorScheme.surface,
+            titleContentColor = MaterialTheme.colorScheme.onSurface,
+            textContentColor = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+    }
 
     val cameraPermissionLauncher = androidx.activity.compose.rememberLauncherForActivityResult(
         contract = androidx.activity.result.contract.ActivityResultContracts.RequestPermission(),

@@ -17,7 +17,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Phone
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -28,7 +27,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.incomingcallonly.launcher.R
 import com.incomingcallonly.launcher.ui.components.DepthIcon
-import com.incomingcallonly.launcher.ui.theme.HighContrastButtonBg
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -39,7 +37,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import com.incomingcallonly.launcher.ui.theme.ConfirmGreen
-import com.incomingcallonly.launcher.ui.theme.ErrorRed
 import com.incomingcallonly.launcher.ui.onboarding.parseBoldString
 
 @Composable
@@ -93,12 +90,12 @@ fun DefaultAppPrompts(
             .padding(horizontal = 32.dp)
     ) {
         if (!isDefaultDialer) {
-            androidx.compose.material3.Button(
+            Button(
                 onClick = { showDialerModal = true },
                 modifier = Modifier.fillMaxWidth(),
-                colors = androidx.compose.material3.ButtonDefaults.buttonColors(
-                    containerColor = androidx.compose.material3.MaterialTheme.colorScheme.primary,
-                    contentColor = androidx.compose.material3.MaterialTheme.colorScheme.onPrimary
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary
                 )
             ) {
                 DepthIcon(
@@ -118,9 +115,9 @@ fun DefaultAppPrompts(
             Button(
                 onClick = { showLauncherModal = true },
                 modifier = Modifier.fillMaxWidth(),
-                colors = androidx.compose.material3.ButtonDefaults.buttonColors(
-                    containerColor = androidx.compose.material3.MaterialTheme.colorScheme.primary,
-                    contentColor = androidx.compose.material3.MaterialTheme.colorScheme.onPrimary
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary
                 )
             ) {
                 DepthIcon(
@@ -138,12 +135,12 @@ fun DefaultAppPrompts(
 
         // Pin app button - visible when the app is not pinned
         if (!isPinned) {
-            androidx.compose.material3.Button(
+            Button(
                 onClick = { onPinClick() },
                 modifier = Modifier.fillMaxWidth(),
-                colors = androidx.compose.material3.ButtonDefaults.buttonColors(
-                    containerColor = androidx.compose.material3.MaterialTheme.colorScheme.primary,
-                    contentColor = androidx.compose.material3.MaterialTheme.colorScheme.onPrimary
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary
                 )
             ) {
                 DepthIcon(
@@ -162,7 +159,8 @@ fun DefaultAppPrompts(
 
     if (showDialerModal) {
         AlertDialog(
-            onDismissRequest = { showDialerModal = false },
+            onDismissRequest = { },
+            modifier = Modifier.fillMaxWidth(0.95f),
             title = {
                 Text(
                     text = stringResource(id = R.string.onboarding_default_dialer_title),
@@ -192,7 +190,6 @@ fun DefaultAppPrompts(
                     }
                     Button(
                         onClick = {
-                            showDialerModal = false
                             requestDefaultDialer()
                         },
                         colors = ButtonDefaults.buttonColors(containerColor = ConfirmGreen),
@@ -210,7 +207,8 @@ fun DefaultAppPrompts(
 
     if (showLauncherModal) {
         AlertDialog(
-            onDismissRequest = { showLauncherModal = false },
+            onDismissRequest = { },
+            modifier = Modifier.fillMaxWidth(0.95f),
             title = {
                 Text(
                     text = stringResource(id = R.string.onboarding_default_launcher_title),
@@ -240,7 +238,6 @@ fun DefaultAppPrompts(
                     }
                     Button(
                         onClick = {
-                            showLauncherModal = false
                             requestDefaultLauncher()
                         },
                         colors = ButtonDefaults.buttonColors(containerColor = ConfirmGreen),

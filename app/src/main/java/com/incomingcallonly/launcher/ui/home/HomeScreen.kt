@@ -196,6 +196,7 @@ fun HomeScreen(
         if (showPinConfirmation) {
             AlertDialog(
                 onDismissRequest = { showPinConfirmation = false },
+                modifier = Modifier.fillMaxWidth(0.95f),
                 title = {
                     Text(
                         text = stringResource(id = R.string.onboarding_pinned_mode_title),
