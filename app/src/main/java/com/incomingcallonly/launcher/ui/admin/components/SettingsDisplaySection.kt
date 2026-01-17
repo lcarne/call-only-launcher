@@ -40,7 +40,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -48,7 +47,6 @@ import com.incomingcallonly.launcher.R
 import com.incomingcallonly.launcher.ui.admin.SettingsViewModel
 import com.incomingcallonly.launcher.ui.admin.dialogs.ScreenBehaviorDialog
 import com.incomingcallonly.launcher.ui.admin.dialogs.TimePickerDialogWrapper
-import com.incomingcallonly.launcher.ui.theme.HighContrastButtonBg
 import com.incomingcallonly.launcher.ui.theme.Spacing
 import com.incomingcallonly.launcher.util.TimeFormatUtils
 
@@ -244,7 +242,7 @@ fun NightModeSettings(viewModel: SettingsViewModel) {
                 text = stringResource(
                     id = R.string.night_mode_duration_desc,
                     durationHours,
-                    if (durationMinsOnly > 0) String.format("%02d", durationMinsOnly) else "",
+                    if (durationMinsOnly > 0) String.format(java.util.Locale.getDefault(), "%02d", durationMinsOnly) else "",
                     nextDay
                 ),
                 style = MaterialTheme.typography.bodySmall,

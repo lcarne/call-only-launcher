@@ -1,6 +1,7 @@
 package com.incomingcallonly.launcher.ui.admin
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,18 +12,15 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.automirrored.filled.OpenInNew
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
@@ -32,10 +30,10 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
@@ -48,19 +46,19 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.incomingcallonly.launcher.R
 import com.incomingcallonly.launcher.ui.admin.components.AdminDangerButton
-import com.incomingcallonly.launcher.ui.admin.components.AdminDivider
 import com.incomingcallonly.launcher.ui.admin.components.AdminDialog
-import com.incomingcallonly.launcher.ui.admin.components.AdminSectionHeader
-import com.incomingcallonly.launcher.ui.admin.components.AdminSettingsCard
+import com.incomingcallonly.launcher.ui.admin.components.AdminDivider
 import com.incomingcallonly.launcher.ui.admin.components.AdminIcon
 import com.incomingcallonly.launcher.ui.admin.components.AdminNavigationItem
+import com.incomingcallonly.launcher.ui.admin.components.AdminSectionHeader
+import com.incomingcallonly.launcher.ui.admin.components.AdminSettingsCard
 import com.incomingcallonly.launcher.ui.admin.components.SettingsAudioSection
 import com.incomingcallonly.launcher.ui.admin.components.SettingsDisplaySection
 import com.incomingcallonly.launcher.ui.admin.components.SettingsLocalizationSection
 import com.incomingcallonly.launcher.ui.admin.components.SettingsSystemSection
+import com.incomingcallonly.launcher.ui.components.DepthIcon
 import com.incomingcallonly.launcher.ui.theme.Spacing
 import com.incomingcallonly.launcher.ui.theme.SystemBarsColor
-import com.incomingcallonly.launcher.ui.components.DepthIcon
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -173,15 +171,15 @@ fun AdminSettingsScreen(
     androidx.compose.runtime.LaunchedEffect(importExportState) {
         importExportState?.let { result ->
             when (result) {
-                is com.incomingcallonly.launcher.ui.admin.Result.Success -> {
+                is Result.Success -> {
                     snackbarHostState.showSnackbar(result.data)
                     contactsViewModel.resetImportExportState()
                 }
-                is com.incomingcallonly.launcher.ui.admin.Result.Error -> {
+                is Result.Error -> {
                     snackbarHostState.showSnackbar(result.message ?: "Unknown error")
                     contactsViewModel.resetImportExportState()
                 }
-                is com.incomingcallonly.launcher.ui.admin.Result.Loading -> {
+                is Result.Loading -> {
                      // Optionally show loading indicator
                 }
             }
@@ -408,8 +406,8 @@ fun AdminSettingsScreen(
                         AdminIcon(
                             imageVector = Icons.Default.Favorite,
                             contentDescription = null,
-                            tint = androidx.compose.ui.graphics.Color(0xFFFFDD00), // Gold
-                            containerColor = androidx.compose.ui.graphics.Color(0xFFFFDD00).copy(alpha = 0.1f)
+                            tint = Color(0xFFFFDD00), // Gold
+                            containerColor = Color(0xFFFFDD00).copy(alpha = 0.1f)
                         ) 
                     },
                     trailingContent = {

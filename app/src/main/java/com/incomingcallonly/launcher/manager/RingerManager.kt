@@ -35,12 +35,7 @@ class RingerManager @Inject constructor(
 
     private fun updateRinger(enabled: Boolean, volumePercent: Int) {
         try {
-            val hasDndAccess =
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    notificationManager.isNotificationPolicyAccessGranted
-                } else {
-                    true
-                }
+            val hasDndAccess = notificationManager.isNotificationPolicyAccessGranted
 
             if (enabled) {
                 // Ringer is ON

@@ -1,6 +1,7 @@
 package com.incomingcallonly.launcher.ui.admin.dialogs
 
 import androidx.compose.foundation.background
+import androidx.core.net.toUri
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -23,6 +24,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -52,9 +54,8 @@ import coil.compose.AsyncImage
 import com.incomingcallonly.launcher.R
 import com.incomingcallonly.launcher.data.model.Contact
 import com.incomingcallonly.launcher.ui.admin.components.AdminDialog
-import com.incomingcallonly.launcher.ui.theme.ConfirmGreen
 import com.incomingcallonly.launcher.ui.components.AppDialog
-import androidx.compose.material3.ButtonDefaults
+import com.incomingcallonly.launcher.ui.theme.ConfirmGreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -81,7 +82,7 @@ fun ContactDialog(
             }
             number = contactToEdit.phoneNumber
             if (contactToEdit.photoUri != null) {
-                photoUri = android.net.Uri.parse(contactToEdit.photoUri)
+                photoUri = contactToEdit.photoUri.toUri()
             }
         }
     }
@@ -126,7 +127,7 @@ fun ContactDialog(
                         if (photoIndex != -1) {
                             val uriStr = it.getString(photoIndex)
                             if (uriStr != null) {
-                                photoUri = android.net.Uri.parse(uriStr)
+                                photoUri = uriStr.toUri()
                             }
                         }
 

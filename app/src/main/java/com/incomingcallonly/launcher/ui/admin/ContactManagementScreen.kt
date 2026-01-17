@@ -12,7 +12,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -40,9 +39,9 @@ import com.incomingcallonly.launcher.ui.admin.components.AdminDialog
 import com.incomingcallonly.launcher.ui.admin.components.AdminLargeButton
 import com.incomingcallonly.launcher.ui.admin.components.ContactListItem
 import com.incomingcallonly.launcher.ui.admin.dialogs.ContactDialog
+import com.incomingcallonly.launcher.ui.components.DepthIcon
 import com.incomingcallonly.launcher.ui.theme.Spacing
 import com.incomingcallonly.launcher.ui.theme.SystemBarsColor
-import com.incomingcallonly.launcher.ui.components.DepthIcon
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

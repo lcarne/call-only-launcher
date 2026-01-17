@@ -1,6 +1,7 @@
 package com.incomingcallonly.launcher.data.repository
 
 import android.content.Context
+import androidx.core.net.toUri
 import com.incomingcallonly.launcher.data.local.ContactDao
 import com.incomingcallonly.launcher.data.model.Contact
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -9,7 +10,7 @@ import javax.inject.Inject
 
 class ContactRepositoryImpl @Inject constructor(
     private val contactDao: ContactDao,
-    @ApplicationContext private val context: Context
+    @param:ApplicationContext private val context: Context
 ) : ContactRepository {
     override fun getAllContacts(): Flow<List<Contact>> = contactDao.getAllContacts()
 
@@ -44,7 +45,7 @@ class ContactRepositoryImpl @Inject constructor(
                 
                 val photoBase64 = contact.photoUri?.let { uriString ->
                     try {
-                        val uri = android.net.Uri.parse(uriString)
+                        val uri = uriString.toUri()
                         context.contentResolver.openInputStream(uri)?.use { inputStream ->
                             val bytes = inputStream.readBytes()
                             android.util.Base64.encodeToString(bytes, android.util.Base64.DEFAULT)

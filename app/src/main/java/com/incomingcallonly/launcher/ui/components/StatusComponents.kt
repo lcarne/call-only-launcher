@@ -1,5 +1,6 @@
 package com.incomingcallonly.launcher.ui.components
 
+
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -8,35 +9,28 @@ import android.os.BatteryManager
 import android.telephony.SignalStrength
 import android.telephony.TelephonyCallback
 import android.telephony.TelephonyManager
-
-
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
-import androidx.compose.ui.graphics.drawscope.translate
 import com.incomingcallonly.launcher.R
-import com.incomingcallonly.launcher.ui.theme.ErrorRed
-import com.incomingcallonly.launcher.ui.theme.White
 
 private const val BATTERY_LOW_THRESHOLD = 20
 private const val BATTERY_MEDIUM_THRESHOLD = 50
@@ -239,7 +233,7 @@ fun NetworkSignalDisplay(
     iconSize: androidx.compose.ui.unit.Dp = 32.dp
 ) {
     val context = LocalContext.current
-    var signalLevel by remember { mutableStateOf(0) }
+    var signalLevel by remember { mutableIntStateOf(0) }
     var hasPermission by remember { mutableStateOf(false) }
 
     // Check permissions

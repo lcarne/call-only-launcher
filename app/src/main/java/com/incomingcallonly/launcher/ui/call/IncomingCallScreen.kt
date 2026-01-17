@@ -18,7 +18,6 @@ import androidx.compose.material.icons.filled.Call
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -42,9 +41,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
+import com.incomingcallonly.launcher.R
 import com.incomingcallonly.launcher.data.model.Contact
 import com.incomingcallonly.launcher.ui.components.BatteryLevelDisplay
-import com.incomingcallonly.launcher.R
 import com.incomingcallonly.launcher.ui.components.DepthIcon
 import kotlinx.coroutines.delay
 

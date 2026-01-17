@@ -1,6 +1,7 @@
 package com.incomingcallonly.launcher.ui.admin
 
 import android.content.Context
+import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.incomingcallonly.launcher.data.model.Contact
@@ -39,7 +40,7 @@ class ContactsViewModel @Inject constructor(
     fun addContact(name: String, number: String, photoUri: String?) {
         viewModelScope.launch {
             val localUri = photoUri?.let { uriStr ->
-                imageStorageManager.saveImageLocally(android.net.Uri.parse(uriStr))
+                imageStorageManager.saveImageLocally(uriStr.toUri())
             }
             repository.insertContact(
                 Contact(
@@ -60,7 +61,7 @@ class ContactsViewModel @Inject constructor(
                 imageStorageManager.deleteImage(existingContact?.photoUri)
                 newPhotoUri = contact.photoUri?.let { uriStr ->
                     if (!uriStr.startsWith("file://") || !uriStr.contains("contact_photos")) {
-                        imageStorageManager.saveImageLocally(android.net.Uri.parse(uriStr))
+                        imageStorageManager.saveImageLocally(uriStr.toUri())
                     } else {
                         uriStr
                     }

@@ -5,10 +5,10 @@ import android.content.Context
 import android.os.Build
 import android.telecom.TelecomManager
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.incomingcallonly.launcher.data.repository.SettingsRepository
 import com.incomingcallonly.launcher.manager.ScreenManager
 import dagger.hilt.android.lifecycle.HiltViewModel
-import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch

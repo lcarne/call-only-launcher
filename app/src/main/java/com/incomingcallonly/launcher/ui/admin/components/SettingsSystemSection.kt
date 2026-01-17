@@ -6,7 +6,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -17,15 +19,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.ui.text.input.KeyboardType
 import com.incomingcallonly.launcher.R
 import com.incomingcallonly.launcher.ui.admin.AuthViewModel
 import com.incomingcallonly.launcher.ui.admin.SettingsViewModel
-import androidx.compose.material3.ListItemDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 
 @Composable
 fun SettingsSystemSection(viewModel: SettingsViewModel, authViewModel: AuthViewModel) {
@@ -36,7 +36,7 @@ fun SettingsSystemSection(viewModel: SettingsViewModel, authViewModel: AuthViewM
             // Call Security
             val allowAllCalls by viewModel.allowAllCalls.collectAsState()
             ListItem(
-                colors = ListItemDefaults.colors(containerColor = androidx.compose.ui.graphics.Color.Transparent),
+                colors = ListItemDefaults.colors(containerColor = Color.Transparent),
                 headlineContent = { Text(stringResource(id = R.string.accept_all_calls)) },
                 supportingContent = { Text(stringResource(id = R.string.accept_all_calls_desc)) },
                 trailingContent = {
@@ -66,7 +66,7 @@ fun SettingsSystemSection(viewModel: SettingsViewModel, authViewModel: AuthViewM
             )
 
             if (showChangePinDialog) {
-                var step by remember { mutableStateOf(1) }
+                var step by remember { mutableIntStateOf(1) }
                 var previousPin by remember { mutableStateOf("") }
                 var newPin by remember { mutableStateOf("") }
                 var confirmPin by remember { mutableStateOf("") }

@@ -2,6 +2,8 @@ package com.incomingcallonly.launcher.util
 
 import android.content.Context
 import android.net.Uri
+import androidx.core.net.toUri
+import androidx.core.graphics.scale
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.File
 import java.io.FileOutputStream
@@ -37,7 +39,7 @@ class ImageStorageManager @Inject constructor(
                 val width = (originalBitmap.width * ratio).toInt()
                 val height = (originalBitmap.height * ratio).toInt()
                 
-                val resizedBitmap = android.graphics.Bitmap.createScaledBitmap(originalBitmap, width, height, true)
+                val resizedBitmap = originalBitmap.scale(width, height, true)
 
                 FileOutputStream(destFile).use { output ->
                      resizedBitmap.compress(android.graphics.Bitmap.CompressFormat.JPEG, 80, output)
@@ -58,7 +60,7 @@ class ImageStorageManager @Inject constructor(
     fun deleteImage(uriString: String?) {
         if (uriString == null) return
         try {
-            val uri = Uri.parse(uriString)
+            val uri = uriString.toUri()
             if (uri.scheme == "file") {
                 val file = File(uri.path ?: return)
                 if (file.exists() && file.parentFile?.name == "contact_photos") {

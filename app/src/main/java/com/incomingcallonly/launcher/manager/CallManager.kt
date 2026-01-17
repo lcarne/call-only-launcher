@@ -11,6 +11,7 @@ import com.incomingcallonly.launcher.data.model.CallLogType
 import com.incomingcallonly.launcher.data.repository.CallLogRepository
 import com.incomingcallonly.launcher.data.repository.ContactRepository
 import com.incomingcallonly.launcher.data.repository.SettingsRepository
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,7 +20,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Singleton
-import dagger.hilt.android.qualifiers.ApplicationContext
 
 @Singleton
 class CallManager @Inject constructor(
@@ -106,7 +106,7 @@ class CallManager @Inject constructor(
             if (isContact || settingsRepository.allowAllCalls.value) {
                 _incomingNumber.value = number
                 _isCallAllowed.value = true
-                updateState(call.details.state)
+                updateState(call.state)
             } else {
                 // Silently reject if not a contact
                 call.reject(false, null)
@@ -166,7 +166,7 @@ class CallManager @Inject constructor(
     }
 
     fun reject() {
-        if (currentCall?.details?.state == Call.STATE_RINGING) {
+        if (currentCall?.state == Call.STATE_RINGING) {
             userRejected = true
             currentCall?.reject(false, null)
         } else {

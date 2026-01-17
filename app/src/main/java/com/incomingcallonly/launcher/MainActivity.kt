@@ -7,7 +7,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.collectAsState
@@ -26,10 +25,8 @@ import com.incomingcallonly.launcher.ui.components.SimLockOverlay
 import com.incomingcallonly.launcher.ui.navigation.IncomingCallOnlyNavGraph
 import com.incomingcallonly.launcher.ui.theme.IncomingCallOnlyTheme
 import com.incomingcallonly.launcher.ui.theme.SystemBarsColor
-import androidx.compose.material3.MaterialTheme
 import com.incomingcallonly.launcher.util.LocaleHelper
 import dagger.hilt.android.AndroidEntryPoint
-
 import javax.inject.Inject
 
 @AndroidEntryPoint

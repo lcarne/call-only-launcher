@@ -20,6 +20,7 @@
     <plurals name="press_again">
         <item quantity="one">Appuyez encore %1$d fois</item>
         <item quantity="other">Appuyez encore %1$d fois</item>
+        <item quantity="many">Appuyez encore %1$d fois</item>
     </plurals>
     <string name="press_again_to_confirm">Appuyez à nouveau pour confirmer</string>
 
@@ -41,6 +42,7 @@
     <plurals name="taps_remaining">
         <item quantity="one">Encore %1$d appui</item>
         <item quantity="other">Encore %1$d appuis</item>
+        <item quantity="many">Encore %1$d appuis</item>
     </plurals>
 
     <!-- ==================== SIM LOCK ==================== -->
@@ -163,16 +165,13 @@
     <string name="onboarding_admin_intro_message">Pour accéder aux réglages ou quitter l\'application, il existe un menu caché :\n\nTapez *15 fois sur la date*, puis le code *1234*.</string>
 
     <!-- Permissions -->
-    <string name="onboarding_auth_intro_title">Pourquoi ces autorisations ?</string>
-    <string name="onboarding_auth_intro_message">L\'application doit accéder à certaines fonctionnalités de votre téléphone pour fonctionner correctement :\n\n• *Appels* : Pour détecter les appels entrants et créer un historique.\n• *Notifications* : Pour vous alerter des appels entrants.\n• *Localisation* : Pour afficher les barres de réseau (imposé par Android).</string>
+
     <string name="onboarding_auth_contacts_title">Accès aux Contacts</string>
     <string name="onboarding_auth_contacts_message">Veuillez autoriser l\'accès à vos contacts pour les importer dans la liste de contacts.</string>
-    <string name="onboarding_auth_calls_title">Accès Appels &amp; Notifications</string>
-    <string name="onboarding_auth_calls_message">Veuillez autoriser l\'accès aux appels et aux notifications pour gérer les appels entrants et l\'historique.</string>
+
     <string name="onboarding_auth_location_intro_title">Localisation et Réseau</string>
     <string name="onboarding_auth_location_intro_message">Android exige l\'autorisation de localisation pour lire la puissance du signal réseau (les barres). L\'application *ne suit pas* votre position GPS.</string>
-    <string name="onboarding_auth_location_request_title">Accès à la Localisation</string>
-    <string name="onboarding_auth_location_request_message">Veuillez autoriser l\'accès à la localisation pour l\'affichage du réseau.</string>
+
     <string name="onboarding_default_dialer_title">Activer les appels</string>
     <string name="onboarding_default_dialer_message">Pour gérer les appels entrants, cette application doit être définie comme votre *application par défaut*.</string>
     <string name="onboarding_default_launcher_title">Définir en launcher</string>

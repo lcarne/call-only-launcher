@@ -17,3 +17,6 @@
 -keep class androidx.room.RoomMasterTable {
     public static java.lang.String createInsertQuery(java.lang.String);
 }
+
+# Fix for R8 missing classes error for Tink/ErrorProne
+-dontwarn com.google.errorprone.annotations.**

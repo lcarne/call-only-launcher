@@ -2,17 +2,18 @@ package com.incomingcallonly.launcher.data.repository
 
 import android.content.Context
 import android.content.SharedPreferences
+import androidx.core.content.edit
+import com.incomingcallonly.launcher.manager.NightModeScheduler
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import com.incomingcallonly.launcher.manager.NightModeScheduler
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class SettingsRepositoryImpl @Inject constructor(
-    @ApplicationContext private val context: Context
+    @param:ApplicationContext private val context: Context
 ) : SettingsRepository {
     private val prefs: SharedPreferences by lazy {
         val masterKey = androidx.security.crypto.MasterKey.Builder(context)
@@ -97,68 +98,68 @@ class SettingsRepositoryImpl @Inject constructor(
 
 
     override fun setScreenBehaviorPlugged(behavior: Int) {
-        prefs.edit().putInt(KEY_SCREEN_BEHAVIOR_PLUGGED, behavior).apply()
+        prefs.edit { putInt(KEY_SCREEN_BEHAVIOR_PLUGGED, behavior) }
         _screenBehaviorPlugged.value = behavior
     }
 
     override fun setScreenBehaviorBattery(behavior: Int) {
-        prefs.edit().putInt(KEY_SCREEN_BEHAVIOR_BATTERY, behavior).apply()
+        prefs.edit { putInt(KEY_SCREEN_BEHAVIOR_BATTERY, behavior) }
         _screenBehaviorBattery.value = behavior
     }
 
     override fun setNightModeStartHour(hour: Int) {
-        prefs.edit().putInt(KEY_NIGHT_START, hour).apply()
+        prefs.edit { putInt(KEY_NIGHT_START, hour) }
         _nightModeStartHour.value = hour
         NightModeScheduler.scheduleNightModeEnd(context)
     }
 
     override fun setNightModeStartMinute(minute: Int) {
-        prefs.edit().putInt(KEY_NIGHT_START_MINUTE, minute).apply()
+        prefs.edit { putInt(KEY_NIGHT_START_MINUTE, minute) }
         _nightModeStartMinute.value = minute
         NightModeScheduler.scheduleNightModeEnd(context)
     }
 
     override fun setNightModeEndHour(hour: Int) {
-        prefs.edit().putInt(KEY_NIGHT_END, hour).apply()
+        prefs.edit { putInt(KEY_NIGHT_END, hour) }
         _nightModeEndHour.value = hour
         NightModeScheduler.scheduleNightModeEnd(context)
     }
 
     override fun setNightModeEndMinute(minute: Int) {
-        prefs.edit().putInt(KEY_NIGHT_END_MINUTE, minute).apply()
+        prefs.edit { putInt(KEY_NIGHT_END_MINUTE, minute) }
         _nightModeEndMinute.value = minute
         NightModeScheduler.scheduleNightModeEnd(context)
     }
 
     override fun setNightModeEnabled(enabled: Boolean) {
-        prefs.edit().putBoolean(KEY_NIGHT_MODE_ENABLED, enabled).apply()
+        prefs.edit { putBoolean(KEY_NIGHT_MODE_ENABLED, enabled) }
         _isNightModeEnabled.value = enabled
         NightModeScheduler.scheduleNightModeEnd(context)
     }
 
     override fun setClockColor(color: Int) {
-        prefs.edit().putInt(KEY_CLOCK_COLOR, color).apply()
+        prefs.edit { putInt(KEY_CLOCK_COLOR, color) }
         _clockColor.value = color
     }
 
     override fun setAllowAllCalls(enabled: Boolean) {
-        prefs.edit().putBoolean(KEY_ALLOW_ALL_CALLS, enabled).apply()
+        prefs.edit { putBoolean(KEY_ALLOW_ALL_CALLS, enabled) }
         _allowAllCalls.value = enabled
     }
 
 
     override fun setRingerEnabled(enabled: Boolean) {
         _isRingerEnabled.value = enabled
-        prefs.edit().putBoolean(KEY_RINGER_ENABLED, enabled).apply()
+        prefs.edit { putBoolean(KEY_RINGER_ENABLED, enabled) }
     }
 
     override fun setRingerVolume(volume: Int) {
         _ringerVolume.value = volume
-        prefs.edit().putInt(KEY_RINGER_VOLUME, volume).apply()
+        prefs.edit { putInt(KEY_RINGER_VOLUME, volume) }
     }
 
     override fun saveRingerStatePreNight(enabled: Boolean) {
-        prefs.edit().putBoolean(KEY_PRE_NIGHT_RINGER_ENABLED, enabled).apply()
+        prefs.edit { putBoolean(KEY_PRE_NIGHT_RINGER_ENABLED, enabled) }
         _preNightRingerEnabled.value = enabled
     }
 
@@ -169,27 +170,27 @@ class SettingsRepositoryImpl @Inject constructor(
 
 
     override fun setLanguage(lang: String) {
-        prefs.edit().putString(KEY_LANGUAGE, lang).apply()
+        prefs.edit { putString(KEY_LANGUAGE, lang) }
         _language.value = lang
     }
 
     override fun setTimeFormat(format: String) {
-        prefs.edit().putString(KEY_TIME_FORMAT, format).apply()
+        prefs.edit { putString(KEY_TIME_FORMAT, format) }
         _timeFormat.value = format
     }
 
     override fun setDefaultSpeakerEnabled(enabled: Boolean) {
-        prefs.edit().putBoolean(KEY_DEFAULT_SPEAKER_ENABLED, enabled).apply()
+        prefs.edit { putBoolean(KEY_DEFAULT_SPEAKER_ENABLED, enabled) }
         _isDefaultSpeakerEnabled.value = enabled
     }
 
     override fun setHasSeenOnboarding(hasSeen: Boolean) {
-        prefs.edit().putBoolean(KEY_HAS_SEEN_ONBOARDING, hasSeen).apply()
+        prefs.edit { putBoolean(KEY_HAS_SEEN_ONBOARDING, hasSeen) }
         _hasSeenOnboarding.value = hasSeen
     }
 
     override fun setAdminPin(pin: String) {
-        prefs.edit().putString(KEY_ADMIN_PIN, pin).apply()
+        prefs.edit { putString(KEY_ADMIN_PIN, pin) }
         _adminPin.value = pin
     }
 

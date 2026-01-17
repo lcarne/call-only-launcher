@@ -13,12 +13,18 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -27,9 +33,12 @@ import androidx.compose.ui.input.pointer.changedToDown
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.incomingcallonly.launcher.R
 import com.incomingcallonly.launcher.data.repository.SettingsRepository
 import com.incomingcallonly.launcher.manager.NightModeScheduler
+import com.incomingcallonly.launcher.ui.components.AppDialog
 import com.incomingcallonly.launcher.ui.components.BatteryLevelDisplay
 import com.incomingcallonly.launcher.ui.components.NetworkSignalDisplay
 import com.incomingcallonly.launcher.ui.home.components.ClockDisplay
@@ -43,22 +52,10 @@ import com.incomingcallonly.launcher.ui.home.effects.rememberInactivityState
 import com.incomingcallonly.launcher.ui.home.effects.rememberIsPlugged
 import com.incomingcallonly.launcher.ui.onboarding.OnboardingFlow
 import com.incomingcallonly.launcher.ui.theme.Black
+import com.incomingcallonly.launcher.ui.theme.ConfirmGreen
 import com.incomingcallonly.launcher.ui.theme.DimmedClockColor
-import com.incomingcallonly.launcher.ui.theme.HighContrastButtonBg
 import com.incomingcallonly.launcher.ui.theme.SystemBarsColor
 import java.util.Calendar
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Text
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.remember
-import com.incomingcallonly.launcher.R
-import com.incomingcallonly.launcher.ui.theme.ConfirmGreen
-import com.incomingcallonly.launcher.ui.theme.ErrorRed
-import com.incomingcallonly.launcher.ui.components.AppDialog
 
 private const val MINUTES_IN_HOUR = 60
 

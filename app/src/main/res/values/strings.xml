@@ -65,7 +65,7 @@
     <string name="accept_all_calls">Restrict to contacts only</string>
     <string name="accept_all_calls_desc">If disabled, all calls are allowed</string>
     <string name="change_pin">Change PIN</string>
-    <string name="change_pin_desc">Change the administrator access code</string>
+
     <string name="new_pin">New PIN</string>
     <string name="previous_pin">Current PIN</string>
     <string name="confirm_new_pin">Confirm New PIN</string>
@@ -163,16 +163,13 @@
     <string name="onboarding_admin_intro_message">To access settings or exit the app, there is a hidden menu:\n\nTap *15 times on the date*, then enter code *1234*.</string>
 
     <!-- Permissions -->
-    <string name="onboarding_auth_intro_title">Why these permissions?</string>
-    <string name="onboarding_auth_intro_message">The app needs access to certain features of your phone to work correctly:\n\n• *Calls*: To detect incoming calls and create a history.\n• *Notifications*: To alert you of incoming calls.\n• *Location*: To display network signal bars (required by Android).</string>
+
     <string name="onboarding_auth_contacts_title">Contacts Access</string>
     <string name="onboarding_auth_contacts_message">Please allow access to your contacts so the app can tell you who is calling.</string>
-    <string name="onboarding_auth_calls_title">Calls &amp; Notifications Access</string>
-    <string name="onboarding_auth_calls_message">Please allow access to calls and notifications to manage incoming calls and history.</string>
+
     <string name="onboarding_auth_location_intro_title">Location and Network</string>
     <string name="onboarding_auth_location_intro_message">Android requires location permission to read network signal strength (bars). The app *does not track* your GPS location.</string>
-    <string name="onboarding_auth_location_request_title">Location Access</string>
-    <string name="onboarding_auth_location_request_message">Please allow location access for network display.</string>
+
     <string name="onboarding_default_dialer_title">Enable Calls</string>
     <string name="onboarding_default_dialer_message">To handle incoming calls effectively, this app needs to be set as your *default phone app*.</string>
     <string name="onboarding_default_launcher_title">Set as Home App</string>
