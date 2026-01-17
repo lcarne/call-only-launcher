@@ -39,12 +39,7 @@ import com.incomingcallonly.launcher.ui.theme.Spacing
 @Composable
 fun SettingsAudioSection(viewModel: SettingsViewModel) {
     Column {
-        AdminSectionHeader(text = stringResource(id = R.string.settings_section_audio)) // Assuming you add this string, or reuse an existing one if appropriate. Wait, the original didn't have a header call here but AdminSettingsScreen might have been updated. 
-        // Actually AdminSettingsScreen calls SettingsAudioSection directly.
-        // Let's check original SettingsAudioSection ... it didn't have a header text inside. 
-        // I should probably add one for consistency if it fits, or merge into System if that feels better.
-        // But "System" and "Audio" were separate.
-        // I'll add a header for "Audio".
+        AdminSectionHeader(text = stringResource(id = R.string.settings_section_audio))
         
         AdminSettingsCard {
             // Audio Output

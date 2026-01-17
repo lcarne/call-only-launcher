@@ -29,7 +29,7 @@ import com.incomingcallonly.launcher.ui.theme.SystemBarsColor
 import androidx.compose.material3.MaterialTheme
 import com.incomingcallonly.launcher.util.LocaleHelper
 import dagger.hilt.android.AndroidEntryPoint
-import androidx.activity.viewModels
+
 import javax.inject.Inject
 
 @AndroidEntryPoint

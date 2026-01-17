@@ -69,7 +69,7 @@ fun OnboardingFlow(onDismiss: () -> Unit) {
     })
 
     AppDialog(
-        onDismissRequest = { /* Prevent dismissal */ },
+        onDismissRequest = { },
         icon = currentIcon,
         title = currentTitle,
         content = {
@@ -94,7 +94,7 @@ fun OnboardingFlow(onDismiss: () -> Unit) {
         },
         buttons = {
             if (step is OnboardingStep.AdminDefinition) {
-                // Admin Step Logic (Double Tap)
+
                 var tapCount by remember { mutableIntStateOf(0) }
 
                 LaunchedEffect(tapCount) {
@@ -143,9 +143,7 @@ fun OnboardingFlow(onDismiss: () -> Unit) {
                         .fillMaxWidth()
                         .heightIn(min = 56.dp)
                 ) {
-                    // Display logic:
-                    // Presentation -> 1/3
-                    // Location -> 2/3
+
                     val currentStepDisplay = when(step) {
                         OnboardingStep.Presentation -> 1
                         OnboardingStep.LocationPermission -> 2

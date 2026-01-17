@@ -57,7 +57,7 @@ val AppTypography = Typography(
     ),
     headlineSmall = TextStyle(
         fontFamily = AppFontFamily,
-        fontWeight = FontWeight.SemiBold,  // Stronger weight
+        fontWeight = FontWeight.SemiBold,
         fontSize = 24.sp,
         lineHeight = 32.sp,
         letterSpacing = 0.sp
@@ -73,15 +73,15 @@ val AppTypography = Typography(
     ),
     titleMedium = TextStyle(
         fontFamily = AppFontFamily,
-        fontWeight = FontWeight.SemiBold,  // Increased from Medium
-        fontSize = 18.sp,  // Increased from 16sp
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 18.sp,
         lineHeight = 24.sp,
         letterSpacing = 0.15.sp
     ),
     titleSmall = TextStyle(
         fontFamily = AppFontFamily,
         fontWeight = FontWeight.Medium,
-        fontSize = 16.sp,  // Increased from 14sp
+        fontSize = 16.sp,
         lineHeight = 20.sp,
         letterSpacing = 0.1.sp
     ),
@@ -90,21 +90,21 @@ val AppTypography = Typography(
     bodyLarge = TextStyle(
         fontFamily = AppFontFamily,
         fontWeight = FontWeight.Normal,
-        fontSize = 17.sp,  // Increased from 16sp
+        fontSize = 17.sp,
         lineHeight = 24.sp,
         letterSpacing = 0.5.sp
     ),
     bodyMedium = TextStyle(
         fontFamily = AppFontFamily,
         fontWeight = FontWeight.Normal,
-        fontSize = 15.sp,  // Increased from 14sp
+        fontSize = 15.sp,
         lineHeight = 20.sp,
         letterSpacing = 0.25.sp
     ),
     bodySmall = TextStyle(
         fontFamily = AppFontFamily,
         fontWeight = FontWeight.Normal,
-        fontSize = 13.sp,  // Increased from 12sp
+        fontSize = 13.sp,
         lineHeight = 16.sp,
         letterSpacing = 0.4.sp
     ),
@@ -112,27 +112,25 @@ val AppTypography = Typography(
     // Labels - Section headers, buttons, chips
     labelLarge = TextStyle(
         fontFamily = AppFontFamily,
-        fontWeight = FontWeight.SemiBold,  // Increased from Medium for hierarchy
-        fontSize = 15.sp,  // Increased from 14sp
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 15.sp,
         lineHeight = 20.sp,
         letterSpacing = 0.1.sp
     ),
     labelMedium = TextStyle(
         fontFamily = AppFontFamily,
         fontWeight = FontWeight.Medium,
-        fontSize = 13.sp,  // Increased from 12sp
+        fontSize = 13.sp,
         lineHeight = 16.sp,
         letterSpacing = 0.5.sp
     ),
     labelSmall = TextStyle(
         fontFamily = AppFontFamily,
         fontWeight = FontWeight.Medium,
-        fontSize = 12.sp,  // Increased from 11sp
+        fontSize = 12.sp,
         lineHeight = 16.sp,
         letterSpacing = 0.5.sp
     )
 )
 
-// Legacy Typography for backward compatibility (deprecated)
-@Deprecated("Use AppTypography instead", ReplaceWith("AppTypography"))
 val Typography = AppTypography
