@@ -76,11 +76,9 @@ This design minimizes confusion and prevents misuse.
   - Unknown callers are **automatically silenced or rejected**.
   - **2-Tap Safety**: Hang-up and Refuse actions require two taps to prevent accidental call termination.
 
-- **Kiosk / Device Owner Support**  
-  When set as Device Owner, the app can:
-  - Disable the status bar
-  - Block system navigation gestures
-  - Prevent leaving the launcher
+- **Kiosk & Pinning Modes**
+  - **Screen Pinning**: Easily lock the app to the screen from the Admin menu (no ADB required).
+  - **Device Owner**: For full lockdown (status bar disabled, navigation blocked), set as Device Owner via ADB.
 
 - **Protected Admin Interface**  
   A hidden admin screen allows caregivers to manage contacts and device behavior without risk of accidental access.
@@ -244,12 +242,13 @@ Each release includes:
 
 ---
 
-## Set as Default Launcher
+## Initial Setup (Onboarding)
 
-After installation:
-1. Press the **Home** button.
-2. Select **Incoming Call Only Launcher**.
-3. Choose **Always** to make it the default launcher.
+Upon the first launch, an **onboarding flow* will guide you through requesting location access (used to display network quality).
+On the home page, you can set:
+- the default phone app
+- the default launcher
+- the app lock
 
 ---
 
@@ -291,7 +290,10 @@ From the Admin interface you can:
   - **Dim**: Screen stays on with reduced brightness, showing only the clock.
   - **Awake**: Screen stays on at normal brightness.
 - **Customization**: Configure Night mode, Clock color, Ringer volume.
-- **System Control**: Temporarily unpin/unlock the device or set as Default Launcher.
+- **System Control**:
+  - **Pin App**: Activate Android Screen Pinning to lock the user in the app (no ADB required).
+  - **Unpin / Unlock**: Temporarily exit restricted mode.
+  - **Set as Default Launcher**: Re-prompt to set as home app if needed.
 
 ## Emergency Unlock / Remove Device Owner
 

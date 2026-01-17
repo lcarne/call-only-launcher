@@ -76,11 +76,9 @@ Cette conception minimise la confusion et empêche une mauvaise utilisation.
   - Les appelants inconnus sont **automatiquement réduits au silence ou rejetés**.
   - **Sécurité à 2 Tapes** : Les actions Raccrocher et Refuser nécessitent deux tapes pour éviter la fin accidentelle de l'appel.
 
-- **Support Kiosque / Propriétaire de l'Appareil**
-  Lorsqu'elle est définie comme Propriétaire de l'Appareil, l'application peut :
-  - Désactiver la barre d'état
-  - Bloquer les gestes de navigation du système
-  - Empêcher de quitter le launcher
+- **Modes Kiosque & Épinglage**
+  - **Épinglage d'écran** : Verrouillez facilement l'application à l'écran depuis le menu Admin (sans ADB).
+  - **Propriétaire de l'Appareil** : Pour un verrouillage complet (barre d'état désactivée, navigation bloquée), définissez comme Propriétaire via ADB.
 
 - **Interface Administrateur Protégée**
   Un écran d'administration caché permet aux aidants de gérer les contacts et le comportement de l'appareil sans risque d'accès accidentel.
@@ -244,12 +242,13 @@ Chaque version inclut :
 
 ---
 
-## Définir comme Launcher par Défaut
+## Configuration Initiale (Onboarding)
 
-Après l'installation :
-1. Appuyez sur le bouton **Accueil**.
-2. Sélectionnez **Incoming Call Only Launcher**.
-3. Choisissez **Toujours** pour en faire le launcher par défaut.
+Au premier lancement, un **assistant de configuration** vous guidera pour demander l'accès à la localisation (permet d'afficher la qualité du réseau).
+Sur la page d'accueil, vous pouvez définir :
+- l'application de téléphone par défaut
+- le launcher par défaut
+- le vérouillage de l'application
 
 ---
 
@@ -290,7 +289,10 @@ Depuis l'interface Admin, vous pouvez :
   - **Sombre** : L'écran reste allumé avec une luminosité réduite, n'affichant que l'horloge.
   - **Éveillé** : L'écran reste allumé avec une luminosité normale.
 - **Personnalisation** : Configurer le mode Nuit, la couleur de l'Horloge, le volume de la Sonnerie.
-- **Contrôle Système** : Désépingler/déverrouiller temporairement l'appareil ou définir comme Launcher par Défaut.
+- **Contrôle Système** :
+  - **Épingler l'application** : Activer l'épinglage d'écran Android pour verrouiller l'utilisateur dans l'application (pas d'ADB requis).
+  - **Désépingler / Déverrouiller** : Quitter temporairement le mode restreint.
+  - **Définir comme Launcher** : Redemander de définir l'application comme accueil si nécessaire.
 
 ## Déverrouillage d'Urgence / Supprimer le Propriétaire de l'Appareil
 
