@@ -2,28 +2,20 @@ package com.incomingcallonly.launcher.ui.onboarding
 
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.ui.Alignment
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.ui.draw.shadow
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.ui.window.DialogProperties
-import androidx.compose.material3.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Phone
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -32,14 +24,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.incomingcallonly.launcher.R
+import com.incomingcallonly.launcher.ui.components.AppDialog
+import com.incomingcallonly.launcher.ui.components.parseBoldString
 import com.incomingcallonly.launcher.ui.theme.ConfirmGreen
 import com.incomingcallonly.launcher.ui.theme.ErrorRed
 import kotlinx.coroutines.delay
@@ -48,76 +39,65 @@ import kotlinx.coroutines.delay
 fun OnboardingFlow(onDismiss: () -> Unit) {
     var step by remember { mutableIntStateOf(0) }
 
+    // Stepping Logic:
     // 0: Presentation
     // 1: Authorization Requests Explanation
-    // 2: Request Contacts
     // 3: Request Phone State
     // 4: Location Explanation
-    // 5: Request Location
     // 6: Admin Explanation
 
-    val contactLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestPermission(),
-        onResult = { _ -> step++ }
-    )
-    
     val phoneLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestMultiplePermissions(),
-        onResult = { _ -> step++ }
+        onResult = { step = 4 }
     )
 
     val locationLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission(),
-        onResult = { _ -> step = 6 }
+        onResult = { step = 6 }
     )
 
-    AlertDialog(
+    val currentIcon = when (step) {
+        0 -> Icons.Default.Info
+        1, 6 -> Icons.Default.Lock
+        3 -> Icons.Default.Phone
+        4 -> Icons.Default.LocationOn
+        else -> Icons.Default.Info
+    }
+
+    val currentTitle = stringResource(id = when (step) {
+        0 -> R.string.onboarding_presentation_title
+        1 -> R.string.onboarding_auth_intro_title
+        3 -> R.string.onboarding_auth_calls_title
+        4 -> R.string.onboarding_auth_location_intro_title
+        else -> R.string.onboarding_admin_intro_title
+    })
+
+    val currentMessage = stringResource(id = when (step) {
+        0 -> R.string.onboarding_presentation_message
+        1 -> R.string.onboarding_auth_intro_message
+        3 -> R.string.onboarding_auth_calls_message
+        4 -> R.string.onboarding_auth_location_intro_message
+        else -> R.string.onboarding_admin_intro_message
+    })
+
+    AppDialog(
         onDismissRequest = { /* Prevent dismissal */ },
-        icon = {
-            androidx.compose.material3.Icon(
-                imageVector = when (step) {
-                    0 -> Icons.Default.Info
-                    1, 6 -> Icons.Default.Lock
-                    2 -> Icons.Default.Person
-                    3 -> Icons.Default.Phone
-                    4 -> Icons.Default.LocationOn
-                    else -> Icons.Default.Info
-                },
-                contentDescription = null
-            )
-        },
-        title = {
-            Text(
-                text = stringResource(id = when (step) {
-                    0 -> R.string.onboarding_presentation_title
-                    1 -> R.string.onboarding_auth_intro_title
-                    2 -> R.string.onboarding_auth_contacts_title
-                    3 -> R.string.onboarding_auth_calls_title
-                    4 -> R.string.onboarding_auth_location_intro_title
-                    else -> R.string.onboarding_admin_intro_title
-                }),
-                style = MaterialTheme.typography.headlineSmall,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth()
-            )
-        },
-        text = {
+        icon = currentIcon,
+        title = currentTitle,
+        // For step 6, we use custom content to show the error message.
+        // For other steps, we just show the message using the simplified content slot
+        // or just passing message if separate. 
+        // Since we want consistent aligned text, we use content slot with parseBoldString.
+        content = {
             Column {
                 Text(
-                    text = parseBoldString(stringResource(id = when (step) {
-                        0 -> R.string.onboarding_presentation_message
-                        1 -> R.string.onboarding_auth_intro_message
-                        2 -> R.string.onboarding_auth_contacts_message
-                        3 -> R.string.onboarding_auth_calls_message
-                        4 -> R.string.onboarding_auth_location_intro_message
-                        else -> R.string.onboarding_admin_intro_message
-                    })),
+                    text = parseBoldString(currentMessage),
                     style = MaterialTheme.typography.bodyMedium,
                     textAlign = TextAlign.Start
                 )
-                Spacer(modifier = Modifier.height(16.dp))
-
+                
                 if (step == 6) {
+                    Spacer(modifier = Modifier.height(16.dp))
                     Text(
                         text = stringResource(id = R.string.onboarding_important),
                         style = MaterialTheme.typography.titleMedium,
@@ -128,7 +108,7 @@ fun OnboardingFlow(onDismiss: () -> Unit) {
                 }
             }
         },
-        confirmButton = {
+        buttons = {
             if (step == 6) {
                 // Admin Step Logic (Double Tap)
                 var tapCount by remember { mutableIntStateOf(0) }
@@ -170,10 +150,8 @@ fun OnboardingFlow(onDismiss: () -> Unit) {
                 Button(
                     onClick = {
                         when (step) {
-                            0 -> step++
+                            0 -> step = 1
                             1 -> step = 3
-
-                            2 -> contactLauncher.launch(android.Manifest.permission.READ_CONTACTS)
                             3 -> {
                                 val permissions = mutableListOf(
                                     android.Manifest.permission.READ_PHONE_STATE,
@@ -191,49 +169,25 @@ fun OnboardingFlow(onDismiss: () -> Unit) {
                         .fillMaxWidth()
                         .heightIn(min = 56.dp)
                 ) {
-                    val currentStep = when(step) {
+                    // Display logic:
+                    // 0 -> 1/5
+                    // 1 -> 2/5
+                    // 3 -> 3/5
+                    // 4 -> 4/5
+                    val currentStepDisplay = when(step) {
                         0 -> 1
                         1 -> 2
                         3 -> 3
                         4 -> 4
                         else -> 0
                     }
-                    val buttonText = stringResource(id = if (step in listOf(2, 3, 4)) R.string.validate else R.string.next)
+                    val buttonText = stringResource(id = if (step in listOf(3, 4)) R.string.validate else R.string.next)
                     Text(
-                        text = if (currentStep > 0) "$buttonText ($currentStep/5)" else buttonText,
+                        text = if (currentStepDisplay > 0) "$buttonText ($currentStepDisplay/5)" else buttonText,
                         fontSize = 18.sp
                     )
                 }
             }
-        },
-        shape = RoundedCornerShape(24.dp),
-        modifier = Modifier
-            .fillMaxWidth(0.90f)
-            .shadow(
-                elevation = 12.dp,
-                shape = RoundedCornerShape(24.dp),
-                spotColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f),
-                ambientColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
-            ),
-        containerColor = MaterialTheme.colorScheme.surface,
-        titleContentColor = MaterialTheme.colorScheme.onSurface,
-        textContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-        properties = DialogProperties(usePlatformDefaultWidth = false)
-    )
-}
-
-@Composable
-fun parseBoldString(text: String): androidx.compose.ui.text.AnnotatedString {
-    return buildAnnotatedString {
-        val parts = text.split("*")
-        parts.forEachIndexed { index, part ->
-            if (index % 2 == 1) { // Odd indices are inside * *
-                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                    append(part)
-                }
-            } else {
-                append(part)
-            }
         }
-    }
+    )
 }

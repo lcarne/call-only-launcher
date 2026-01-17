@@ -8,6 +8,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -17,8 +18,15 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Phone
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -26,18 +34,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.incomingcallonly.launcher.R
+import com.incomingcallonly.launcher.ui.components.AppDialog
 import com.incomingcallonly.launcher.ui.components.DepthIcon
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.foundation.layout.Row
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import com.incomingcallonly.launcher.ui.theme.ConfirmGreen
-import com.incomingcallonly.launcher.ui.onboarding.parseBoldString
 
 @Composable
 fun DefaultAppPrompts(
@@ -158,25 +157,11 @@ fun DefaultAppPrompts(
     }
 
     if (showDialerModal) {
-        AlertDialog(
+        AppDialog(
             onDismissRequest = { },
-            modifier = Modifier.fillMaxWidth(0.95f),
-            title = {
-                Text(
-                    text = stringResource(id = R.string.onboarding_default_dialer_title),
-                    style = MaterialTheme.typography.headlineSmall,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.fillMaxWidth()
-                )
-            },
-            text = {
-                Text(
-                    text = parseBoldString(stringResource(id = R.string.onboarding_default_dialer_message)),
-                    style = MaterialTheme.typography.bodyMedium,
-                    textAlign = TextAlign.Center
-                )
-            },
-            confirmButton = {
+            title = stringResource(id = R.string.onboarding_default_dialer_title),
+            message = stringResource(id = R.string.onboarding_default_dialer_message),
+            buttons = {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center
@@ -190,6 +175,7 @@ fun DefaultAppPrompts(
                     }
                     Button(
                         onClick = {
+                            showDialerModal = false
                             requestDefaultDialer()
                         },
                         colors = ButtonDefaults.buttonColors(containerColor = ConfirmGreen),
@@ -198,33 +184,16 @@ fun DefaultAppPrompts(
                         Text(stringResource(id = R.string.configure))
                     }
                 }
-            },
-            containerColor = MaterialTheme.colorScheme.surface,
-            titleContentColor = MaterialTheme.colorScheme.onSurface,
-            textContentColor = MaterialTheme.colorScheme.onSurfaceVariant
+            }
         )
     }
 
     if (showLauncherModal) {
-        AlertDialog(
+        AppDialog(
             onDismissRequest = { },
-            modifier = Modifier.fillMaxWidth(0.95f),
-            title = {
-                Text(
-                    text = stringResource(id = R.string.onboarding_default_launcher_title),
-                    style = MaterialTheme.typography.headlineSmall,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.fillMaxWidth()
-                )
-            },
-            text = {
-                Text(
-                    text = parseBoldString(stringResource(id = R.string.onboarding_default_launcher_message)),
-                    style = MaterialTheme.typography.bodyMedium,
-                    textAlign = TextAlign.Center
-                )
-            },
-            confirmButton = {
+            title = stringResource(id = R.string.onboarding_default_launcher_title),
+            message = stringResource(id = R.string.onboarding_default_launcher_message),
+            buttons = {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center
@@ -238,6 +207,7 @@ fun DefaultAppPrompts(
                     }
                     Button(
                         onClick = {
+                            showLauncherModal = false
                             requestDefaultLauncher()
                         },
                         colors = ButtonDefaults.buttonColors(containerColor = ConfirmGreen),
@@ -246,10 +216,7 @@ fun DefaultAppPrompts(
                         Text(stringResource(id = R.string.configure))
                     }
                 }
-            },
-            containerColor = MaterialTheme.colorScheme.surface,
-            titleContentColor = MaterialTheme.colorScheme.onSurface,
-            textContentColor = MaterialTheme.colorScheme.onSurfaceVariant
+            }
         )
     }
 }

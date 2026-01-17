@@ -47,7 +47,6 @@ import com.incomingcallonly.launcher.ui.theme.DimmedClockColor
 import com.incomingcallonly.launcher.ui.theme.HighContrastButtonBg
 import com.incomingcallonly.launcher.ui.theme.SystemBarsColor
 import java.util.Calendar
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
@@ -59,7 +58,7 @@ import androidx.compose.runtime.remember
 import com.incomingcallonly.launcher.R
 import com.incomingcallonly.launcher.ui.theme.ConfirmGreen
 import com.incomingcallonly.launcher.ui.theme.ErrorRed
-import com.incomingcallonly.launcher.ui.onboarding.parseBoldString
+import com.incomingcallonly.launcher.ui.components.AppDialog
 
 private const val MINUTES_IN_HOUR = 60
 
@@ -194,25 +193,11 @@ fun HomeScreen(
         }
 
         if (showPinConfirmation) {
-            AlertDialog(
+            AppDialog(
                 onDismissRequest = { showPinConfirmation = false },
-                modifier = Modifier.fillMaxWidth(0.95f),
-                title = {
-                    Text(
-                        text = stringResource(id = R.string.onboarding_pinned_mode_title),
-                        style = MaterialTheme.typography.headlineSmall,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                },
-                text = {
-                    Text(
-                        text = parseBoldString(stringResource(id = R.string.onboarding_pinned_mode_message)),
-                        style = MaterialTheme.typography.bodyMedium,
-                        textAlign = TextAlign.Center
-                    )
-                },
-                confirmButton = {
+                title = stringResource(id = R.string.onboarding_pinned_mode_title),
+                message = stringResource(id = R.string.onboarding_pinned_mode_message),
+                buttons = {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.Center
@@ -235,10 +220,7 @@ fun HomeScreen(
                             Text(stringResource(id = R.string.understood))
                         }
                     }
-                },
-                containerColor = MaterialTheme.colorScheme.surface,
-                titleContentColor = MaterialTheme.colorScheme.onSurface,
-                textContentColor = MaterialTheme.colorScheme.onSurfaceVariant
+                }
             )
         }
 

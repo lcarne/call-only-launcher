@@ -55,11 +55,11 @@ import com.incomingcallonly.launcher.R
 import com.incomingcallonly.launcher.data.model.Contact
 import com.incomingcallonly.launcher.ui.admin.components.AdminDialog
 import com.incomingcallonly.launcher.ui.theme.ConfirmGreen
-import com.incomingcallonly.launcher.ui.onboarding.parseBoldString
+import com.incomingcallonly.launcher.ui.components.parseBoldString
+import com.incomingcallonly.launcher.ui.components.AppDialog
 import android.provider.Settings
 import android.content.Intent
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.AlertDialog
 import androidx.compose.ui.text.style.TextAlign
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -172,24 +172,11 @@ fun ContactDialog(
     )
 
     if (showContactPermissionRationale) {
-        AlertDialog(
+        AppDialog(
             onDismissRequest = { showContactPermissionRationale = false },
-            title = {
-                Text(
-                    text = stringResource(id = R.string.onboarding_auth_contacts_title),
-                    style = MaterialTheme.typography.headlineSmall,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.fillMaxWidth()
-                )
-            },
-            text = {
-                Text(
-                    text = parseBoldString(stringResource(id = R.string.onboarding_auth_contacts_message)),
-                    style = MaterialTheme.typography.bodyMedium,
-                    textAlign = TextAlign.Center
-                )
-            },
-            confirmButton = {
+            title = stringResource(id = R.string.onboarding_auth_contacts_title),
+            message = stringResource(id = R.string.onboarding_auth_contacts_message),
+            buttons = {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center
@@ -212,10 +199,7 @@ fun ContactDialog(
                         Text(stringResource(id = R.string.understood))
                     }
                 }
-            },
-            containerColor = MaterialTheme.colorScheme.surface,
-            titleContentColor = MaterialTheme.colorScheme.onSurface,
-            textContentColor = MaterialTheme.colorScheme.onSurfaceVariant
+            }
         )
     }
 
