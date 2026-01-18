@@ -5,16 +5,16 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.IntrinsicSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -24,8 +24,8 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.PhotoLibrary
 import androidx.compose.material.icons.filled.PhotoCamera
+import androidx.compose.material.icons.filled.PhotoLibrary
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -44,28 +44,26 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
+import androidx.compose.ui.window.DialogProperties
 import androidx.core.net.toUri
 import coil.compose.AsyncImage
+import com.hbb20.CountryCodePicker
 import com.incomingcallonly.launcher.R
 import com.incomingcallonly.launcher.data.model.Contact
-import androidx.compose.ui.viewinterop.AndroidView
-import androidx.compose.ui.graphics.toArgb
-import com.hbb20.CountryCodePicker
 import com.incomingcallonly.launcher.ui.admin.components.AdminDialog
 import com.incomingcallonly.launcher.ui.components.AppDialog
-import com.incomingcallonly.launcher.ui.admin.components.AdminSelectionDialog
 import com.incomingcallonly.launcher.ui.theme.ConfirmGreen
-import androidx.compose.ui.window.DialogProperties
 
 // Removed manual CountryCode data class and list as we now use CountryCodePicker (ccp)
 
@@ -108,7 +106,7 @@ fun ContactDialog(
 
     val photoPicker = androidx.activity.compose.rememberLauncherForActivityResult(
         contract = androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia(),
-        onResult = { uri -> 
+        onResult = { uri ->
             photoUri = uri
             errorMessage = null
         }
@@ -167,9 +165,15 @@ fun ContactDialog(
                                     val numberIndex =
                                         pc.getColumnIndex(android.provider.ContactsContract.CommonDataKinds.Phone.NUMBER)
                                     if (numberIndex != -1) {
-                                        val rawNumber = (pc.getString(numberIndex) ?: "").replace(" ", "").replace("-", "")
+                                        val rawNumber =
+                                            (pc.getString(numberIndex) ?: "").replace(" ", "")
+                                                .replace("-", "")
                                         // Store the full number to trigger CCP update
-                                        importedFullNumber = com.incomingcallonly.launcher.util.PhoneNumberUtils.normalizePhoneNumber(rawNumber, context)
+                                        importedFullNumber =
+                                            com.incomingcallonly.launcher.util.PhoneNumberUtils.normalizePhoneNumber(
+                                                rawNumber,
+                                                context
+                                            )
                                     }
                                 }
                             }
@@ -452,7 +456,7 @@ fun ContactDialog(
 
                 OutlinedTextField(
                     value = firstName,
-                    onValueChange = { 
+                    onValueChange = {
                         firstName = it
                         errorMessage = null
                     },
@@ -471,7 +475,7 @@ fun ContactDialog(
 
                 OutlinedTextField(
                     value = lastName,
-                    onValueChange = { 
+                    onValueChange = {
                         lastName = it
                         errorMessage = null
                     },
@@ -493,15 +497,15 @@ fun ContactDialog(
 
                     OutlinedTextField(
                         value = number,
-                        onValueChange = { 
-                            number = it 
+                        onValueChange = {
+                            number = it
                             errorMessage = null
                         },
                         label = { Text(stringResource(id = R.string.number)) },
                         leadingIcon = {
                             val density = androidx.compose.ui.platform.LocalDensity.current
                             val textSize = MaterialTheme.typography.bodyLarge.fontSize
-                            
+
                             Row(
                                 modifier = Modifier
                                     .padding(start = 8.dp)
@@ -516,14 +520,19 @@ fun ContactDialog(
                                             setCountryPreference("FR")
                                             showNameCode(false)
                                             showFullName(false)
-                                            
+
                                             // Set language based on locale
-                                            val currentLang = ctx.resources.configuration.locales[0].language
+                                            val currentLang =
+                                                ctx.resources.configuration.locales[0].language
                                             changeDefaultLanguage(if (currentLang == "fr") CountryCodePicker.Language.FRENCH else CountryCodePicker.Language.ENGLISH)
 
                                             // Customize Font (Inter)
                                             try {
-                                                val typeFace = androidx.core.content.res.ResourcesCompat.getFont(ctx, com.incomingcallonly.launcher.R.font.inter_regular)
+                                                val typeFace =
+                                                    androidx.core.content.res.ResourcesCompat.getFont(
+                                                        ctx,
+                                                        com.incomingcallonly.launcher.R.font.inter_regular
+                                                    )
                                                 if (typeFace != null) {
                                                     setTypeFace(typeFace)
                                                     setDialogTypeFace(typeFace)
@@ -545,23 +554,32 @@ fun ContactDialog(
                                                 selectedCountryCode = selectedCountryCodeWithPlus
                                                 errorMessage = null
                                             }
-                                            
+
                                             // Initial value
                                             if (contactToEdit != null) {
                                                 setFullNumber(contactToEdit.phoneNumber)
                                                 selectedCountryCode = selectedCountryCodeWithPlus
                                                 val prefix = selectedCountryCodeWithPlus
                                                 val prefixDigits = prefix.removePrefix("+")
-                                                
-                                                number = if (contactToEdit.phoneNumber.startsWith(prefix)) {
-                                                    contactToEdit.phoneNumber.removePrefix(prefix)
-                                                } else if (contactToEdit.phoneNumber.startsWith(prefixDigits)) {
-                                                    contactToEdit.phoneNumber.removePrefix(prefixDigits)
-                                                } else {
-                                                    contactToEdit.phoneNumber
-                                                }
+
+                                                number =
+                                                    if (contactToEdit.phoneNumber.startsWith(prefix)) {
+                                                        contactToEdit.phoneNumber.removePrefix(
+                                                            prefix
+                                                        )
+                                                    } else if (contactToEdit.phoneNumber.startsWith(
+                                                            prefixDigits
+                                                        )
+                                                    ) {
+                                                        contactToEdit.phoneNumber.removePrefix(
+                                                            prefixDigits
+                                                        )
+                                                    } else {
+                                                        contactToEdit.phoneNumber
+                                                    }
                                             } else {
-                                                val phoneCode = defaultCountryCode.removePrefix("+").toIntOrNull()
+                                                val phoneCode = defaultCountryCode.removePrefix("+")
+                                                    .toIntOrNull()
                                                 if (phoneCode != null) {
                                                     setCountryForPhoneCode(phoneCode)
                                                 }
@@ -573,24 +591,31 @@ fun ContactDialog(
                                         ccp.contentColor = textColor
                                         // Ensure text size stays correct on updates
                                         ccp.setTextSize(with(density) { textSize.toPx().toInt() })
-                                        
+
                                         importedFullNumber?.let { fullNum ->
-                                            val normalized = com.incomingcallonly.launcher.util.PhoneNumberUtils
-                                                .normalizePhoneNumber(fullNum, context)
-                                            
+                                            val normalized =
+                                                com.incomingcallonly.launcher.util.PhoneNumberUtils
+                                                    .normalizePhoneNumber(fullNum, context)
+
                                             ccp.setFullNumber(normalized)
                                             selectedCountryCode = ccp.selectedCountryCodeWithPlus
-                                            
+
                                             val prefix = ccp.selectedCountryCodeWithPlus
                                             val prefixDigits = prefix.removePrefix("+")
-                                            
+
                                             number = when {
-                                                normalized.startsWith(prefix) -> normalized.removePrefix(prefix)
-                                                normalized.startsWith(prefixDigits) -> normalized.removePrefix(prefixDigits)
+                                                normalized.startsWith(prefix) -> normalized.removePrefix(
+                                                    prefix
+                                                )
+
+                                                normalized.startsWith(prefixDigits) -> normalized.removePrefix(
+                                                    prefixDigits
+                                                )
+
                                                 normalized.startsWith("0") -> normalized.drop(1)
                                                 else -> normalized
                                             }
-                                            
+
                                             importedFullNumber = null
                                         }
                                     }
@@ -631,20 +656,26 @@ fun ContactDialog(
             Button(
                 onClick = {
                     if (firstName.isNotBlank() && number.isNotBlank()) {
-                        val fullName = if (lastName.isNotBlank()) "$firstName $lastName" else firstName
+                        val fullName =
+                            if (lastName.isNotBlank()) "$firstName $lastName" else firstName
                         val cleanNumber = number.replace(" ", "")
                         var sanitizedNumber = cleanNumber
                         if (sanitizedNumber.startsWith("0")) {
                             sanitizedNumber = sanitizedNumber.drop(1)
                         }
                         val finalNumber = selectedCountryCode + sanitizedNumber
-                        
+
                         // Check for duplicate number
                         val duplicate = allContacts.find { it.phoneNumber == finalNumber }
                         if (duplicate != null && duplicate.id != contactToEdit?.id) {
                             errorMessage = res
                         } else {
-                            onConfirm(fullName, finalNumber, photoUri?.toString(), selectedCountryCode)
+                            onConfirm(
+                                fullName,
+                                finalNumber,
+                                photoUri?.toString(),
+                                selectedCountryCode
+                            )
                         }
                     }
                 },

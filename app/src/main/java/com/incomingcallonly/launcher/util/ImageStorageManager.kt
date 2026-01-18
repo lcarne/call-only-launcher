@@ -35,15 +35,18 @@ class ImageStorageManager @Inject constructor(
             // 1. Get orientation
             val orientation = context.contentResolver.openInputStream(uri)?.use { input ->
                 val exif = ExifInterface(input)
-                exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL)
+                exif.getAttributeInt(
+                    ExifInterface.TAG_ORIENTATION,
+                    ExifInterface.ORIENTATION_NORMAL
+                )
             } ?: ExifInterface.ORIENTATION_NORMAL
 
             context.contentResolver.openInputStream(uri)?.use { input ->
                 val loadedBitmap = BitmapFactory.decodeStream(input) ?: return null
-                
+
                 // 2. Rotate if needed
                 val rotatedBitmap = rotateBitmap(loadedBitmap, orientation)
-                
+
                 // 3. Resize
                 val maxDimension = 512
                 val ratio = min(
@@ -84,10 +87,12 @@ class ImageStorageManager @Inject constructor(
                 matrix.postRotate(90f)
                 matrix.postScale(-1f, 1f)
             }
+
             ExifInterface.ORIENTATION_TRANSVERSE -> {
                 matrix.postRotate(270f)
                 matrix.postScale(-1f, 1f)
             }
+
             else -> return bitmap
         }
         return try {

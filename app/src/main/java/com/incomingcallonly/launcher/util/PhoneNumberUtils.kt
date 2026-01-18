@@ -4,7 +4,7 @@ import android.content.Context
 import android.telephony.TelephonyManager
 
 object PhoneNumberUtils {
-    
+
     /**
      * Normalizes a phone number to international format with country code.
      * @param phoneNumber The raw phone number to normalize
@@ -23,20 +23,20 @@ object PhoneNumberUtils {
             .replace("(", "")
             .replace(")", "")
             .replace(".", "")
-        
+
         // If already in international format, just return cleaned
         if (cleanedNumber.startsWith("+")) {
             return cleanedNumber
         }
-        
+
         // Handle numbers starting with 00 (international prefix)
         if (cleanedNumber.startsWith("00")) {
             return "+" + cleanedNumber.drop(2)
         }
-        
+
         // Get device's country code
         val deviceCountryCode = getDeviceCountryCode(context) ?: defaultCountryCode
-        
+
         // If the number already starts with the country code (e.g. "336..." for FR), 
         // treat it as international format
         val deviceCodeDigits = deviceCountryCode.removePrefix("+")
@@ -51,21 +51,21 @@ object PhoneNumberUtils {
             deviceCountryCode + cleanedNumber
         }
     }
-    
+
     /**
      * Gets the device's country dial code based on network or SIM.
      */
     private fun getDeviceCountryCode(context: Context): String? {
         return try {
             val tm = context.getSystemService(Context.TELEPHONY_SERVICE) as? TelephonyManager
-            val countryIso = tm?.networkCountryIso?.uppercase() 
+            val countryIso = tm?.networkCountryIso?.uppercase()
                 ?: tm?.simCountryIso?.uppercase()
             countryIso?.let { getCountryCodeFromIso(it) }
         } catch (e: Exception) {
             null
         }
     }
-    
+
     /**
      * Gets the dial code from a country ISO (e.g., "FR" -> "+33")
      */
@@ -119,7 +119,7 @@ object PhoneNumberUtils {
             else -> null
         }
     }
-    
+
     /**
      * Compares two phone numbers to check if they are equivalent.
      * Handles different formats (local vs international).

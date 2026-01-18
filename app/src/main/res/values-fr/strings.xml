@@ -130,7 +130,6 @@
     <string name="contacts">Contacts</string>
     <string name="new_contact">Nouveau Contact</string>
     <string name="add_contact">Ajouter un contact</string>
-    <string name="select_country">Indicatif international</string>
     <string name="edit_contact">Modifier Contact</string>
     <string name="delete_contact">Supprimer le contact</string>
     <string name="confirm_delete_contact">Êtes-vous sûr de vouloir supprimer le contact %1$s ?</string>

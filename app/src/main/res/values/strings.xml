@@ -128,7 +128,6 @@
     <string name="contacts">Contacts</string>
     <string name="new_contact">New Contact</string>
     <string name="add_contact">Add contact</string>
-    <string name="select_country">International prefix</string>
     <string name="edit_contact">Edit Contact</string>
     <string name="delete_contact">Delete contact</string>
     <string name="confirm_delete_contact">Are you sure you want to delete contact %1$s ?</string>

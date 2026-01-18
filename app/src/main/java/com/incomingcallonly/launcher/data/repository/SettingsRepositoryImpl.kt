@@ -116,9 +116,11 @@ class SettingsRepositoryImpl @Inject constructor(
     private val _adminPin =
         MutableStateFlow(prefs.getString(KEY_ADMIN_PIN, DEFAULT_ADMIN_PIN) ?: DEFAULT_ADMIN_PIN)
     override val adminPin: StateFlow<String> = _adminPin.asStateFlow()
-    
-    private val _lastSelectedCountryCode = 
-        MutableStateFlow(prefs.getString(KEY_LAST_COUNTRY_CODE, DEFAULT_COUNTRY_CODE) ?: DEFAULT_COUNTRY_CODE)
+
+    private val _lastSelectedCountryCode =
+        MutableStateFlow(
+            prefs.getString(KEY_LAST_COUNTRY_CODE, DEFAULT_COUNTRY_CODE) ?: DEFAULT_COUNTRY_CODE
+        )
     override val lastSelectedCountryCode: StateFlow<String> = _lastSelectedCountryCode.asStateFlow()
 
 

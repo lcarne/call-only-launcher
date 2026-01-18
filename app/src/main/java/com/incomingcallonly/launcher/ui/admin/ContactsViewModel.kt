@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.incomingcallonly.launcher.data.model.Contact
 import com.incomingcallonly.launcher.data.repository.ContactRepository
+import com.incomingcallonly.launcher.data.repository.SettingsRepository
 import com.incomingcallonly.launcher.util.ImageStorageManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -14,7 +15,6 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import com.incomingcallonly.launcher.data.repository.SettingsRepository
 import javax.inject.Inject
 
 @HiltViewModel

@@ -110,7 +110,12 @@ class ContactRepositoryImpl @Inject constructor(
         val prefixes = listOf("M.", "Mme", "Mlle", "Dr.", "Pr.", "Mr.", "Ms.", "Mrs.")
         val remainingParts = parts.toMutableList()
 
-        if (remainingParts.size > 1 && prefixes.any { it.equals(remainingParts[0], ignoreCase = true) }) {
+        if (remainingParts.size > 1 && prefixes.any {
+                it.equals(
+                    remainingParts[0],
+                    ignoreCase = true
+                )
+            }) {
             prefix = remainingParts.removeAt(0)
         }
 
@@ -121,7 +126,11 @@ class ContactRepositoryImpl @Inject constructor(
             family = remainingParts[0]
         }
 
-        return "${escapeVCardValue(family)};${escapeVCardValue(given)};${escapeVCardValue(additional)};${escapeVCardValue(prefix)};${escapeVCardValue(suffix)}"
+        return "${escapeVCardValue(family)};${escapeVCardValue(given)};${escapeVCardValue(additional)};${
+            escapeVCardValue(
+                prefix
+            )
+        };${escapeVCardValue(suffix)}"
     }
 
     override suspend fun importContacts(inputStream: InputStream): Int {
@@ -255,7 +264,7 @@ class ContactRepositoryImpl @Inject constructor(
                     // Normalize phone number to international format
                     val normalizedNumber = com.incomingcallonly.launcher.util.PhoneNumberUtils
                         .normalizePhoneNumber(rawNumber, context)
-                    
+
                     contacts.add(
                         Contact(
                             name = name ?: "Unknown",

@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -43,6 +42,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -53,8 +53,6 @@ import coil.compose.AsyncImage
 import com.incomingcallonly.launcher.R
 import com.incomingcallonly.launcher.data.model.Contact
 import com.incomingcallonly.launcher.ui.admin.ContactsViewModel
-import com.incomingcallonly.launcher.ui.components.DepthIcon
-import androidx.compose.ui.platform.LocalContext
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -68,7 +66,7 @@ fun MultiContactImportDialog(
     val selectedContacts = remember { mutableStateListOf<Contact>() }
 
     val context = LocalContext.current
-    
+
     fun isContactSaved(phoneNumber: String): Boolean {
         return savedContacts.any { saved ->
             com.incomingcallonly.launcher.util.PhoneNumberUtils.arePhoneNumbersEqual(
@@ -116,7 +114,10 @@ fun MultiContactImportDialog(
                         fontWeight = FontWeight.Bold
                     )
                     IconButton(onClick = onDismiss) {
-                        Icon(Icons.Default.Close, contentDescription = stringResource(R.string.cancel))
+                        Icon(
+                            Icons.Default.Close,
+                            contentDescription = stringResource(R.string.cancel)
+                        )
                     }
                 }
 
@@ -157,7 +158,8 @@ fun MultiContactImportDialog(
                         ) {
                             items(deviceContacts) { contact ->
                                 val alreadySaved = isContactSaved(contact.phoneNumber)
-                                val isSelected = selectedContacts.any { it.phoneNumber == contact.phoneNumber }
+                                val isSelected =
+                                    selectedContacts.any { it.phoneNumber == contact.phoneNumber }
                                 Surface(
                                     onClick = {
                                         if (!alreadySaved) {
@@ -170,8 +172,14 @@ fun MultiContactImportDialog(
                                     },
                                     shape = RoundedCornerShape(12.dp),
                                     color = when {
-                                        isSelected -> MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f)
-                                        alreadySaved -> MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+                                        isSelected -> MaterialTheme.colorScheme.primaryContainer.copy(
+                                            alpha = 0.3f
+                                        )
+
+                                        alreadySaved -> MaterialTheme.colorScheme.surfaceVariant.copy(
+                                            alpha = 0.5f
+                                        )
+
                                         else -> Color.Transparent
                                     }
                                 ) {
@@ -192,10 +200,15 @@ fun MultiContactImportDialog(
                                                         color = MaterialTheme.colorScheme.secondary,
                                                         modifier = Modifier
                                                             .background(
-                                                                MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.5f),
+                                                                MaterialTheme.colorScheme.secondaryContainer.copy(
+                                                                    alpha = 0.5f
+                                                                ),
                                                                 RoundedCornerShape(4.dp)
                                                             )
-                                                            .padding(horizontal = 4.dp, vertical = 2.dp)
+                                                            .padding(
+                                                                horizontal = 4.dp,
+                                                                vertical = 2.dp
+                                                            )
                                                     )
                                                 }
                                             }
@@ -204,8 +217,10 @@ fun MultiContactImportDialog(
                                             Text(
                                                 text = contact.phoneNumber,
                                                 style = MaterialTheme.typography.bodySmall,
-                                                color = if (alreadySaved) MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
-                                                        else MaterialTheme.colorScheme.onSurfaceVariant
+                                                color = if (alreadySaved) MaterialTheme.colorScheme.onSurfaceVariant.copy(
+                                                    alpha = 0.6f
+                                                )
+                                                else MaterialTheme.colorScheme.onSurfaceVariant
                                             )
                                         },
                                         leadingContent = {

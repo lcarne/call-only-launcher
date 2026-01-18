@@ -15,11 +15,10 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Call
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.CallEnd
 import androidx.compose.material.icons.filled.Hearing
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Speaker
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
@@ -352,7 +351,9 @@ fun CallLayout(
                             imageVector = Icons.Default.Hearing,
                             contentDescription = "Earpiece",
                             tint = if (!isSpeakerOn) Color.White else Color.Gray,
-                            modifier = Modifier.size(56.dp).scale(scaleX = -1f, scaleY = 1f)
+                            modifier = Modifier
+                                .size(56.dp)
+                                .scale(scaleX = -1f, scaleY = 1f)
                         )
                     }
                     Spacer(Modifier.height(8.dp))
