@@ -256,7 +256,7 @@ private fun PinKeyButton(
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
 
-    val scale by animateFloatAsState(
+    val animatedScale by animateFloatAsState(
         targetValue = if (isPressed) 0.92f else 1f,
         animationSpec = tween(durationMillis = 100),
         label = "scale"
@@ -265,7 +265,7 @@ private fun PinKeyButton(
     Surface(
         modifier = modifier
             .size(72.dp)
-            .scale(scale)
+            .scale(animatedScale)
             .shadow(
                 elevation = 6.dp,
                 shape = CircleShape,

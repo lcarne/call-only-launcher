@@ -189,6 +189,7 @@ class CallManager @Inject constructor(
 
 
     fun setSpeakerOn(on: Boolean) {
+        _isSpeakerOn.value = on
         val route = if (on) CallAudioState.ROUTE_SPEAKER else CallAudioState.ROUTE_WIRED_OR_EARPIECE
         audioController?.requestAudioRoute(route)
     }

@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.displayCutoutPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -56,7 +57,7 @@ import kotlinx.coroutines.delay
 private const val RESET_AMBIGUOUS_TAP_DELAY = 3000L
 private const val TAP_CONFIRMATION_COUNT = 2
 private const val TAP_INFO_ALPHA_BG = 0.8f
-private val EARPIECE_ACTIVE_COLOR = Color(0xFF2196F3)
+private val ACTIVE_OUTPUT_COLOR = Color(0xFF2196F3)
 
 @Composable
 fun IncomingCallScreen(
@@ -136,8 +137,9 @@ fun CallLayout(
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .displayCutoutPadding()
             .systemBarsPadding()
-            .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp),
+            .padding(start = 16.dp, end = 16.dp, top = 56.dp, bottom = 8.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween
     ) {
@@ -344,7 +346,7 @@ fun CallLayout(
                     Button(
                         onClick = { viewModel?.setSpeakerOn(false) },
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = if (!isSpeakerOn) EARPIECE_ACTIVE_COLOR else Color.DarkGray
+                            containerColor = if (!isSpeakerOn) ACTIVE_OUTPUT_COLOR else Color.DarkGray
                         ),
                         shape = RoundedCornerShape(24.dp),
                         modifier = Modifier.size(110.dp)
@@ -355,14 +357,13 @@ fun CallLayout(
                             tint = if (!isSpeakerOn) Color.White else Color.Gray,
                             modifier = Modifier
                                 .size(56.dp)
-                                .scale(scaleY = -1f)
                         )
                     }
                     Spacer(Modifier.height(8.dp))
                     Text(
                         text = stringResource(id = R.string.earpiece),
                         style = MaterialTheme.typography.titleLarge,
-                        color = if (!isSpeakerOn) EARPIECE_ACTIVE_COLOR else Color.White,
+                        color = if (!isSpeakerOn) ACTIVE_OUTPUT_COLOR else Color.White,
                         fontWeight = FontWeight.Bold,
                         textAlign = TextAlign.Center
                     )
@@ -373,7 +374,7 @@ fun CallLayout(
                     Button(
                         onClick = { viewModel?.setSpeakerOn(true) },
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = if (isSpeakerOn) Color.Green else Color.DarkGray
+                            containerColor = if (isSpeakerOn) ACTIVE_OUTPUT_COLOR else Color.DarkGray
                         ),
                         shape = RoundedCornerShape(24.dp),
                         modifier = Modifier.size(110.dp)
@@ -381,7 +382,7 @@ fun CallLayout(
                         DepthIcon(
                             imageVector = Icons.Default.Speaker,
                             contentDescription = "Speaker",
-                            tint = if (isSpeakerOn) Color.Black else Color.White,
+                            tint = if (isSpeakerOn) Color.White else Color.Gray,
                             modifier = Modifier.size(56.dp)
                         )
                     }
@@ -389,7 +390,7 @@ fun CallLayout(
                     Text(
                         text = stringResource(id = R.string.speaker),
                         style = MaterialTheme.typography.titleLarge,
-                        color = if (isSpeakerOn) Color.Green else Color.White,
+                        color = if (isSpeakerOn) ACTIVE_OUTPUT_COLOR else Color.White,
                         fontWeight = FontWeight.Bold,
                         textAlign = TextAlign.Center
                     )

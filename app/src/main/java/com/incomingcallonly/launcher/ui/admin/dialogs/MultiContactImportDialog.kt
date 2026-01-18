@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -93,9 +94,8 @@ fun MultiContactImportDialog(
     ) {
         Surface(
             modifier = Modifier
-                .fillMaxSize()
-                .systemBarsPadding()
-                .padding(16.dp),
+                .fillMaxWidth(0.95f)
+                .fillMaxHeight(0.9f),
             shape = RoundedCornerShape(24.dp),
             color = MaterialTheme.colorScheme.surface,
             tonalElevation = 6.dp
