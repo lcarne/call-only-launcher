@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -135,7 +136,8 @@ fun CallLayout(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 8.dp),
+            .systemBarsPadding()
+            .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween
     ) {
@@ -353,7 +355,7 @@ fun CallLayout(
                             tint = if (!isSpeakerOn) Color.White else Color.Gray,
                             modifier = Modifier
                                 .size(56.dp)
-                                .scale(scaleX = -1f, scaleY = 1f)
+                                .scale(scaleY = -1f)
                         )
                     }
                     Spacer(Modifier.height(8.dp))

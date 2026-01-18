@@ -495,6 +495,7 @@ fun ContactDialog(
 
                 Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                     val textColor = MaterialTheme.colorScheme.onSurface.toArgb()
+                    val dialogBackgroundColor = MaterialTheme.colorScheme.surface.toArgb()
 
                     OutlinedTextField(
                         value = number,
@@ -545,6 +546,7 @@ fun ContactDialog(
                                             // Customize Colors
                                             contentColor = textColor
                                             setDialogTextColor(textColor)
+                                            setDialogBackgroundColor(dialogBackgroundColor)
 
                                             setBackgroundColor(android.graphics.Color.TRANSPARENT)
                                             // Match text size (expects pixels as Int)

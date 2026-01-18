@@ -54,6 +54,8 @@ import com.incomingcallonly.launcher.R
 import com.incomingcallonly.launcher.data.model.Contact
 import com.incomingcallonly.launcher.ui.admin.ContactsViewModel
 
+import androidx.compose.foundation.layout.systemBarsPadding
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MultiContactImportDialog(
@@ -92,6 +94,7 @@ fun MultiContactImportDialog(
         Surface(
             modifier = Modifier
                 .fillMaxSize()
+                .systemBarsPadding()
                 .padding(16.dp),
             shape = RoundedCornerShape(24.dp),
             color = MaterialTheme.colorScheme.surface,
