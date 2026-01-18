@@ -185,7 +185,8 @@ class SettingsRepositoryImpl @Inject constructor(
         prefs.edit { putInt(KEY_RINGER_VOLUME, volume) }
     }
 
-    private val _ringerMode = MutableStateFlow(prefs.getInt(KEY_RINGER_MODE, SettingsRepository.RINGER_MODE_SWITCHABLE))
+    private val _ringerMode =
+        MutableStateFlow(prefs.getInt(KEY_RINGER_MODE, SettingsRepository.RINGER_MODE_SWITCHABLE))
     override val ringerMode: StateFlow<Int> = _ringerMode.asStateFlow()
 
     override fun setRingerMode(mode: Int) {

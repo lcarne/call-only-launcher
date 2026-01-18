@@ -532,7 +532,7 @@ fun ContactDialog(
                                                 val typeFace =
                                                     androidx.core.content.res.ResourcesCompat.getFont(
                                                         ctx,
-                                                        com.incomingcallonly.launcher.R.font.inter_regular
+                                                        R.font.inter_regular
                                                     )
                                                 if (typeFace != null) {
                                                     setTypeFace(typeFace)
@@ -549,7 +549,7 @@ fun ContactDialog(
                                             setBackgroundColor(android.graphics.Color.TRANSPARENT)
                                             // Match text size (expects pixels as Int)
                                             setTextSize(with(density) { textSize.toPx().toInt() })
-                                            setGravity(android.view.Gravity.CENTER_VERTICAL)
+                                            gravity = android.view.Gravity.CENTER_VERTICAL
 
                                             setOnCountryChangeListener {
                                                 selectedCountryCode = selectedCountryCodeWithPlus
@@ -558,7 +558,7 @@ fun ContactDialog(
 
                                             // Initial value
                                             if (contactToEdit != null) {
-                                                setFullNumber(contactToEdit.phoneNumber)
+                                                fullNumber = contactToEdit.phoneNumber
                                                 selectedCountryCode = selectedCountryCodeWithPlus
                                                 val prefix = selectedCountryCodeWithPlus
                                                 val prefixDigits = prefix.removePrefix("+")
@@ -598,7 +598,7 @@ fun ContactDialog(
                                                 com.incomingcallonly.launcher.util.PhoneNumberUtils
                                                     .normalizePhoneNumber(fullNum, context)
 
-                                            ccp.setFullNumber(normalized)
+                                            ccp.fullNumber = normalized
                                             selectedCountryCode = ccp.selectedCountryCodeWithPlus
 
                                             val prefix = ccp.selectedCountryCodeWithPlus

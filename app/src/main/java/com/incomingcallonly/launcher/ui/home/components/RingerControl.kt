@@ -93,7 +93,8 @@ fun RingerControl(
         // Day Mode - Interactive Ringer Toggle with Volume/Depth
         val backgroundColor = if (isRingerEnabled) accentColor else DarkGray
         val contentColor = if (backgroundColor.luminance() > 0.5f) Color.Black else Color.White
-        val isSwitchable = ringerMode == com.incomingcallonly.launcher.data.repository.SettingsRepository.RINGER_MODE_SWITCHABLE
+        val isSwitchable =
+            ringerMode == com.incomingcallonly.launcher.data.repository.SettingsRepository.RINGER_MODE_SWITCHABLE
 
         Surface(
             color = Color.Transparent,

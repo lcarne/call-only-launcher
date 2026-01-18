@@ -27,9 +27,9 @@
     <!-- ==================== HOME SCREEN ==================== -->
     <string name="ringer_active">Sonnerie active</string>
     <string name="ringer_disabled">Sonnerie désactivée</string>
-    <string name="activate_calls">Activer les appels</string>
-    <string name="activate_launcher">Définir en launcher</string>
-    <string name="pin_app">Épingler l\'application</string>
+    <string name="activate_calls">ACTIVER LES APPELS</string>
+    <string name="activate_launcher">DÉFINIR EN LAUNCHER</string>
+    <string name="pin_app">ÉPINGLER L\'APPLICATION</string>
 
     <!-- ==================== INCOMING CALL ==================== -->
     <string name="incoming_call">Appel entrant</string>
