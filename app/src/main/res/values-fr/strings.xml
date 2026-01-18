@@ -15,7 +15,7 @@
     <string name="next">Suivant</string>
     <string name="not_now">Plus tard</string>
     <string name="understood">Compris</string>
-    <string name="unlock">Déverrouiller</string>
+    <string name="unpin">Désépingler l\'application</string>
     <string name="validate">Valider</string>
     <plurals name="press_again">
         <item quantity="one">Appuyez encore %1$d fois</item>
@@ -75,8 +75,8 @@
 
     <!-- Audio -->
     <string name="default_audio_output">Sortie son par défaut</string>
-    <string name="earpiece_setting">À l\'oreille</string>
-    <string name="speaker_setting">Haut-parleur</string>
+    <string name="earpiece_setting">Téléphone</string>
+    <string name="speaker_setting">Son fort</string>
     <string name="ringer_volume">Volume de la sonnerie</string>
     <string name="test_ringer">Tester la sonnerie</string>
 
@@ -130,6 +130,7 @@
     <string name="contacts">Contacts</string>
     <string name="new_contact">Nouveau Contact</string>
     <string name="add_contact">Ajouter un contact</string>
+    <string name="select_country">Indicatif international</string>
     <string name="edit_contact">Modifier Contact</string>
     <string name="delete_contact">Supprimer le contact</string>
     <string name="confirm_delete_contact">Êtes-vous sûr de vouloir supprimer le contact %1$s ?</string>
@@ -142,11 +143,21 @@
     <string name="take_photo">Prendre une photo</string>
     <string name="gallery">Galerie</string>
     <string name="camera">Appareil photo</string>
-    <string name="import_contacts">Importer les contacts</string>
-    <string name="export_contacts">Exporter les contacts</string>
+    <string name="import_contacts">Importer les contacts (.vcf)</string>
+    <string name="export_contacts">Exporter les contacts (.vcf)</string>
     <string name="import_from_directory">Importer du répertoire</string>
     <string name="discard_changes_title">Modifications non enregistrées</string>
     <string name="discard_changes_message">Voulez-vous vraiment quitter sans enregistrer vos modifications ?</string>
+    <string name="import_multiple_contacts">Importer plusieurs contacts</string>
+    <string name="select_all">Tout sélectionner</string>
+    <string name="deselect_all">Tout désélectionner</string>
+    <plurals name="import_selected_contacts">
+        <item quantity="one">Importer %1$d contact</item>
+        <item quantity="other">Importer %1$d contacts</item>
+    </plurals>
+    <string name="no_device_contacts">Aucun contact trouvé dans le répertoire</string>
+    <string name="error_number_already_exists">Ce numéro existe déjà</string>
+    <string name="already_in_directory">Déjà présent</string>
 
     <!-- ==================== ADMIN: CALL HISTORY ==================== -->
     <string name="call_history">Historique des appels</string>

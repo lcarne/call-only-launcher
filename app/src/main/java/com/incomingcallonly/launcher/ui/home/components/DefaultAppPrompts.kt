@@ -59,7 +59,8 @@ fun DefaultAppPrompts(
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             val roleManager = context.getSystemService(RoleManager::class.java)
             if (roleManager?.isRoleAvailable(RoleManager.ROLE_DIALER) == true &&
-                !roleManager.isRoleHeld(RoleManager.ROLE_DIALER)) {
+                !roleManager.isRoleHeld(RoleManager.ROLE_DIALER)
+            ) {
                 val intent = roleManager.createRequestRoleIntent(RoleManager.ROLE_DIALER)
                 dialerLauncher.launch(intent)
             }
@@ -68,7 +69,10 @@ fun DefaultAppPrompts(
             if (telecomManager?.defaultDialerPackage != context.packageName) {
                 @Suppress("DEPRECATION")
                 val intent = Intent(TelecomManager.ACTION_CHANGE_DEFAULT_DIALER).apply {
-                    putExtra(TelecomManager.EXTRA_CHANGE_DEFAULT_DIALER_PACKAGE_NAME, context.packageName)
+                    putExtra(
+                        TelecomManager.EXTRA_CHANGE_DEFAULT_DIALER_PACKAGE_NAME,
+                        context.packageName
+                    )
                 }
                 dialerLauncher.launch(intent)
             }

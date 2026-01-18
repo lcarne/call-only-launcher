@@ -15,7 +15,7 @@
     <string name="next">Next</string>
     <string name="not_now">Not now</string>
     <string name="understood">Understood</string>
-    <string name="unlock">Unlock</string>
+    <string name="unpin">Unpin the app</string>
     <string name="validate">Validate</string>
     <plurals name="press_again">
         <item quantity="one">%1$d more tap</item>
@@ -74,7 +74,7 @@
 
     <!-- Audio -->
     <string name="default_audio_output">Default audio output</string>
-    <string name="earpiece_setting">Earpiece</string>
+    <string name="earpiece_setting">Phone</string>
     <string name="speaker_setting">Speaker</string>
     <string name="ringer_volume">Ringer volume</string>
     <string name="test_ringer">Test Ringer</string>
@@ -127,7 +127,8 @@
     <string name="manage_contacts">Manage contacts</string>
     <string name="contacts">Contacts</string>
     <string name="new_contact">New Contact</string>
-    <string name="add_contact">Add Contact</string>
+    <string name="add_contact">Add contact</string>
+    <string name="select_country">International prefix</string>
     <string name="edit_contact">Edit Contact</string>
     <string name="delete_contact">Delete contact</string>
     <string name="confirm_delete_contact">Are you sure you want to delete contact %1$s ?</string>
@@ -140,11 +141,21 @@
     <string name="take_photo">Take a photo</string>
     <string name="gallery">Gallery</string>
     <string name="camera">Camera</string>
-    <string name="import_contacts">Import Contacts</string>
-    <string name="export_contacts">Export Contacts</string>
+    <string name="import_contacts">Import Contacts (.vcf)</string>
+    <string name="export_contacts">Export Contacts (.vcf)</string>
     <string name="import_from_directory">Import from directory</string>
     <string name="discard_changes_title">Discard changes?</string>
     <string name="discard_changes_message">Do you want to discard unsaved changes?</string>
+    <string name="import_multiple_contacts">Import multiple contacts</string>
+    <string name="select_all">Select all</string>
+    <string name="deselect_all">Deselect all</string>
+    <plurals name="import_selected_contacts">
+        <item quantity="one">Import %1$d contact</item>
+        <item quantity="other">Import %1$d contacts</item>
+    </plurals>
+    <string name="no_device_contacts">No contacts found in directory</string>
+    <string name="error_number_already_exists">This number already exists</string>
+    <string name="already_in_directory">Already present</string>
 
     <!-- ==================== ADMIN: CALL HISTORY ==================== -->
     <string name="call_history">Call history</string>

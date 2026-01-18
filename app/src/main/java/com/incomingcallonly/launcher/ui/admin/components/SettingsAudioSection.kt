@@ -39,7 +39,7 @@ import com.incomingcallonly.launcher.ui.theme.Spacing
 fun SettingsAudioSection(viewModel: SettingsViewModel) {
     Column {
         AdminSectionHeader(text = stringResource(id = R.string.settings_section_audio))
-        
+
         AdminSettingsCard {
             // Audio Output
             val isDefaultSpeakerEnabled by viewModel.isDefaultSpeakerEnabled.collectAsState()
@@ -66,7 +66,7 @@ fun SettingsAudioSection(viewModel: SettingsViewModel) {
             }
 
             AdminDivider()
-            
+
             // Ringer Volume with Enhanced Display
             val ringerVolume by viewModel.ringerVolume.collectAsState()
             ListItem(

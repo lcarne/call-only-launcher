@@ -53,6 +53,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -60,6 +61,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import com.incomingcallonly.launcher.R
 import com.incomingcallonly.launcher.ui.components.DepthIcon
 import com.incomingcallonly.launcher.ui.theme.IncomingCallOnlyTheme
@@ -100,7 +102,7 @@ fun <T> AdminSelectionDialog(
         ) {
             options.forEach { option ->
                 val isSelected = option == selectedOption
-                
+
                 // Only create the leadingIcon lambda if iconProvider is not null
                 val leadingIconLambda: (@Composable () -> Unit)? = if (iconProvider != null) {
                     { iconProvider(option) }
@@ -125,14 +127,14 @@ fun AdminSelectionItem(
     modifier: Modifier = Modifier,
     leadingIcon: (@Composable () -> Unit)? = null
 ) {
-    val backgroundColor = if (isSelected) 
-        MaterialTheme.colorScheme.primaryContainer 
-    else 
+    val backgroundColor = if (isSelected)
+        MaterialTheme.colorScheme.primaryContainer
+    else
         MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
-        
-    val contentColor = if (isSelected) 
-        MaterialTheme.colorScheme.onPrimaryContainer 
-    else 
+
+    val contentColor = if (isSelected)
+        MaterialTheme.colorScheme.onPrimaryContainer
+    else
         MaterialTheme.colorScheme.onSurface
 
     Surface(
@@ -151,7 +153,7 @@ fun AdminSelectionItem(
                 leadingIcon()
                 Spacer(modifier = Modifier.width(12.dp))
             }
-            
+
             Text(
                 text = text,
                 style = MaterialTheme.typography.bodyMedium.copy(
@@ -160,7 +162,7 @@ fun AdminSelectionItem(
                 color = contentColor,
                 modifier = Modifier.weight(1f)
             )
-            
+
             if (isSelected) {
                 DepthIcon(
                     imageVector = Icons.Default.Check,
@@ -308,6 +310,7 @@ fun AdminDivider(modifier: Modifier = Modifier) {
 // DIALOGS
 // ============================================================================
 
+
 @Composable
 fun AdminDialog(
     onDismissRequest: () -> Unit,
@@ -318,12 +321,16 @@ fun AdminDialog(
     iconContainerColor: Color? = null,
     iconTint: Color? = null,
     animated: Boolean = true,
+    properties: DialogProperties = DialogProperties(),
     dismissButton: @Composable (() -> Unit)? = null,
     content: @Composable () -> Unit
 ) {
-    Dialog(onDismissRequest = onDismissRequest) {
+    Dialog(
+        onDismissRequest = onDismissRequest,
+        properties = properties
+    ) {
         var animateTrigger by remember { mutableStateOf(!animated) }
-        
+
         if (animated) {
             LaunchedEffect(Unit) {
                 animateTrigger = true
@@ -335,10 +342,13 @@ fun AdminDialog(
             animationSpec = spring(stiffness = Spring.StiffnessLow),
             label = "dialogAlpha"
         )
-        
+
         val offsetY by animateFloatAsState(
             targetValue = if (animated && !animateTrigger) 100f else 0f,
-            animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy, stiffness = Spring.StiffnessLow),
+            animationSpec = spring(
+                dampingRatio = Spring.DampingRatioMediumBouncy,
+                stiffness = Spring.StiffnessLow
+            ),
             label = "dialogOffset"
         )
 
@@ -369,8 +379,12 @@ fun AdminDialog(
                         .background(
                             brush = androidx.compose.ui.graphics.Brush.verticalGradient(
                                 colors = listOf(
-                                    if (isDark) Color.White.copy(alpha = 0.05f) else Color.White.copy(alpha = 0.8f),
-                                    if (isDark) Color.White.copy(alpha = 0.02f) else Color.White.copy(alpha = 0.4f)
+                                    if (isDark) Color.White.copy(alpha = 0.05f) else Color.White.copy(
+                                        alpha = 0.8f
+                                    ),
+                                    if (isDark) Color.White.copy(alpha = 0.02f) else Color.White.copy(
+                                        alpha = 0.4f
+                                    )
                                 )
                             ),
                             shape = RoundedCornerShape(24.dp)
@@ -382,14 +396,19 @@ fun AdminDialog(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     if (icon != null) {
-                        val containerColor = iconContainerColor ?: MaterialTheme.colorScheme.primaryContainer
+                        val containerColor =
+                            iconContainerColor ?: MaterialTheme.colorScheme.primaryContainer
                         val tintColor = iconTint ?: MaterialTheme.colorScheme.onSecondaryContainer
                         Surface(
                             shape = RoundedCornerShape(16.dp),
                             color = containerColor,
                             modifier = Modifier
                                 .size(64.dp)
-                                .shadow(8.dp, RoundedCornerShape(16.dp), spotColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f))
+                                .shadow(
+                                    8.dp,
+                                    RoundedCornerShape(16.dp),
+                                    spotColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f)
+                                )
                         ) {
                             Box(contentAlignment = Alignment.Center) {
                                 when (icon) {
@@ -399,6 +418,7 @@ fun AdminDialog(
                                         modifier = Modifier.size(32.dp),
                                         tint = tintColor
                                     )
+
                                     is Int -> DepthIcon(
                                         painter = painterResource(id = icon),
                                         contentDescription = null,
@@ -417,7 +437,7 @@ fun AdminDialog(
                         textAlign = TextAlign.Center,
                         color = MaterialTheme.colorScheme.onSurface
                     )
-                    
+
                     Spacer(modifier = Modifier.height(16.dp))
 
                     Box(modifier = Modifier.fillMaxWidth()) {
@@ -436,9 +456,9 @@ fun AdminDialog(
                                 dismissButton()
                             }
                         }
-                        
+
                         Box(modifier = Modifier.weight(1f)) {
-                             confirmButton()
+                            confirmButton()
                         }
                     }
                 }
@@ -446,7 +466,6 @@ fun AdminDialog(
         }
     }
 }
-
 
 
 // ============================================================================
@@ -516,7 +535,6 @@ fun AdminIcon(
 }
 
 
-
 // ============================================================================
 // TOGGLES
 // ============================================================================
@@ -536,7 +554,7 @@ fun AdminSwitch(
         ),
         label = "switchScale"
     )
-    
+
     Box(modifier = modifier.scale(scale)) {
         Switch(
             checked = checked,
@@ -583,12 +601,12 @@ fun ModernSegmentedButton(
         ) {
             options.forEachIndexed { index, option ->
                 val isSelected = index == selectedIndex
-                
-                val backgroundColor = if (isSelected) 
-                    MaterialTheme.colorScheme.surface 
-                else 
+
+                val backgroundColor = if (isSelected)
+                    MaterialTheme.colorScheme.surface
+                else
                     Color.Transparent
-                
+
                 val contentColor = if (isSelected)
                     MaterialTheme.colorScheme.primary
                 else
@@ -638,12 +656,34 @@ fun AdminLargeButton(
     containerColor: Color = MaterialTheme.colorScheme.primary,
     contentColor: Color = MaterialTheme.colorScheme.onPrimary
 ) {
+    AdminLargeButton(
+        text = text,
+        onClick = onClick,
+        modifier = modifier,
+        painter = icon?.let { rememberVectorPainter(it) },
+        containerColor = containerColor,
+        contentColor = contentColor
+    )
+}
+
+@Composable
+fun AdminLargeButton(
+    text: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    painter: Painter? = null,
+    containerColor: Color = MaterialTheme.colorScheme.primary,
+    contentColor: Color = MaterialTheme.colorScheme.onPrimary
+) {
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
     val scale by animateFloatAsState(targetValue = if (isPressed) 0.97f else 1.0f, label = "scale")
-    val elevation by animateFloatAsState(targetValue = if (isPressed) 2.0f else 8.0f, label = "elevation")
+    val elevation by animateFloatAsState(
+        targetValue = if (isPressed) 2.0f else 8.0f,
+        label = "elevation"
+    )
 
-    Surface(
+     Surface(
         onClick = onClick,
         modifier = modifier
             .fillMaxWidth()
@@ -665,9 +705,9 @@ fun AdminLargeButton(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            if (icon != null) {
+            if (painter != null) {
                 DepthIcon(
-                    imageVector = icon,
+                    painter = painter,
                     contentDescription = null,
                     modifier = Modifier.size(24.dp)
                 )

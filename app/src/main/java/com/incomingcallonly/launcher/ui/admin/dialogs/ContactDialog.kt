@@ -1,7 +1,6 @@
 package com.incomingcallonly.launcher.ui.admin.dialogs
 
 import androidx.compose.foundation.background
-import androidx.core.net.toUri
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,6 +13,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -23,6 +24,8 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.PhotoLibrary
+import androidx.compose.material.icons.filled.PhotoCamera
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -42,6 +45,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
@@ -50,25 +54,38 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import coil.compose.AsyncImage
 import com.incomingcallonly.launcher.R
 import com.incomingcallonly.launcher.data.model.Contact
+import androidx.compose.ui.viewinterop.AndroidView
+import androidx.compose.ui.graphics.toArgb
+import com.hbb20.CountryCodePicker
 import com.incomingcallonly.launcher.ui.admin.components.AdminDialog
 import com.incomingcallonly.launcher.ui.components.AppDialog
+import com.incomingcallonly.launcher.ui.admin.components.AdminSelectionDialog
 import com.incomingcallonly.launcher.ui.theme.ConfirmGreen
+import androidx.compose.ui.window.DialogProperties
+
+// Removed manual CountryCode data class and list as we now use CountryCodePicker (ccp)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ContactDialog(
     contactToEdit: Contact?,
+    allContacts: List<Contact>,
+    defaultCountryCode: String,
     onDismiss: () -> Unit,
     onOpenCamera: ((android.net.Uri) -> Unit) -> Unit,
-    onConfirm: (String, String, String?) -> Unit
+    onConfirm: (String, String, String?, String) -> Unit
 ) {
     var firstName by remember { mutableStateOf("") }
     var lastName by remember { mutableStateOf("") }
     var number by remember { mutableStateOf("") }
     var photoUri by remember { mutableStateOf<android.net.Uri?>(null) }
+    var selectedCountryCode by remember { mutableStateOf(defaultCountryCode) }
+    var errorMessage by remember { mutableStateOf<String?>(null) }
+    var importedFullNumber by remember { mutableStateOf<String?>(null) }
 
     // Pre-fill if editing
     LaunchedEffect(contactToEdit) {
@@ -80,7 +97,7 @@ fun ContactDialog(
             } else {
                 firstName = contactToEdit.name
             }
-            number = contactToEdit.phoneNumber
+            // Number is handled by CountryCodePicker factory block to correctly strip country code
             if (contactToEdit.photoUri != null) {
                 photoUri = contactToEdit.photoUri.toUri()
             }
@@ -91,7 +108,10 @@ fun ContactDialog(
 
     val photoPicker = androidx.activity.compose.rememberLauncherForActivityResult(
         contract = androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia(),
-        onResult = { uri -> photoUri = uri }
+        onResult = { uri -> 
+            photoUri = uri
+            errorMessage = null
+        }
     )
 
     var showPhotoSourceDialog by remember { mutableStateOf(false) }
@@ -101,6 +121,7 @@ fun ContactDialog(
         contract = androidx.activity.result.contract.ActivityResultContracts.PickContact(),
         onResult = { contactUri ->
             if (contactUri != null) {
+                errorMessage = null
                 // Query Name
                 val cursor = context.contentResolver.query(contactUri, null, null, null, null)
                 cursor?.use {
@@ -146,7 +167,9 @@ fun ContactDialog(
                                     val numberIndex =
                                         pc.getColumnIndex(android.provider.ContactsContract.CommonDataKinds.Phone.NUMBER)
                                     if (numberIndex != -1) {
-                                        number = pc.getString(numberIndex) ?: ""
+                                        val rawNumber = (pc.getString(numberIndex) ?: "").replace(" ", "").replace("-", "")
+                                        // Store the full number to trigger CCP update
+                                        importedFullNumber = com.incomingcallonly.launcher.util.PhoneNumberUtils.normalizePhoneNumber(rawNumber, context)
                                     }
                                 }
                             }
@@ -157,14 +180,15 @@ fun ContactDialog(
         }
     )
 
-    val requestContactPermissionLauncher = androidx.activity.compose.rememberLauncherForActivityResult(
-        contract = androidx.activity.result.contract.ActivityResultContracts.RequestPermission(),
-        onResult = { isGranted ->
-            if (isGranted) {
-                contactPicker.launch(null)
+    val requestContactPermissionLauncher =
+        androidx.activity.compose.rememberLauncherForActivityResult(
+            contract = androidx.activity.result.contract.ActivityResultContracts.RequestPermission(),
+            onResult = { isGranted ->
+                if (isGranted) {
+                    contactPicker.launch(null)
+                }
             }
-        }
-    )
+        )
 
     if (showContactPermissionRationale) {
         AppDialog(
@@ -207,9 +231,8 @@ fun ContactDialog(
     )
 
 
-
     var showDiscardConfirmation by remember { mutableStateOf(false) }
-    
+
     // Check if form is modified
     fun isModified(): Boolean {
         if (contactToEdit == null) {
@@ -221,10 +244,14 @@ fun ContactDialog(
         val originalPhone = contactToEdit.phoneNumber
         val originalPhoto = contactToEdit.photoUri
         val currentPhoto = photoUri?.toString()
-        
-        return firstName != originalFirst || lastName != originalLast || number != originalPhone || currentPhoto != originalPhoto
+
+        val cleanNumber = number.replace(" ", "")
+        val sanitizedNumber = if (cleanNumber.startsWith("0")) cleanNumber.drop(1) else cleanNumber
+        val currentFullNumber = selectedCountryCode + sanitizedNumber
+
+        return firstName != originalFirst || lastName != originalLast || currentFullNumber != originalPhone || currentPhoto != originalPhoto
     }
-    
+
     val attemptDismiss = {
         if (isModified()) {
             showDiscardConfirmation = true
@@ -280,9 +307,16 @@ fun ContactDialog(
                             modifier = Modifier.padding(16.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Icon(painter = painterResource(id = R.drawable.ic_photo_library), contentDescription = null, tint = MaterialTheme.colorScheme.primary)
+                            Icon(
+                                painter = rememberVectorPainter(Icons.Default.PhotoLibrary),
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.primary
+                            )
                             Spacer(modifier = Modifier.width(16.dp))
-                            Text(stringResource(id = R.string.gallery), style = MaterialTheme.typography.bodyLarge)
+                            Text(
+                                stringResource(id = R.string.gallery),
+                                style = MaterialTheme.typography.bodyLarge
+                            )
                         }
                     }
                     Surface(
@@ -307,9 +341,16 @@ fun ContactDialog(
                             modifier = Modifier.padding(16.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Icon(painter = painterResource(id = R.drawable.ic_photo_camera), contentDescription = null, tint = MaterialTheme.colorScheme.primary)
+                            Icon(
+                                imageVector = Icons.Default.PhotoCamera,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.primary
+                            )
                             Spacer(modifier = Modifier.width(16.dp))
-                            Text(stringResource(id = R.string.camera), style = MaterialTheme.typography.bodyLarge)
+                            Text(
+                                stringResource(id = R.string.camera),
+                                style = MaterialTheme.typography.bodyLarge
+                            )
                         }
                     }
                 }
@@ -325,8 +366,12 @@ fun ContactDialog(
 
     AdminDialog(
         onDismissRequest = attemptDismiss,
-        title = if (contactToEdit == null) stringResource(id = R.string.new_contact) else stringResource(id = R.string.edit_contact),
+        title = if (contactToEdit == null) stringResource(id = R.string.new_contact) else stringResource(
+            id = R.string.edit_contact
+        ),
         icon = null,
+        properties = DialogProperties(usePlatformDefaultWidth = false),
+        modifier = Modifier.fillMaxWidth(0.95f),
         content = {
             Column(
                 modifier = Modifier
@@ -354,9 +399,13 @@ fun ContactDialog(
                         modifier = Modifier.align(Alignment.CenterHorizontally),
                         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
                     ) {
-                         Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.size(18.dp))
-                         Spacer(modifier = Modifier.width(8.dp))
-                         Text(stringResource(id = R.string.import_from_directory))
+                        Icon(
+                            Icons.Default.Add,
+                            contentDescription = null,
+                            modifier = Modifier.size(18.dp)
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(stringResource(id = R.string.import_from_directory))
                     }
                 }
 
@@ -390,20 +439,23 @@ fun ContactDialog(
                             )
                         }
                     }
-                    
+
                     TextButton(
                         onClick = { showPhotoSourceDialog = true }
                     ) {
                         Text(
                             text = if (hasPhoto) stringResource(id = R.string.photo_selected)
-                                   else stringResource(id = R.string.add_photo)
+                            else stringResource(id = R.string.add_photo)
                         )
                     }
                 }
 
                 OutlinedTextField(
                     value = firstName,
-                    onValueChange = { firstName = it },
+                    onValueChange = { 
+                        firstName = it
+                        errorMessage = null
+                    },
                     label = { Text(stringResource(id = R.string.first_name)) },
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(
@@ -419,7 +471,10 @@ fun ContactDialog(
 
                 OutlinedTextField(
                     value = lastName,
-                    onValueChange = { lastName = it },
+                    onValueChange = { 
+                        lastName = it
+                        errorMessage = null
+                    },
                     label = { Text(stringResource(id = R.string.last_name)) },
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(
@@ -433,30 +488,164 @@ fun ContactDialog(
                     shape = RoundedCornerShape(12.dp)
                 )
 
-                OutlinedTextField(
-                    value = number,
-                    onValueChange = { number = it },
-                    label = { Text(stringResource(id = R.string.number)) },
-                    singleLine = true,
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Phone,
-                        imeAction = ImeAction.Done
-                    ),
-                    keyboardActions = KeyboardActions(
-                        onDone = { focusManager.clearFocus() }
-                    ),
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(12.dp)
-                )
+                Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                    val textColor = MaterialTheme.colorScheme.onSurface.toArgb()
+
+                    OutlinedTextField(
+                        value = number,
+                        onValueChange = { 
+                            number = it 
+                            errorMessage = null
+                        },
+                        label = { Text(stringResource(id = R.string.number)) },
+                        leadingIcon = {
+                            val density = androidx.compose.ui.platform.LocalDensity.current
+                            val textSize = MaterialTheme.typography.bodyLarge.fontSize
+                            
+                            Row(
+                                modifier = Modifier
+                                    .padding(start = 8.dp)
+                                    .height(IntrinsicSize.Min),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                AndroidView(
+                                    modifier = Modifier.height(IntrinsicSize.Min),
+                                    factory = { ctx ->
+                                        CountryCodePicker(ctx).apply {
+                                            setDefaultCountryUsingNameCode("FR")
+                                            setCountryPreference("FR")
+                                            showNameCode(false)
+                                            showFullName(false)
+                                            
+                                            // Set language based on locale
+                                            val currentLang = ctx.resources.configuration.locales[0].language
+                                            changeDefaultLanguage(if (currentLang == "fr") CountryCodePicker.Language.FRENCH else CountryCodePicker.Language.ENGLISH)
+
+                                            // Customize Font (Inter)
+                                            try {
+                                                val typeFace = androidx.core.content.res.ResourcesCompat.getFont(ctx, com.incomingcallonly.launcher.R.font.inter_regular)
+                                                if (typeFace != null) {
+                                                    setTypeFace(typeFace)
+                                                    setDialogTypeFace(typeFace)
+                                                }
+                                            } catch (e: Exception) {
+                                                // Fallback
+                                            }
+
+                                            // Customize Colors
+                                            contentColor = textColor
+                                            setDialogTextColor(textColor)
+
+                                            setBackgroundColor(android.graphics.Color.TRANSPARENT)
+                                            // Match text size (expects pixels as Int)
+                                            setTextSize(with(density) { textSize.toPx().toInt() })
+                                            setGravity(android.view.Gravity.CENTER_VERTICAL)
+
+                                            setOnCountryChangeListener {
+                                                selectedCountryCode = selectedCountryCodeWithPlus
+                                                errorMessage = null
+                                            }
+                                            
+                                            // Initial value
+                                            if (contactToEdit != null) {
+                                                setFullNumber(contactToEdit.phoneNumber)
+                                                selectedCountryCode = selectedCountryCodeWithPlus
+                                                val prefix = selectedCountryCodeWithPlus
+                                                val prefixDigits = prefix.removePrefix("+")
+                                                
+                                                number = if (contactToEdit.phoneNumber.startsWith(prefix)) {
+                                                    contactToEdit.phoneNumber.removePrefix(prefix)
+                                                } else if (contactToEdit.phoneNumber.startsWith(prefixDigits)) {
+                                                    contactToEdit.phoneNumber.removePrefix(prefixDigits)
+                                                } else {
+                                                    contactToEdit.phoneNumber
+                                                }
+                                            } else {
+                                                val phoneCode = defaultCountryCode.removePrefix("+").toIntOrNull()
+                                                if (phoneCode != null) {
+                                                    setCountryForPhoneCode(phoneCode)
+                                                }
+                                                selectedCountryCode = selectedCountryCodeWithPlus
+                                            }
+                                        }
+                                    },
+                                    update = { ccp ->
+                                        ccp.contentColor = textColor
+                                        // Ensure text size stays correct on updates
+                                        ccp.setTextSize(with(density) { textSize.toPx().toInt() })
+                                        
+                                        importedFullNumber?.let { fullNum ->
+                                            val normalized = com.incomingcallonly.launcher.util.PhoneNumberUtils
+                                                .normalizePhoneNumber(fullNum, context)
+                                            
+                                            ccp.setFullNumber(normalized)
+                                            selectedCountryCode = ccp.selectedCountryCodeWithPlus
+                                            
+                                            val prefix = ccp.selectedCountryCodeWithPlus
+                                            val prefixDigits = prefix.removePrefix("+")
+                                            
+                                            number = when {
+                                                normalized.startsWith(prefix) -> normalized.removePrefix(prefix)
+                                                normalized.startsWith(prefixDigits) -> normalized.removePrefix(prefixDigits)
+                                                normalized.startsWith("0") -> normalized.drop(1)
+                                                else -> normalized
+                                            }
+                                            
+                                            importedFullNumber = null
+                                        }
+                                    }
+                                )
+                                Text(
+                                    text = "-",
+                                    color = MaterialTheme.colorScheme.onSurface,
+                                    style = MaterialTheme.typography.bodyLarge,
+                                    modifier = Modifier.padding(horizontal = 4.dp)
+                                )
+                            }
+                        },
+                        singleLine = true,
+                        isError = errorMessage != null,
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Phone,
+                            imeAction = ImeAction.Done
+                        ),
+                        keyboardActions = KeyboardActions(
+                            onDone = { focusManager.clearFocus() }
+                        ),
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(12.dp)
+                    )
+                    if (errorMessage != null) {
+                        Text(
+                            text = errorMessage!!,
+                            color = MaterialTheme.colorScheme.error,
+                            style = MaterialTheme.typography.labelSmall,
+                            modifier = Modifier.padding(start = 12.dp)
+                        )
+                    }
+                }
             }
         },
         confirmButton = {
+            val res = stringResource(id = R.string.error_number_already_exists)
             Button(
                 onClick = {
                     if (firstName.isNotBlank() && number.isNotBlank()) {
-                        val fullName =
-                            if (lastName.isNotBlank()) "$firstName $lastName" else firstName
-                        onConfirm(fullName, number, photoUri?.toString())
+                        val fullName = if (lastName.isNotBlank()) "$firstName $lastName" else firstName
+                        val cleanNumber = number.replace(" ", "")
+                        var sanitizedNumber = cleanNumber
+                        if (sanitizedNumber.startsWith("0")) {
+                            sanitizedNumber = sanitizedNumber.drop(1)
+                        }
+                        val finalNumber = selectedCountryCode + sanitizedNumber
+                        
+                        // Check for duplicate number
+                        val duplicate = allContacts.find { it.phoneNumber == finalNumber }
+                        if (duplicate != null && duplicate.id != contactToEdit?.id) {
+                            errorMessage = res
+                        } else {
+                            onConfirm(fullName, finalNumber, photoUri?.toString(), selectedCountryCode)
+                        }
                     }
                 },
                 enabled = firstName.isNotBlank() && number.isNotBlank()

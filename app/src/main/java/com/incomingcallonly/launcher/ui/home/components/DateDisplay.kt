@@ -29,13 +29,13 @@ fun DateDisplay(
 ) {
     var adminTapCount by remember { androidx.compose.runtime.mutableIntStateOf(0) }
     var lastTapTime by remember { androidx.compose.runtime.mutableLongStateOf(0L) }
-    
+
     val dateFormat = remember { SimpleDateFormat(CLOCK_DATE_FORMAT, Locale.getDefault()) }
 
     val rawDate = dateFormat.format(currentTime)
     val capitalizedDate = rawDate.split(" ").joinToString(" ") {
-        if (it.firstOrNull()?.isLetter() == true) 
-            it.replaceFirstChar { char -> char.uppercase() } 
+        if (it.firstOrNull()?.isLetter() == true)
+            it.replaceFirstChar { char -> char.uppercase() }
         else it
     }
 

@@ -30,15 +30,30 @@ class SettingsRepositoryImpl @Inject constructor(
     }
 
     private val _screenBehaviorPlugged =
-        MutableStateFlow(prefs.getInt(KEY_SCREEN_BEHAVIOR_PLUGGED, SettingsRepository.SCREEN_BEHAVIOR_AWAKE))
+        MutableStateFlow(
+            prefs.getInt(
+                KEY_SCREEN_BEHAVIOR_PLUGGED,
+                SettingsRepository.SCREEN_BEHAVIOR_AWAKE
+            )
+        )
     override val screenBehaviorPlugged: StateFlow<Int> = _screenBehaviorPlugged.asStateFlow()
 
     private val _screenBehaviorBattery =
-        MutableStateFlow(prefs.getInt(KEY_SCREEN_BEHAVIOR_BATTERY, SettingsRepository.SCREEN_BEHAVIOR_OFF))
+        MutableStateFlow(
+            prefs.getInt(
+                KEY_SCREEN_BEHAVIOR_BATTERY,
+                SettingsRepository.SCREEN_BEHAVIOR_OFF
+            )
+        )
     override val screenBehaviorBattery: StateFlow<Int> = _screenBehaviorBattery.asStateFlow()
 
     private val _nightModeStartHour =
-        MutableStateFlow(prefs.getInt(KEY_NIGHT_START, DEFAULT_NIGHT_START_HOUR)) // Default 22h / 10PM
+        MutableStateFlow(
+            prefs.getInt(
+                KEY_NIGHT_START,
+                DEFAULT_NIGHT_START_HOUR
+            )
+        ) // Default 22h / 10PM
     override val nightModeStartHour: StateFlow<Int> = _nightModeStartHour.asStateFlow()
 
     private val _nightModeStartMinute = MutableStateFlow(prefs.getInt(KEY_NIGHT_START_MINUTE, 0))
@@ -67,15 +82,19 @@ class SettingsRepositoryImpl @Inject constructor(
     private val _isRingerEnabled = MutableStateFlow(prefs.getBoolean(KEY_RINGER_ENABLED, true))
     override val isRingerEnabled: StateFlow<Boolean> = _isRingerEnabled.asStateFlow()
 
-    private val _ringerVolume = MutableStateFlow(prefs.getInt(KEY_RINGER_VOLUME, DEFAULT_RINGER_VOLUME)) // 0-100
+    private val _ringerVolume =
+        MutableStateFlow(prefs.getInt(KEY_RINGER_VOLUME, DEFAULT_RINGER_VOLUME)) // 0-100
     override val ringerVolume: StateFlow<Int> = _ringerVolume.asStateFlow()
 
-    private val _preNightRingerEnabled = MutableStateFlow(prefs.getBoolean(KEY_PRE_NIGHT_RINGER_ENABLED, true))
+    private val _preNightRingerEnabled =
+        MutableStateFlow(prefs.getBoolean(KEY_PRE_NIGHT_RINGER_ENABLED, true))
     override val preNightRingerEnabled: StateFlow<Boolean> = _preNightRingerEnabled.asStateFlow()
 
 
-    private val defaultLang = if (android.content.res.Resources.getSystem().configuration.locales[0].language == "fr") "fr" else "en"
-    private val _language = MutableStateFlow(prefs.getString(KEY_LANGUAGE, defaultLang) ?: defaultLang)
+    private val defaultLang =
+        if (android.content.res.Resources.getSystem().configuration.locales[0].language == "fr") "fr" else "en"
+    private val _language =
+        MutableStateFlow(prefs.getString(KEY_LANGUAGE, defaultLang) ?: defaultLang)
     override val language: StateFlow<String> = _language.asStateFlow()
 
     private val _timeFormat = MutableStateFlow(prefs.getString(KEY_TIME_FORMAT, "24") ?: "24")
@@ -87,14 +106,20 @@ class SettingsRepositoryImpl @Inject constructor(
             true
         )
     ) // Default True (Speaker)
-    override val isDefaultSpeakerEnabled: StateFlow<Boolean> = _isDefaultSpeakerEnabled.asStateFlow()
+    override val isDefaultSpeakerEnabled: StateFlow<Boolean> =
+        _isDefaultSpeakerEnabled.asStateFlow()
 
     private val _hasSeenOnboarding =
         MutableStateFlow(prefs.getBoolean(KEY_HAS_SEEN_ONBOARDING, false))
     override val hasSeenOnboarding: StateFlow<Boolean> = _hasSeenOnboarding.asStateFlow()
 
-    private val _adminPin = MutableStateFlow(prefs.getString(KEY_ADMIN_PIN, DEFAULT_ADMIN_PIN) ?: DEFAULT_ADMIN_PIN)
+    private val _adminPin =
+        MutableStateFlow(prefs.getString(KEY_ADMIN_PIN, DEFAULT_ADMIN_PIN) ?: DEFAULT_ADMIN_PIN)
     override val adminPin: StateFlow<String> = _adminPin.asStateFlow()
+    
+    private val _lastSelectedCountryCode = 
+        MutableStateFlow(prefs.getString(KEY_LAST_COUNTRY_CODE, DEFAULT_COUNTRY_CODE) ?: DEFAULT_COUNTRY_CODE)
+    override val lastSelectedCountryCode: StateFlow<String> = _lastSelectedCountryCode.asStateFlow()
 
 
     override fun setScreenBehaviorPlugged(behavior: Int) {
@@ -194,6 +219,11 @@ class SettingsRepositoryImpl @Inject constructor(
         _adminPin.value = pin
     }
 
+    override fun setLastSelectedCountryCode(code: String) {
+        prefs.edit { putString(KEY_LAST_COUNTRY_CODE, code) }
+        _lastSelectedCountryCode.value = code
+    }
+
     override fun resetToDefaults() {
         setScreenBehaviorPlugged(SettingsRepository.SCREEN_BEHAVIOR_AWAKE)
         setScreenBehaviorBattery(SettingsRepository.SCREEN_BEHAVIOR_OFF)
@@ -231,11 +261,13 @@ class SettingsRepositoryImpl @Inject constructor(
         private const val KEY_DEFAULT_SPEAKER_ENABLED = "default_speaker_enabled"
         private const val KEY_HAS_SEEN_ONBOARDING = "has_seen_onboarding"
         private const val KEY_ADMIN_PIN = "admin_pin"
+        private const val KEY_LAST_COUNTRY_CODE = "last_country_code"
 
         // Default Values
         private const val DEFAULT_NIGHT_START_HOUR = 22
         private const val DEFAULT_NIGHT_END_HOUR = 7
         private const val DEFAULT_RINGER_VOLUME = 80
         private const val DEFAULT_ADMIN_PIN = "1234"
+        private const val DEFAULT_COUNTRY_CODE = "+33"
     }
 }

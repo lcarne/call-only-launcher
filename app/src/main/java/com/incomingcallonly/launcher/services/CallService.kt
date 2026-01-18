@@ -57,13 +57,13 @@ class CallService : InCallService(), CallManager.AudioController {
             getSystemService(NOTIFICATION_SERVICE) as android.app.NotificationManager
 
         val channel = android.app.NotificationChannel(
-                channelId,
-                "Incoming Calls",
-                android.app.NotificationManager.IMPORTANCE_HIGH
-            ).apply {
-                lockscreenVisibility = android.app.Notification.VISIBILITY_PUBLIC
-            }
-            notificationManager.createNotificationChannel(channel)
+            channelId,
+            "Incoming Calls",
+            android.app.NotificationManager.IMPORTANCE_HIGH
+        ).apply {
+            lockscreenVisibility = android.app.Notification.VISIBILITY_PUBLIC
+        }
+        notificationManager.createNotificationChannel(channel)
 
         val intent = Intent(this, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP

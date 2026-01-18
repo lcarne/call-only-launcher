@@ -14,7 +14,7 @@ fun ScreenBehaviorDialog(
     onDismiss: () -> Unit
 ) {
     val options = listOf(0, 1, 2)
-    
+
     AdminSelectionDialog(
         title = title,
         options = options,

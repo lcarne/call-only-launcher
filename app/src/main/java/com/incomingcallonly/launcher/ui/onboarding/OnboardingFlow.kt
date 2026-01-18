@@ -56,17 +56,21 @@ fun OnboardingFlow(onDismiss: () -> Unit) {
         OnboardingStep.AdminDefinition -> Icons.Default.Lock
     }
 
-    val currentTitle = stringResource(id = when (step) {
-        OnboardingStep.Presentation -> R.string.onboarding_presentation_title
-        OnboardingStep.LocationPermission -> R.string.onboarding_auth_location_intro_title
-        OnboardingStep.AdminDefinition -> R.string.onboarding_admin_intro_title
-    })
+    val currentTitle = stringResource(
+        id = when (step) {
+            OnboardingStep.Presentation -> R.string.onboarding_presentation_title
+            OnboardingStep.LocationPermission -> R.string.onboarding_auth_location_intro_title
+            OnboardingStep.AdminDefinition -> R.string.onboarding_admin_intro_title
+        }
+    )
 
-    val currentMessage = stringResource(id = when (step) {
-        OnboardingStep.Presentation -> R.string.onboarding_presentation_message
-        OnboardingStep.LocationPermission -> R.string.onboarding_auth_location_intro_message
-        OnboardingStep.AdminDefinition -> R.string.onboarding_admin_intro_message
-    })
+    val currentMessage = stringResource(
+        id = when (step) {
+            OnboardingStep.Presentation -> R.string.onboarding_presentation_message
+            OnboardingStep.LocationPermission -> R.string.onboarding_auth_location_intro_message
+            OnboardingStep.AdminDefinition -> R.string.onboarding_admin_intro_message
+        }
+    )
 
     AppDialog(
         onDismissRequest = { },
@@ -79,7 +83,7 @@ fun OnboardingFlow(onDismiss: () -> Unit) {
                     style = MaterialTheme.typography.bodyMedium,
                     textAlign = TextAlign.Start
                 )
-                
+
                 if (step is OnboardingStep.AdminDefinition) {
                     Spacer(modifier = Modifier.height(16.dp))
                     Text(
@@ -144,12 +148,13 @@ fun OnboardingFlow(onDismiss: () -> Unit) {
                         .heightIn(min = 56.dp)
                 ) {
 
-                    val currentStepDisplay = when(step) {
+                    val currentStepDisplay = when (step) {
                         OnboardingStep.Presentation -> 1
                         OnboardingStep.LocationPermission -> 2
                         else -> 0
                     }
-                    val buttonText = stringResource(id = if (step is OnboardingStep.LocationPermission) R.string.validate else R.string.next)
+                    val buttonText =
+                        stringResource(id = if (step is OnboardingStep.LocationPermission) R.string.validate else R.string.next)
                     Text(
                         text = if (currentStepDisplay > 0) "$buttonText ($currentStepDisplay/3)" else buttonText,
                         fontSize = 18.sp

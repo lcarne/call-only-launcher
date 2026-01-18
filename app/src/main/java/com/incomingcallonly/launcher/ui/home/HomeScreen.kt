@@ -86,19 +86,21 @@ fun HomeScreen(
     val nightEndMin by viewModel.nightModeEndMinute.collectAsState()
     val isNightModeEnabled by viewModel.isNightModeEnabled.collectAsState()
     val isRingerEnabled by viewModel.isRingerEnabled.collectAsState()
-    
+
     val savedClockColor by viewModel.clockColor.collectAsState()
-    val clockColor = if (savedClockColor != 0) Color(savedClockColor) else MaterialTheme.colorScheme.primary
-    
+    val clockColor =
+        if (savedClockColor != 0) Color(savedClockColor) else MaterialTheme.colorScheme.primary
+
     val savedFormat by viewModel.timeFormat.collectAsState()
     val hasSeenOnboarding by viewModel.hasSeenOnboarding.collectAsState()
-    
+
     val isDefaultDialer by viewModel.isDefaultDialer.collectAsState()
     val isDefaultLauncher by viewModel.isDefaultLauncher.collectAsState()
 
     // 3. Night Mode Logic
     val calendar = Calendar.getInstance().apply { time = currentTime }
-    val currentTotalMinutes = calendar.get(Calendar.HOUR_OF_DAY) * MINUTES_IN_HOUR + calendar.get(Calendar.MINUTE)
+    val currentTotalMinutes =
+        calendar.get(Calendar.HOUR_OF_DAY) * MINUTES_IN_HOUR + calendar.get(Calendar.MINUTE)
     val startTotalMinutes = nightStart * MINUTES_IN_HOUR + nightStartMin
     val endTotalMinutes = nightEnd * MINUTES_IN_HOUR + nightEndMin
 
@@ -116,7 +118,7 @@ fun HomeScreen(
     // 5. Effects
     ScreenEffect(viewModel, currentBehavior, isNight, isDimmed)
     RingerEffect(viewModel, isNight, isRingerEnabled)
-    
+
     // Default Apps Check Effect
     DisposableEffect(lifecycleOwner) {
         val observer = androidx.lifecycle.LifecycleEventObserver { _, event ->
@@ -155,7 +157,7 @@ fun HomeScreen(
                         if (event.changes.any { it.changedToDown() }) {
                             val wasDimmed = inactivityState.isDimmed
                             inactivityState.onInteraction()
-                            
+
                             if (wasDimmed) {
                                 event.changes.forEach { it.consume() }
                             }
@@ -166,25 +168,25 @@ fun HomeScreen(
         contentAlignment = Alignment.Center
     ) {
         if (!isDimmed) {
-             HomeContentNormal(
-                 currentTime = currentTime,
-                 clockColor = clockColor,
-                 timeFormat = savedFormat,
-                 isRingerEnabled = isRingerEnabled,
-                 onToggleRinger = { viewModel.setRingerEnabled(!isRingerEnabled) },
-                 onAdminClick = onAdminClick,
-                 nightStart = nightStart,
-                 nightStartMin = nightStartMin,
-                 nightEnd = nightEnd,
-                 nightEndMin = nightEndMin,
-                 isNight = isNight,
-                 isDefaultDialer = isDefaultDialer,
-                 isDefaultLauncher = isDefaultLauncher,
-                 isPinned = isPinned,
-                 onPinClick = { showPinConfirmation = true }
-             )
+            HomeContentNormal(
+                currentTime = currentTime,
+                clockColor = clockColor,
+                timeFormat = savedFormat,
+                isRingerEnabled = isRingerEnabled,
+                onToggleRinger = { viewModel.setRingerEnabled(!isRingerEnabled) },
+                onAdminClick = onAdminClick,
+                nightStart = nightStart,
+                nightStartMin = nightStartMin,
+                nightEnd = nightEnd,
+                nightEndMin = nightEndMin,
+                isNight = isNight,
+                isDefaultDialer = isDefaultDialer,
+                isDefaultLauncher = isDefaultLauncher,
+                isPinned = isPinned,
+                onPinClick = { showPinConfirmation = true }
+            )
         } else {
-             HomeContentDimmed(currentTime, savedFormat)
+            HomeContentDimmed(currentTime, savedFormat)
         }
 
         if (showPinConfirmation) {
@@ -296,7 +298,7 @@ private fun HomeContentNormal(
             onPinClick = onPinClick
         )
     }
-} 
+}
 
 @Composable
 private fun HomeContentDimmed(

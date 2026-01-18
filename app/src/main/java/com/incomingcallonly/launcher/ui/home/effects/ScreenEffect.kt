@@ -24,7 +24,11 @@ fun ScreenEffect(
     val context = LocalContext.current
     var previousIsNight by remember { mutableStateOf(isNight) }
 
-    LaunchedEffect(currentBehavior, isNight, isDimmed) { // removed currentTime as it triggers too often, check if needed
+    LaunchedEffect(
+        currentBehavior,
+        isNight,
+        isDimmed
+    ) { // removed currentTime as it triggers too often, check if needed
         val activity = context.findActivity()
         if (activity != null) {
             val isTransitioningFromNightToDay = previousIsNight && !isNight

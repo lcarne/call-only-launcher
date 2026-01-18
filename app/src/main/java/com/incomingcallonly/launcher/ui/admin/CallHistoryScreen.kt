@@ -11,6 +11,11 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.automirrored.filled.CallMissed
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Call
+import androidx.compose.material.icons.filled.Block
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.IconButton
@@ -76,7 +81,7 @@ fun CallHistoryScreen(
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         DepthIcon(
-                            painter = androidx.compose.ui.res.painterResource(id = com.incomingcallonly.launcher.R.drawable.ic_arrow_back),
+                            painter = rememberVectorPainter(Icons.AutoMirrored.Filled.ArrowBack),
                             contentDescription = stringResource(id = com.incomingcallonly.launcher.R.string.back)
                         )
                     }
@@ -159,27 +164,27 @@ fun CallLogItem(log: CallLog) {
     val sdf = SimpleDateFormat(DATE_FORMAT_HISTORY, Locale.getDefault())
     val dateStr = sdf.format(Date(log.timestamp))
 
-    val (iconRes, color, label) = when (log.type) {
+    val (painter, color, label) = when (log.type) {
         CallLogType.INCOMING_ANSWERED -> Triple(
-            com.incomingcallonly.launcher.R.drawable.ic_call,
+            rememberVectorPainter(Icons.Default.Call),
             COLOR_ANSWERED,
             stringResource(id = com.incomingcallonly.launcher.R.string.call_received_label)
         )
 
         CallLogType.INCOMING_MISSED -> Triple(
-            com.incomingcallonly.launcher.R.drawable.ic_call_missed,
+            rememberVectorPainter(Icons.AutoMirrored.Filled.CallMissed),
             COLOR_MISSED,
             stringResource(id = com.incomingcallonly.launcher.R.string.call_missed_label)
         )
 
         CallLogType.INCOMING_REJECTED -> Triple(
-            com.incomingcallonly.launcher.R.drawable.ic_block,
+            rememberVectorPainter(Icons.Default.Block),
             COLOR_REJECTED,
             stringResource(id = com.incomingcallonly.launcher.R.string.call_rejected_label)
         )
 
         CallLogType.BLOCKED -> Triple(
-            com.incomingcallonly.launcher.R.drawable.ic_block,
+            rememberVectorPainter(Icons.Default.Block),
             COLOR_BLOCKED,
             stringResource(id = com.incomingcallonly.launcher.R.string.call_rejected_auto_label)
         )
@@ -188,7 +193,7 @@ fun CallLogItem(log: CallLog) {
     ListItem(
         leadingContent = {
             DepthIcon(
-                painter = androidx.compose.ui.res.painterResource(id = iconRes),
+                painter = painter,
                 contentDescription = null,
                 tint = color,
                 modifier = Modifier.size(24.dp)

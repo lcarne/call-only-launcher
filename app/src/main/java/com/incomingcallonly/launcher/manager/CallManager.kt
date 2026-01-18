@@ -1,11 +1,11 @@
 package com.incomingcallonly.launcher.manager
 
 import android.content.Context
+import android.os.Build
 import android.telecom.Call
 import android.telecom.CallAudioState
 import android.telecom.VideoProfile
 import android.telephony.PhoneNumberUtils
-import android.os.Build
 import com.incomingcallonly.launcher.R
 import com.incomingcallonly.launcher.data.model.CallLog
 import com.incomingcallonly.launcher.data.model.CallLogType
@@ -134,7 +134,6 @@ class CallManager @Inject constructor(
     }
 
 
-
     fun updateState(state: Int) {
         when (state) {
             Call.STATE_RINGING -> {
@@ -152,7 +151,8 @@ class CallManager @Inject constructor(
 
             Call.STATE_DISCONNECTED -> {
                 if (wasAnswered && answerTime > 0) {
-                    durationSeconds = (System.currentTimeMillis() - answerTime) / MILLISECONDS_PER_SECOND
+                    durationSeconds =
+                        (System.currentTimeMillis() - answerTime) / MILLISECONDS_PER_SECOND
                 }
                 _callState.value = CallState.Ended
                 logCall()

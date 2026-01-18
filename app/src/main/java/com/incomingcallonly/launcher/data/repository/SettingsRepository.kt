@@ -20,6 +20,7 @@ interface SettingsRepository {
     val isDefaultSpeakerEnabled: StateFlow<Boolean>
     val hasSeenOnboarding: StateFlow<Boolean>
     val adminPin: StateFlow<String>
+    val lastSelectedCountryCode: StateFlow<String>
 
     fun setScreenBehaviorPlugged(behavior: Int)
     fun setScreenBehaviorBattery(behavior: Int)
@@ -39,6 +40,7 @@ interface SettingsRepository {
     fun setDefaultSpeakerEnabled(enabled: Boolean)
     fun setHasSeenOnboarding(hasSeen: Boolean)
     fun setAdminPin(pin: String)
+    fun setLastSelectedCountryCode(code: String)
     fun resetToDefaults()
 
     companion object {

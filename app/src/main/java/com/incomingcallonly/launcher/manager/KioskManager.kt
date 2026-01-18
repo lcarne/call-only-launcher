@@ -37,7 +37,7 @@ class KioskManager @Inject constructor(
         windowInsetsController.hide(WindowInsetsCompat.Type.systemBars())
         // Enforce edge-to-edge mode to prevent black bars when returning from other apps
         WindowCompat.setDecorFitsSystemWindows(activity.window, false)
-        
+
         // Force transparent colors
         // Deprecated in API 35 (Vanilla Ice Cream) as edge-to-edge is enforced
         if (Build.VERSION.SDK_INT < 35) {
@@ -64,7 +64,8 @@ class KioskManager @Inject constructor(
         hideSystemUI(activity)
 
         // Block Notifications
-        val notificationManager = activity.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val notificationManager =
+            activity.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         if (notificationManager.isNotificationPolicyAccessGranted) {
             notificationManager.setInterruptionFilter(NotificationManager.INTERRUPTION_FILTER_ALL)
         }
@@ -89,14 +90,15 @@ class KioskManager @Inject constructor(
         }
 
         try {
-            val am = activity.getSystemService(Context.ACTIVITY_SERVICE) as android.app.ActivityManager
+            val am =
+                activity.getSystemService(Context.ACTIVITY_SERVICE) as android.app.ActivityManager
             if (am.lockTaskModeState == android.app.ActivityManager.LOCK_TASK_MODE_NONE) {
                 activity.startLockTask()
             }
             // Start monitoring for state change because System might show a confirmation dialog
             // and we won't get a callback until the user accepts.
             startStateMonitoring(activity)
-            
+
         } catch (e: Exception) {
             e.printStackTrace()
             syncKioskState(activity)
@@ -123,7 +125,8 @@ class KioskManager @Inject constructor(
         try {
             activity.stopLockTask()
             _isKioskActive.value = false
-            val dpm = activity.getSystemService(Context.DEVICE_POLICY_SERVICE) as DevicePolicyManager
+            val dpm =
+                activity.getSystemService(Context.DEVICE_POLICY_SERVICE) as DevicePolicyManager
             val adminComponent = ComponentName(activity, IncomingCallOnlyAdminReceiver::class.java)
             if (dpm.isDeviceOwnerApp(activity.packageName)) {
                 dpm.setStatusBarDisabled(adminComponent, false)
@@ -135,7 +138,8 @@ class KioskManager @Inject constructor(
 
     fun isKioskModeActive(activity: Activity): Boolean {
         return try {
-            val am = activity.getSystemService(Context.ACTIVITY_SERVICE) as android.app.ActivityManager
+            val am =
+                activity.getSystemService(Context.ACTIVITY_SERVICE) as android.app.ActivityManager
             am.lockTaskModeState != android.app.ActivityManager.LOCK_TASK_MODE_NONE
         } catch (e: Exception) {
             false

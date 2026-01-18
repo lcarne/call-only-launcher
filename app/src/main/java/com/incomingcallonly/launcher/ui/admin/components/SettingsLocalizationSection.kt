@@ -42,7 +42,7 @@ fun SettingsLocalizationSection(viewModel: SettingsViewModel) {
 
         AdminSettingsCard {
             var showLangDialog by remember { mutableStateOf(false) }
-            
+
             ListItem(
                 colors = ListItemDefaults.colors(containerColor = Color.Transparent),
                 headlineContent = { Text(stringResource(id = R.string.language)) },
@@ -83,7 +83,7 @@ fun SettingsLocalizationSection(viewModel: SettingsViewModel) {
                         Triple("en", R.string.language_english, "🇬🇧")
                     )
                 }
-                
+
                 // Using the new AdminSelectionDialog
                 AdminSelectionDialog(
                     title = stringResource(id = R.string.language),

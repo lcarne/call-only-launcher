@@ -23,12 +23,18 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -54,6 +60,7 @@ fun CameraScreen(
     val imageCapture = remember { ImageCapture.Builder().build() }
     val executor = remember { Executors.newSingleThreadExecutor() }
     val mainExecutor = ContextCompat.getMainExecutor(context)
+    var isCapturing by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(context)
@@ -106,11 +113,14 @@ fun CameraScreen(
                 .align(Alignment.TopStart),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            IconButton(onClick = onCancel) {
+            IconButton(
+                onClick = onCancel,
+                enabled = !isCapturing
+            ) {
                 Icon(
-                    painter = painterResource(id = R.drawable.ic_arrow_back),
+                    painter = rememberVectorPainter(Icons.AutoMirrored.Filled.ArrowBack),
                     contentDescription = stringResource(id = R.string.cancel),
-                    tint = Color.White
+                    tint = if (isCapturing) Color.Gray else Color.White
                 )
             }
             Text(
@@ -124,6 +134,9 @@ fun CameraScreen(
         // Shutter Button
         Button(
             onClick = {
+                if (isCapturing) return@Button
+                isCapturing = true
+
                 val photoFile = File(
                     context.cacheDir,
                     "captured_photo_${System.currentTimeMillis()}.jpg"
@@ -136,13 +149,16 @@ fun CameraScreen(
                     object : ImageCapture.OnImageSavedCallback {
                         override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
                             val uri = Uri.fromFile(photoFile)
-                            // Ensure UI updates happen on the main thread
                             mainExecutor.execute {
+                                isCapturing = false
                                 onPhotoCaptured(uri)
                             }
                         }
 
                         override fun onError(exception: ImageCaptureException) {
+                            mainExecutor.execute {
+                                isCapturing = false
+                            }
                             Log.e(
                                 "CameraScreen",
                                 "Photo capture failed: ${exception.message}",
@@ -152,12 +168,16 @@ fun CameraScreen(
                     }
                 )
             },
+            enabled = !isCapturing,
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .padding(bottom = 64.dp)
                 .size(80.dp),
             shape = CircleShape,
-            colors = ButtonDefaults.buttonColors(containerColor = Color.White)
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color.White,
+                disabledContainerColor = Color.Gray
+            )
         ) {
             // Inner circle
             Box(

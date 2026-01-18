@@ -32,14 +32,15 @@ fun rememberInactivityState(
 
     LaunchedEffect(currentTime, currentBehavior, isNight) {
         val isTransitioningFromNightToDay = previousIsNight && !isNight
-        
+
         // Only monitor for dimming if we are in DIM mode and not in Night Mode
         if (currentBehavior == SettingsRepository.SCREEN_BEHAVIOR_DIM && !isNight) {
             // When transitioning from night to day in DIM mode, start dimmed immediately
             if (isTransitioningFromNightToDay) {
                 isDimmed.value = true
             } else {
-                val timeSinceLastInteraction = System.currentTimeMillis() - lastInteractionTime.longValue
+                val timeSinceLastInteraction =
+                    System.currentTimeMillis() - lastInteractionTime.longValue
                 if (timeSinceLastInteraction > INACTIVITY_TIMEOUT_MS) {
                     isDimmed.value = true
                 }
@@ -47,7 +48,7 @@ fun rememberInactivityState(
         } else {
             isDimmed.value = false
         }
-        
+
         previousIsNight = isNight
     }
 

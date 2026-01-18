@@ -24,12 +24,12 @@ object LocaleHelper {
             prefs.getString("language", defaultLang) ?: defaultLang
         } catch (e: Exception) {
             e.printStackTrace()
-             val sysLocale = android.content.res.Resources.getSystem().configuration.locales[0]
+            val sysLocale = android.content.res.Resources.getSystem().configuration.locales[0]
             if (sysLocale.language == "fr") "fr" else "en"
         }
 
         val locale = if (lang == "en") Locale.ENGLISH else Locale("fr")
-        
+
         val config = Configuration(context.resources.configuration)
         Locale.setDefault(locale)
         config.setLocale(locale)

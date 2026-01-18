@@ -13,8 +13,8 @@ android {
         applicationId = "com.incomingcallonly.launcher"
         minSdk = 26 // Android 8.0
         targetSdk = 35
-        versionCode = 10
-        versionName = "1.4.0"
+        versionCode = 11
+        versionName = "1.4.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -104,6 +104,8 @@ dependencies {
 
     // Gson
     implementation(libs.gson)
+    implementation(libs.androidx.exifinterface)
+    implementation(libs.ccp)
 
     // CameraX
     implementation(libs.androidx.camera.core)

@@ -11,8 +11,10 @@ interface ContactRepository {
     suspend fun updateContact(contact: Contact)
     suspend fun deleteContact(contact: Contact)
     suspend fun deleteAllContacts()
-    
+
     suspend fun exportContacts(outputStream: java.io.OutputStream)
 
-    suspend fun importContacts(json: String): Int
+    suspend fun importContacts(inputStream: java.io.InputStream): Int
+
+    suspend fun getDeviceContacts(): List<Contact>
 }

@@ -40,15 +40,19 @@ class SettingsViewModel @Inject constructor(
     val clockColor = settingsRepository.clockColor
 
     // Call History Logic (Can be separated if needed, but fits in 'System' management)
-     val callLogs = callLogRepository.getAllCallLogs()
+    val callLogs = callLogRepository.getAllCallLogs()
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
             initialValue = emptyList()
         )
 
-    fun setScreenBehaviorPlugged(behavior: Int) = settingsRepository.setScreenBehaviorPlugged(behavior)
-    fun setScreenBehaviorBattery(behavior: Int) = settingsRepository.setScreenBehaviorBattery(behavior)
+    fun setScreenBehaviorPlugged(behavior: Int) =
+        settingsRepository.setScreenBehaviorPlugged(behavior)
+
+    fun setScreenBehaviorBattery(behavior: Int) =
+        settingsRepository.setScreenBehaviorBattery(behavior)
+
     fun setNightModeStartHour(hour: Int) = settingsRepository.setNightModeStartHour(hour)
     fun setNightModeStartMinute(minute: Int) = settingsRepository.setNightModeStartMinute(minute)
     fun setNightModeEndHour(hour: Int) = settingsRepository.setNightModeEndHour(hour)
@@ -59,7 +63,9 @@ class SettingsViewModel @Inject constructor(
     fun setRingerEnabled(enabled: Boolean) = settingsRepository.setRingerEnabled(enabled)
     fun setLanguage(lang: String) = settingsRepository.setLanguage(lang)
     fun setTimeFormat(format: String) = settingsRepository.setTimeFormat(format)
-    fun setDefaultSpeakerEnabled(enabled: Boolean) = settingsRepository.setDefaultSpeakerEnabled(enabled)
+    fun setDefaultSpeakerEnabled(enabled: Boolean) =
+        settingsRepository.setDefaultSpeakerEnabled(enabled)
+
     fun setClockColor(color: Int) = settingsRepository.setClockColor(color)
 
     fun clearCallHistory() {

@@ -1,15 +1,19 @@
 package com.incomingcallonly.launcher.util
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Matrix
 import android.net.Uri
-import kotlin.math.min
-import androidx.core.net.toUri
 import androidx.core.graphics.scale
+import androidx.core.net.toUri
+import androidx.exifinterface.media.ExifInterface
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.File
 import java.io.FileOutputStream
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.math.min
 
 @Singleton
 class ImageStorageManager @Inject constructor(
@@ -28,33 +32,69 @@ class ImageStorageManager @Inject constructor(
             val fileName = "photo_${System.currentTimeMillis()}.jpg"
             val destFile = File(photosDir, fileName)
 
+            // 1. Get orientation
+            val orientation = context.contentResolver.openInputStream(uri)?.use { input ->
+                val exif = ExifInterface(input)
+                exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL)
+            } ?: ExifInterface.ORIENTATION_NORMAL
+
             context.contentResolver.openInputStream(uri)?.use { input ->
-                val originalBitmap = android.graphics.BitmapFactory.decodeStream(input)
+                val loadedBitmap = BitmapFactory.decodeStream(input) ?: return null
                 
-                // Resize logic
+                // 2. Rotate if needed
+                val rotatedBitmap = rotateBitmap(loadedBitmap, orientation)
+                
+                // 3. Resize
                 val maxDimension = 512
                 val ratio = min(
-                    maxDimension.toFloat() / originalBitmap.width,
-                    maxDimension.toFloat() / originalBitmap.height
+                    maxDimension.toFloat() / rotatedBitmap.width,
+                    maxDimension.toFloat() / rotatedBitmap.height
                 )
-                val width = (originalBitmap.width * ratio).toInt()
-                val height = (originalBitmap.height * ratio).toInt()
-                
-                val resizedBitmap = originalBitmap.scale(width, height, true)
+                val width = (rotatedBitmap.width * ratio).toInt()
+                val height = (rotatedBitmap.height * ratio).toInt()
 
+                val finalBitmap = rotatedBitmap.scale(width, height, true)
+
+                // 4. Save
                 FileOutputStream(destFile).use { output ->
-                     resizedBitmap.compress(android.graphics.Bitmap.CompressFormat.JPEG, 80, output)
+                    finalBitmap.compress(Bitmap.CompressFormat.JPEG, 80, output)
                 }
-                
-                if (originalBitmap != resizedBitmap) {
-                    originalBitmap.recycle()
-                }
-                resizedBitmap.recycle()
+
+                // Cleanup
+                if (loadedBitmap != rotatedBitmap) loadedBitmap.recycle()
+                if (rotatedBitmap != finalBitmap) rotatedBitmap.recycle()
+                finalBitmap.recycle()
             }
             Uri.fromFile(destFile).toString()
         } catch (e: Exception) {
             e.printStackTrace()
             null
+        }
+    }
+
+    private fun rotateBitmap(bitmap: Bitmap, orientation: Int): Bitmap {
+        val matrix = Matrix()
+        when (orientation) {
+            ExifInterface.ORIENTATION_ROTATE_90 -> matrix.postRotate(90f)
+            ExifInterface.ORIENTATION_ROTATE_180 -> matrix.postRotate(180f)
+            ExifInterface.ORIENTATION_ROTATE_270 -> matrix.postRotate(270f)
+            ExifInterface.ORIENTATION_FLIP_HORIZONTAL -> matrix.postScale(-1f, 1f)
+            ExifInterface.ORIENTATION_FLIP_VERTICAL -> matrix.postScale(1f, -1f)
+            ExifInterface.ORIENTATION_TRANSPOSE -> {
+                matrix.postRotate(90f)
+                matrix.postScale(-1f, 1f)
+            }
+            ExifInterface.ORIENTATION_TRANSVERSE -> {
+                matrix.postRotate(270f)
+                matrix.postScale(-1f, 1f)
+            }
+            else -> return bitmap
+        }
+        return try {
+            Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
+        } catch (e: OutOfMemoryError) {
+            e.printStackTrace()
+            bitmap
         }
     }
 

@@ -39,7 +39,7 @@ val AppTypography = Typography(
         lineHeight = 44.sp,
         letterSpacing = 0.sp
     ),
-    
+
     // Headlines - Dialog titles, major headers
     headlineLarge = TextStyle(
         fontFamily = AppFontFamily,
@@ -62,7 +62,7 @@ val AppTypography = Typography(
         lineHeight = 32.sp,
         letterSpacing = 0.sp
     ),
-    
+
     // Titles - ListItem headlines (main setting names)
     titleLarge = TextStyle(
         fontFamily = AppFontFamily,
@@ -85,7 +85,7 @@ val AppTypography = Typography(
         lineHeight = 20.sp,
         letterSpacing = 0.1.sp
     ),
-    
+
     // Body - Supporting text, descriptions
     bodyLarge = TextStyle(
         fontFamily = AppFontFamily,
@@ -108,7 +108,7 @@ val AppTypography = Typography(
         lineHeight = 16.sp,
         letterSpacing = 0.4.sp
     ),
-    
+
     // Labels - Section headers, buttons, chips
     labelLarge = TextStyle(
         fontFamily = AppFontFamily,

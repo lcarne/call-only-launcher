@@ -55,14 +55,14 @@ fun ContactListItem(
         onClick = onClick
     ) {
         ListItem(
-            headlineContent = { 
+            headlineContent = {
                 Text(
                     text = contact.name,
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Medium
-                ) 
+                )
             },
-            supportingContent = { 
+            supportingContent = {
                 Text(
                     text = contact.phoneNumber,
                     style = MaterialTheme.typography.bodyMedium,

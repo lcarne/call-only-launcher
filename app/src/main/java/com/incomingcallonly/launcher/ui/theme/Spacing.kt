@@ -15,7 +15,7 @@ object Spacing {
     val xxl: Dp = 24.dp
     val xxxl: Dp = 32.dp
     val xxxxl: Dp = 40.dp
-    
+
     // Semantic spacing for specific UI patterns
     val sectionHeaderTop: Dp = lg        // 16dp - breathing room before sections
     val sectionHeaderBottom: Dp = sm      // 8dp - tighter connection to content
@@ -24,11 +24,11 @@ object Spacing {
     val nestedIndent: Dp = xl             // 20dp - clear visual nesting
     val dialogContentSpacing: Dp = lg     // 16dp - form field spacing
     val dividerSpacing: Dp = md           // 12dp - space around dividers
-    
+
     // Touch targets (minimum 48dp per Material/accessibility guidelines)
     val minTouchTarget: Dp = 48.dp
     val iconButtonSize: Dp = 48.dp
-    
+
     // Icon sizes (consistency)
     val iconSmall: Dp = 16.dp             // Trailing icons, decorative
     val iconMedium: Dp = 20.dp            // Secondary icons

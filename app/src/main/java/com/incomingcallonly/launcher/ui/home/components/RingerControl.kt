@@ -22,6 +22,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.VolumeUp
+import androidx.compose.material.icons.automirrored.filled.VolumeOff
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import com.incomingcallonly.launcher.R
 import com.incomingcallonly.launcher.ui.components.DepthIcon
 import com.incomingcallonly.launcher.ui.theme.DarkGray
@@ -57,7 +61,7 @@ fun RingerControl(
                 modifier = Modifier.padding(16.dp)
             ) {
                 DepthIcon(
-                    painter = painterResource(id = R.drawable.ic_volume_off),
+                    imageVector = Icons.AutoMirrored.Filled.VolumeOff,
                     contentDescription = null,
                     tint = White,
                     modifier = Modifier.size(32.dp)
@@ -66,8 +70,16 @@ fun RingerControl(
                 Text(
                     text = stringResource(
                         R.string.night_mode_active_ringer_off,
-                        com.incomingcallonly.launcher.util.TimeFormatUtils.formatTime(nightStart, nightStartMin, is24Hour),
-                        com.incomingcallonly.launcher.util.TimeFormatUtils.formatTime(nightEnd, nightEndMin, is24Hour)
+                        com.incomingcallonly.launcher.util.TimeFormatUtils.formatTime(
+                            nightStart,
+                            nightStartMin,
+                            is24Hour
+                        ),
+                        com.incomingcallonly.launcher.util.TimeFormatUtils.formatTime(
+                            nightEnd,
+                            nightEndMin,
+                            is24Hour
+                        )
                     ),
                     color = White,
                     fontSize = 18.sp,
@@ -80,7 +92,7 @@ fun RingerControl(
         // Day Mode - Interactive Ringer Toggle with Volume/Depth
         val backgroundColor = if (isRingerEnabled) accentColor else DarkGray
         val contentColor = if (backgroundColor.luminance() > 0.5f) Color.Black else Color.White
-        
+
         Surface(
             color = Color.Transparent,
             shape = RoundedCornerShape(24.dp),
@@ -106,9 +118,11 @@ fun RingerControl(
                     modifier = Modifier.padding(horizontal = 48.dp, vertical = 24.dp)
                 ) {
                     DepthIcon(
-                        painter = painterResource(
-                            id = if (isRingerEnabled) R.drawable.ic_volume_up else R.drawable.ic_volume_off
-                        ),
+                        painter = if (isRingerEnabled) {
+                            rememberVectorPainter(Icons.AutoMirrored.Filled.VolumeUp)
+                        } else {
+                             rememberVectorPainter(Icons.AutoMirrored.Filled.VolumeOff)
+                        },
                         contentDescription = "Toggle Ringer",
                         tint = contentColor,
                         modifier = Modifier.size(48.dp)

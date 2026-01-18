@@ -18,8 +18,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -30,6 +30,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Bolt
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import com.incomingcallonly.launcher.R
 
 private const val BATTERY_LOW_THRESHOLD = 20
@@ -117,7 +120,7 @@ fun BatteryIcon(
     isCharging: Boolean,
     modifier: Modifier = Modifier
 ) {
-    val boltPainter = androidx.compose.ui.res.painterResource(id = R.drawable.ic_battery_bolt)
+    val boltPainter = rememberVectorPainter(Icons.Default.Bolt)
 
     androidx.compose.foundation.Canvas(modifier = modifier) {
         val width = size.width
@@ -128,7 +131,7 @@ fun BatteryIcon(
         val bodyHeight = height * BODY_HEIGHT_RATIO
         val capWidth = bodyWidth * CAP_WIDTH_RATIO_OF_BODY
         val capHeight = height * CAP_HEIGHT_RATIO
-        
+
         val bodyLeft = (width - bodyWidth) / 2
         val totalHeight = bodyHeight + capHeight
         val startY = (height - totalHeight) / 2
@@ -141,7 +144,10 @@ fun BatteryIcon(
             brush = androidx.compose.ui.graphics.Brush.linearGradient(
                 colors = listOf(COLOR_BODY_START, COLOR_BODY_END),
                 start = androidx.compose.ui.geometry.Offset(bodyLeft, bodyTopFinal),
-                end = androidx.compose.ui.geometry.Offset(bodyLeft + bodyWidth, bodyTopFinal + bodyHeight)
+                end = androidx.compose.ui.geometry.Offset(
+                    bodyLeft + bodyWidth,
+                    bodyTopFinal + bodyHeight
+                )
             ),
             topLeft = androidx.compose.ui.geometry.Offset(bodyLeft, bodyTopFinal),
             size = androidx.compose.ui.geometry.Size(bodyWidth, bodyHeight),
@@ -157,7 +163,10 @@ fun BatteryIcon(
                 y = startY
             ),
             size = androidx.compose.ui.geometry.Size(capWidth, capHeight),
-            cornerRadius = androidx.compose.ui.geometry.CornerRadius(capCornerRadius, capCornerRadius)
+            cornerRadius = androidx.compose.ui.geometry.CornerRadius(
+                capCornerRadius,
+                capCornerRadius
+            )
         )
 
         // 3. Subtle Inner Glow / Stroke to define edge without white contour
@@ -171,10 +180,10 @@ fun BatteryIcon(
         )
 
         // 4. Draw Fill Level (Dynamic Internal Fill)
-        val padding = 3.dp.toPx() 
+        val padding = 3.dp.toPx()
         val fillMaxWidth = bodyWidth - padding * 2
         val fillMaxHeight = bodyHeight - padding * 2
-        
+
         val currentFillHeight = (fillMaxHeight * (level / 100f)).coerceIn(0f, fillMaxHeight)
 
         if (currentFillHeight > 0) {
@@ -182,14 +191,16 @@ fun BatteryIcon(
                 level <= BATTERY_LOW_THRESHOLD -> androidx.compose.ui.graphics.Brush.verticalGradient(
                     listOf(COLOR_LOW_START, COLOR_LOW_END)
                 )
+
                 level <= BATTERY_MEDIUM_THRESHOLD -> androidx.compose.ui.graphics.Brush.verticalGradient(
                     listOf(COLOR_MEDIUM_START, COLOR_MEDIUM_END)
                 )
+
                 else -> androidx.compose.ui.graphics.Brush.verticalGradient(
                     listOf(COLOR_HIGH_START, COLOR_HIGH_END)
                 )
             }
-            
+
             // Calculate top position for fill (it fills from bottom)
             val fillTop = bodyTopFinal + padding + (fillMaxHeight - currentFillHeight)
 
@@ -200,7 +211,10 @@ fun BatteryIcon(
                     y = fillTop
                 ),
                 size = androidx.compose.ui.geometry.Size(fillMaxWidth, currentFillHeight),
-                cornerRadius = androidx.compose.ui.geometry.CornerRadius(cornerRadius / 2, cornerRadius / 2) // Softer corners inside
+                cornerRadius = androidx.compose.ui.geometry.CornerRadius(
+                    cornerRadius / 2,
+                    cornerRadius / 2
+                ) // Softer corners inside
             )
         }
 
@@ -209,19 +223,19 @@ fun BatteryIcon(
         if (isCharging) {
             val boltWidth = bodyWidth * 0.6f
             val boltHeight = bodyHeight * 0.6f
-            
+
             val boltLeft = bodyLeft + (bodyWidth - boltWidth) / 2
             val boltTop = bodyTopFinal + (bodyHeight - boltHeight) / 2
-            
+
             translate(left = boltLeft, top = boltTop) {
-                 with(boltPainter) {
-                     draw(
-                         size = androidx.compose.ui.geometry.Size(boltWidth, boltHeight),
-                         colorFilter = androidx.compose.ui.graphics.ColorFilter.tint(
+                with(boltPainter) {
+                    draw(
+                        size = androidx.compose.ui.geometry.Size(boltWidth, boltHeight),
+                        colorFilter = androidx.compose.ui.graphics.ColorFilter.tint(
                             Color.Black.copy(alpha = 0.75f)
-                         )
-                     )
-                 }
+                        )
+                    )
+                }
             }
         }
     }
@@ -305,17 +319,17 @@ fun SignalIcon(
         // Configuration
         val barCount = 4
         val spacingRatio = 0.15f // Space between bars relative to bar width
-        
+
         // Calculate dimensions
         // width = 4 * barWidth + 3 * spacing
         // spacing = barWidth * spacingRatio
         // width = 4 * barWidth + 3 * barWidth * spacingRatio
         // width = barWidth * (4 + 3 * spacingRatio)
-        
+
         val totalSpacingRatio = (barCount - 1) * spacingRatio
         val barWidth = width / (barCount + totalSpacingRatio)
         val spacing = barWidth * spacingRatio
-        
+
         val cornerRadius = 4.dp.toPx()
 
         for (i in 0 until barCount) {
@@ -323,37 +337,39 @@ fun SignalIcon(
             // Let's make the first bar 40% height, last bar 100% height
             val heightRatio = 0.4f + (0.6f * i / (barCount - 1))
             val barHeight = height * heightRatio
-            
+
             val barLeft = i * (barWidth + spacing)
             val barTop = height - barHeight
-            
+
             // Determine if this bar is active
             val isActive = i < level
-            
+
             // Unlit bars look like the battery body (dark grey gradient)
             // Lit bars look like the battery fill (colored gradient)
             val barBrush = if (isActive) {
-                 when {
+                when {
                     level <= 1 -> androidx.compose.ui.graphics.Brush.verticalGradient(
                         listOf(COLOR_LOW_START, COLOR_LOW_END),
                         startY = barTop,
                         endY = height
                     )
+
                     level == 2 -> androidx.compose.ui.graphics.Brush.verticalGradient(
                         listOf(COLOR_MEDIUM_START, COLOR_MEDIUM_END),
-                         startY = barTop,
+                        startY = barTop,
                         endY = height
                     )
+
                     else -> androidx.compose.ui.graphics.Brush.verticalGradient(
                         listOf(COLOR_HIGH_START, COLOR_HIGH_END),
-                         startY = barTop,
+                        startY = barTop,
                         endY = height
                     )
                 }
             } else {
                 androidx.compose.ui.graphics.Brush.linearGradient(
                     colors = listOf(COLOR_BODY_START, COLOR_BODY_END),
-                     start = androidx.compose.ui.geometry.Offset(barLeft, barTop),
+                    start = androidx.compose.ui.geometry.Offset(barLeft, barTop),
                     end = androidx.compose.ui.geometry.Offset(barLeft + barWidth, height)
                 )
             }
@@ -365,13 +381,16 @@ fun SignalIcon(
                 size = androidx.compose.ui.geometry.Size(barWidth, barHeight),
                 cornerRadius = androidx.compose.ui.geometry.CornerRadius(cornerRadius, cornerRadius)
             )
-            
+
             // Optional: Add subtle stroke for definition (like battery)
-             drawRoundRect(
+            drawRoundRect(
                 color = Color(0xFF2A2A2A),
                 topLeft = androidx.compose.ui.geometry.Offset(barLeft, barTop),
                 size = androidx.compose.ui.geometry.Size(barWidth, barHeight),
-                cornerRadius = androidx.compose.ui.geometry.CornerRadius(cornerRadius, cornerRadius),
+                cornerRadius = androidx.compose.ui.geometry.CornerRadius(
+                    cornerRadius,
+                    cornerRadius
+                ),
                 style = androidx.compose.ui.graphics.drawscope.Stroke(width = 1.dp.toPx())
             )
         }

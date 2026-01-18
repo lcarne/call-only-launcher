@@ -28,7 +28,7 @@ fun rememberIsPlugged(): Boolean {
         }
         val filter = android.content.IntentFilter(Intent.ACTION_BATTERY_CHANGED)
         val intent = context.registerReceiver(receiver, filter)
-        
+
         // Initial check
         intent?.let {
             val plugged = it.getIntExtra(android.os.BatteryManager.EXTRA_PLUGGED, -1)
@@ -36,7 +36,7 @@ fun rememberIsPlugged(): Boolean {
                     plugged == android.os.BatteryManager.BATTERY_PLUGGED_USB ||
                     plugged == android.os.BatteryManager.BATTERY_PLUGGED_WIRELESS
         }
-        
+
         onDispose {
             context.unregisterReceiver(receiver)
         }

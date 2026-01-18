@@ -14,6 +14,11 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.automirrored.filled.OpenInNew
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.List
+import androidx.compose.material.icons.filled.Call
+import androidx.compose.material.icons.filled.LockOpen
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Favorite
@@ -102,7 +107,7 @@ fun AdminSettingsScreen(
                 )
             },
             confirmButton = {
-            AdminDangerButton(
+                AdminDangerButton(
                     text = stringResource(R.string.confirm),
                     onClick = {
                         settingsViewModel.deleteAllData()
@@ -133,7 +138,7 @@ fun AdminSettingsScreen(
                 )
             },
             confirmButton = {
-            AdminDangerButton( // Changed to DangerButton as requested
+                AdminDangerButton( // Changed to DangerButton as requested
                     text = stringResource(R.string.confirm),
                     onClick = {
                         settingsViewModel.resetSettings()
@@ -150,7 +155,7 @@ fun AdminSettingsScreen(
     }
 
     val exportLauncher = androidx.activity.compose.rememberLauncherForActivityResult(
-        contract = androidx.activity.result.contract.ActivityResultContracts.CreateDocument("application/json"),
+        contract = androidx.activity.result.contract.ActivityResultContracts.CreateDocument("text/x-vcard"),
         onResult = { uri ->
             uri?.let { contactsViewModel.exportContacts(it) }
         }
@@ -173,12 +178,14 @@ fun AdminSettingsScreen(
                     snackbarHostState.showSnackbar(result.data)
                     contactsViewModel.resetImportExportState()
                 }
+
                 is Result.Error -> {
                     snackbarHostState.showSnackbar(result.message ?: "Unknown error")
                     contactsViewModel.resetImportExportState()
                 }
+
                 is Result.Loading -> {
-                     // Optionally show loading indicator
+                    // Optionally show loading indicator
                 }
             }
         }
@@ -190,7 +197,7 @@ fun AdminSettingsScreen(
         snackbarHost = { androidx.compose.material3.SnackbarHost(snackbarHostState) },
         topBar = {
             TopAppBar(
-                title = { 
+                title = {
                     Text(
                         stringResource(id = R.string.settings),
                         style = MaterialTheme.typography.headlineMedium.copy(
@@ -200,7 +207,7 @@ fun AdminSettingsScreen(
                                 blurRadius = 4f
                             )
                         )
-                    ) 
+                    )
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.surface,
@@ -223,16 +230,16 @@ fun AdminSettingsScreen(
             AdminSettingsCard {
                 ListItem(
                     colors = ListItemDefaults.colors(containerColor = Color.Transparent),
-                    headlineContent = { 
+                    headlineContent = {
                         Text(
-                            stringResource(id = R.string.unlock),
+                            stringResource(id = R.string.unpin),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold
-                        ) 
+                        )
                     },
                     leadingContent = {
                         AdminIcon(
-                            painter = painterResource(id = R.drawable.ic_lock_open),
+                            imageVector = Icons.Default.LockOpen,
                             tint = MaterialTheme.colorScheme.error,
                             containerColor = MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.3f)
                         )
@@ -246,15 +253,15 @@ fun AdminSettingsScreen(
                 AdminDivider()
                 ListItem(
                     colors = ListItemDefaults.colors(containerColor = Color.Transparent),
-                    headlineContent = { 
+                    headlineContent = {
                         Text(
                             stringResource(id = R.string.back_arrow),
                             style = MaterialTheme.typography.titleMedium
-                        ) 
+                        )
                     },
                     leadingContent = {
                         AdminIcon(
-                            painter = painterResource(id = R.drawable.ic_arrow_back)
+                            painter = rememberVectorPainter(Icons.AutoMirrored.Filled.ArrowBack)
                         )
                     },
                     modifier = Modifier.clickable {
@@ -266,13 +273,13 @@ fun AdminSettingsScreen(
 
             // Content Management
             AdminSectionHeader(text = stringResource(id = R.string.settings_section_content))
-            
+
             // Standalone buttons for Content Management (as requested)
             AdminNavigationItem(
                 headlineText = stringResource(id = R.string.manage_contacts),
                 leadingIcon = {
                     AdminIcon(
-                        painter = painterResource(id = R.drawable.ic_list),
+                        painter = rememberVectorPainter(Icons.AutoMirrored.Filled.List),
                         tint = MaterialTheme.colorScheme.primary,
                         containerColor = MaterialTheme.colorScheme.primaryContainer
                     )
@@ -295,7 +302,7 @@ fun AdminSettingsScreen(
                 headlineText = stringResource(id = R.string.call_history),
                 leadingIcon = {
                     AdminIcon(
-                        painter = painterResource(id = R.drawable.ic_call),
+                        painter = rememberVectorPainter(Icons.Default.Call),
                         tint = MaterialTheme.colorScheme.primary,
                         containerColor = MaterialTheme.colorScheme.primaryContainer
                     )
@@ -322,13 +329,13 @@ fun AdminSettingsScreen(
                 ListItem(
                     colors = ListItemDefaults.colors(containerColor = Color.Transparent),
                     headlineContent = { Text(stringResource(id = R.string.export_contacts)) },
-                    leadingContent = { 
+                    leadingContent = {
                         AdminIcon(
                             imageVector = Icons.Default.Share,
                             tint = MaterialTheme.colorScheme.primary
-                        ) 
+                        )
                     },
-                    modifier = Modifier.clickable { exportLauncher.launch("contacts_backup.json") }
+                    modifier = Modifier.clickable { exportLauncher.launch("contacts_backup.vcf") }
                 )
 
                 HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp))
@@ -336,29 +343,36 @@ fun AdminSettingsScreen(
                 ListItem(
                     colors = ListItemDefaults.colors(containerColor = Color.Transparent),
                     headlineContent = { Text(stringResource(id = R.string.import_contacts)) },
-                    leadingContent = { 
+                    leadingContent = {
                         AdminIcon(
                             imageVector = Icons.Default.Add,
                             tint = MaterialTheme.colorScheme.primary
-                        ) 
+                        )
                     },
-                    modifier = Modifier.clickable { importLauncher.launch(arrayOf("application/json")) }
+                    modifier = Modifier.clickable {
+                        importLauncher.launch(
+                            arrayOf(
+                                "text/x-vcard",
+                                "text/vcard"
+                            )
+                        )
+                    }
                 )
             }
-            
+
             Spacer(modifier = Modifier.height(Spacing.md))
-            
+
             // Dangerous Zone - Same style as export/import section
             AdminSettingsCard {
                 ListItem(
                     colors = ListItemDefaults.colors(containerColor = Color.Transparent),
                     headlineContent = { Text(stringResource(id = R.string.reset_settings)) },
-                    leadingContent = { 
+                    leadingContent = {
                         AdminIcon(
                             imageVector = Icons.Default.Refresh,
                             tint = MaterialTheme.colorScheme.primary,
                             containerColor = MaterialTheme.colorScheme.primaryContainer
-                        ) 
+                        )
                     },
                     modifier = Modifier.clickable { showResetSettingsDialog = true }
                 )
@@ -367,19 +381,19 @@ fun AdminSettingsScreen(
 
                 ListItem(
                     colors = ListItemDefaults.colors(containerColor = Color.Transparent),
-                    headlineContent = { 
+                    headlineContent = {
                         Text(
                             stringResource(id = R.string.reset_all_data),
                             color = MaterialTheme.colorScheme.error,
                             fontWeight = FontWeight.Bold
-                        ) 
+                        )
                     },
-                    leadingContent = { 
+                    leadingContent = {
                         AdminIcon(
                             imageVector = Icons.Default.Delete,
                             tint = MaterialTheme.colorScheme.error,
                             containerColor = MaterialTheme.colorScheme.errorContainer
-                        ) 
+                        )
                     },
                     modifier = Modifier.clickable { showResetDataDialog = true }
                 )
@@ -392,12 +406,12 @@ fun AdminSettingsScreen(
                 ListItem(
                     colors = ListItemDefaults.colors(containerColor = Color.Transparent),
                     headlineContent = { Text(stringResource(id = R.string.buy_me_coffee)) },
-                    leadingContent = { 
+                    leadingContent = {
                         AdminIcon(
                             imageVector = Icons.Default.Favorite,
                             tint = Color(0xFFFFDD00), // Gold
                             containerColor = Color(0xFFFFDD00).copy(alpha = 0.1f)
-                        ) 
+                        )
                     },
                     trailingContent = {
                         DepthIcon(
@@ -409,11 +423,11 @@ fun AdminSettingsScreen(
                     },
                     modifier = Modifier.clickable {
                         onUnpin()
-                        uriHandler.openUri("https://buymeacoffee.com/leocarne") 
+                        uriHandler.openUri("https://buymeacoffee.com/leocarne")
                     }
                 )
             }
-            
+
             Spacer(modifier = Modifier.height(Spacing.xl))
 
             Text(
@@ -431,7 +445,10 @@ fun AdminSettingsScreen(
     }
 }
 
-@OptIn(androidx.compose.foundation.layout.ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)
+@OptIn(
+    androidx.compose.foundation.layout.ExperimentalLayoutApi::class,
+    ExperimentalMaterial3Api::class
+)
 @Composable
 fun SettingsSection(viewModel: SettingsViewModel, authViewModel: AuthViewModel) {
     Column(modifier = Modifier.fillMaxWidth()) {

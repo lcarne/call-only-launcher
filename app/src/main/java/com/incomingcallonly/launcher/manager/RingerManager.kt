@@ -17,7 +17,8 @@ class RingerManager @Inject constructor(
     private val settingsRepository: SettingsRepository
 ) {
     private val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
-    private val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+    private val notificationManager =
+        context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
     fun startObserving(scope: CoroutineScope) {
         scope.launch {

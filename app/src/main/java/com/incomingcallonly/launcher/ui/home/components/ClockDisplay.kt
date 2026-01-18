@@ -21,7 +21,7 @@ fun ClockDisplay(
     modifier: Modifier = Modifier
 ) {
     val is24Hour = timeFormat == "24"
-    
+
     val timePattern = if (is24Hour) "HH:mm" else "hh:mm"
     val timeFormatObj = SimpleDateFormat(timePattern, Locale.getDefault())
     val formattedTime = timeFormatObj.format(currentTime)
@@ -40,7 +40,7 @@ fun ClockDisplay(
             ),
             color = clockColor
         )
-        
+
         if (!is24Hour) {
             val periodFormatObj = SimpleDateFormat("a", Locale.getDefault())
             Text(

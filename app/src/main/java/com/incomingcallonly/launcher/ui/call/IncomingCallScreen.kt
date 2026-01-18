@@ -16,6 +16,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Call
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.CallEnd
+import androidx.compose.material.icons.filled.Hearing
+import androidx.compose.material.icons.filled.Speaker
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
@@ -31,6 +35,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.ContentScale
@@ -135,7 +140,7 @@ fun CallLayout(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-            BatteryLevelDisplay(
+        BatteryLevelDisplay(
             modifier = Modifier,
             iconSize = 32.dp,
             fontSize = 20.sp
@@ -234,7 +239,7 @@ fun CallLayout(
                         modifier = Modifier.size(110.dp)
                     ) {
                         DepthIcon(
-                            painter = androidx.compose.ui.res.painterResource(id = R.drawable.ic_call_end),
+                            painter = rememberVectorPainter(Icons.Default.CallEnd),
                             contentDescription = "Refuse",
                             tint = Color.White,
                             modifier = Modifier.size(56.dp)
@@ -285,7 +290,10 @@ fun CallLayout(
                         style = MaterialTheme.typography.headlineSmall,
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier
-                            .background(Color.Red.copy(alpha = TAP_INFO_ALPHA_BG), RoundedCornerShape(8.dp))
+                            .background(
+                                Color.Red.copy(alpha = TAP_INFO_ALPHA_BG),
+                                RoundedCornerShape(8.dp)
+                            )
                             .padding(horizontal = 16.dp, vertical = 8.dp)
                     )
                     Spacer(Modifier.height(8.dp))
@@ -305,7 +313,7 @@ fun CallLayout(
                     elevation = ButtonDefaults.buttonElevation(defaultElevation = 8.dp)
                 ) {
                     DepthIcon(
-                        painter = androidx.compose.ui.res.painterResource(id = R.drawable.ic_call_end),
+                        painter = rememberVectorPainter(Icons.Default.CallEnd),
                         contentDescription = "End Call",
                         tint = Color.White,
                         modifier = Modifier.size(80.dp)
@@ -341,10 +349,10 @@ fun CallLayout(
                         modifier = Modifier.size(110.dp)
                     ) {
                         DepthIcon(
-                            painter = androidx.compose.ui.res.painterResource(id = R.drawable.ic_hearing),
+                            imageVector = Icons.Default.Hearing,
                             contentDescription = "Earpiece",
                             tint = if (!isSpeakerOn) Color.White else Color.Gray,
-                            modifier = Modifier.size(56.dp)
+                            modifier = Modifier.size(56.dp).scale(scaleX = -1f, scaleY = 1f)
                         )
                     }
                     Spacer(Modifier.height(8.dp))
@@ -368,7 +376,7 @@ fun CallLayout(
                         modifier = Modifier.size(110.dp)
                     ) {
                         DepthIcon(
-                            painter = androidx.compose.ui.res.painterResource(id = R.drawable.ic_speaker),
+                            imageVector = Icons.Default.Speaker,
                             contentDescription = "Speaker",
                             tint = if (isSpeakerOn) Color.Black else Color.White,
                             modifier = Modifier.size(56.dp)

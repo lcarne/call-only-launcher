@@ -15,13 +15,13 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.ui.text.input.KeyboardType
 import com.incomingcallonly.launcher.R
 import com.incomingcallonly.launcher.ui.admin.AuthViewModel
@@ -83,7 +83,7 @@ fun SettingsSystemSection(viewModel: SettingsViewModel, authViewModel: AuthViewM
                                 1 -> {
                                     OutlinedTextField(
                                         value = previousPin,
-                                        onValueChange = { 
+                                        onValueChange = {
                                             if (it.length <= 4 && it.all { char -> char.isDigit() }) {
                                                 previousPin = it
                                                 errorResId = null
@@ -92,8 +92,9 @@ fun SettingsSystemSection(viewModel: SettingsViewModel, authViewModel: AuthViewM
                                         label = { Text(stringResource(id = R.string.previous_pin)) },
                                         singleLine = true,
                                         isError = errorResId != null,
-                                        supportingText = { 
-                                            Text(errorResId?.let { stringResource(it) } ?: "4 digits")
+                                        supportingText = {
+                                            Text(errorResId?.let { stringResource(it) }
+                                                ?: "4 digits")
                                         },
                                         keyboardOptions = KeyboardOptions(
                                             keyboardType = KeyboardType.NumberPassword
@@ -101,12 +102,13 @@ fun SettingsSystemSection(viewModel: SettingsViewModel, authViewModel: AuthViewM
                                         modifier = Modifier.fillMaxWidth()
                                     )
                                 }
+
                                 2 -> {
                                     OutlinedTextField(
                                         value = newPin,
-                                        onValueChange = { 
+                                        onValueChange = {
                                             if (it.length <= 4 && it.all { char -> char.isDigit() }) {
-                                                newPin = it 
+                                                newPin = it
                                             }
                                         },
                                         label = { Text(stringResource(id = R.string.new_pin)) },
@@ -118,10 +120,11 @@ fun SettingsSystemSection(viewModel: SettingsViewModel, authViewModel: AuthViewM
                                         modifier = Modifier.fillMaxWidth()
                                     )
                                 }
+
                                 3 -> {
                                     OutlinedTextField(
                                         value = confirmPin,
-                                        onValueChange = { 
+                                        onValueChange = {
                                             if (it.length <= 4 && it.all { char -> char.isDigit() }) {
                                                 confirmPin = it
                                                 errorResId = null
@@ -130,8 +133,9 @@ fun SettingsSystemSection(viewModel: SettingsViewModel, authViewModel: AuthViewM
                                         label = { Text(stringResource(id = R.string.confirm_new_pin)) },
                                         singleLine = true,
                                         isError = errorResId != null,
-                                        supportingText = { 
-                                            Text(errorResId?.let { stringResource(it) } ?: "4 digits")
+                                        supportingText = {
+                                            Text(errorResId?.let { stringResource(it) }
+                                                ?: "4 digits")
                                         },
                                         keyboardOptions = KeyboardOptions(
                                             keyboardType = KeyboardType.NumberPassword
@@ -154,9 +158,11 @@ fun SettingsSystemSection(viewModel: SettingsViewModel, authViewModel: AuthViewM
                                             errorResId = R.string.incorrect_previous_pin
                                         }
                                     }
+
                                     2 -> {
                                         step = 3
                                     }
+
                                     3 -> {
                                         if (newPin == confirmPin) {
                                             authViewModel.changePin(newPin)
@@ -181,7 +187,7 @@ fun SettingsSystemSection(viewModel: SettingsViewModel, authViewModel: AuthViewM
                         }
                     },
                     dismissButton = {
-                        TextButton(onClick = { 
+                        TextButton(onClick = {
                             if (step > 1) {
                                 step--
                                 errorResId = null

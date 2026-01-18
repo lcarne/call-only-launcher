@@ -57,7 +57,7 @@ fun PinEntryScreen(
     val isError by viewModel.pinError.collectAsState()
 
     val isDarkTheme = isSystemInDarkTheme()
-    
+
     // System Bars Configuration
     SystemBarsColor(
         darkIcons = !isDarkTheme
@@ -91,9 +91,9 @@ fun PinEntryScreen(
                     )
                 }
             }
-            
+
             Spacer(modifier = Modifier.height(24.dp))
-            
+
             Text(
                 stringResource(id = R.string.admin_mode),
                 style = MaterialTheme.typography.headlineMedium.copy(
@@ -114,13 +114,13 @@ fun PinEntryScreen(
                 repeat(4) { index ->
                     val isActive = index < pin.length
                     val isErrorState = isError
-                    
+
                     val color = when {
                         isErrorState -> MaterialTheme.colorScheme.error
                         isActive -> MaterialTheme.colorScheme.primary
                         else -> MaterialTheme.colorScheme.surfaceVariant
                     }
-                    
+
                     Box(
                         modifier = Modifier
                             .padding(12.dp)
@@ -173,6 +173,7 @@ fun PinEntryScreen(
                                 "" -> {
                                     Spacer(modifier = Modifier.size(72.dp))
                                 }
+
                                 "DEL" -> {
                                     PinKeyButton(
                                         onClick = {
@@ -190,6 +191,7 @@ fun PinEntryScreen(
                                         backgroundColor = MaterialTheme.colorScheme.surface
                                     )
                                 }
+
                                 else -> {
                                     PinKeyButton(
                                         onClick = {
@@ -220,7 +222,9 @@ fun PinEntryScreen(
 
             TextButton(
                 onClick = onExit,
-                modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp)
             ) {
                 Text(
                     stringResource(id = R.string.back),
@@ -229,7 +233,7 @@ fun PinEntryScreen(
                 )
             }
         }
-        }
+    }
 
 
     LaunchedEffect(isError) {
@@ -250,7 +254,7 @@ private fun PinKeyButton(
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
-    
+
     val scale by animateFloatAsState(
         targetValue = if (isPressed) 0.92f else 1f,
         animationSpec = tween(durationMillis = 100),
@@ -275,7 +279,10 @@ private fun PinKeyButton(
             modifier = Modifier
                 .clickable(
                     interactionSource = interactionSource,
-                    indication = rememberRipple(bounded = true, color = MaterialTheme.colorScheme.primary),
+                    indication = rememberRipple(
+                        bounded = true,
+                        color = MaterialTheme.colorScheme.primary
+                    ),
                     onClick = onClick
                 ),
             contentAlignment = Alignment.Center

@@ -57,10 +57,10 @@ fun SettingsDisplaySection(viewModel: SettingsViewModel) {
     // Top-level state hoisting
     val screenBehaviorPlugged by viewModel.screenBehaviorPlugged.collectAsState()
     var showPluggedDialog by remember { mutableStateOf(false) }
-    
+
     val screenBehaviorBattery by viewModel.screenBehaviorBattery.collectAsState()
     var showBatteryDialog by remember { mutableStateOf(false) }
-    
+
     val isNightModeEnabled by viewModel.isNightModeEnabled.collectAsState()
 
     Column {
@@ -115,7 +115,7 @@ fun SettingsDisplaySection(viewModel: SettingsViewModel) {
                 modifier = Modifier.clickable { showBatteryDialog = true }
             )
         }
-        
+
         // Night Mode Group
         AdminSettingsCard {
             ListItem(
@@ -129,7 +129,7 @@ fun SettingsDisplaySection(viewModel: SettingsViewModel) {
                     )
                 }
             )
-            
+
             // Expandable settings INSIDE the card
             AnimatedVisibility(
                 visible = isNightModeEnabled,
@@ -197,9 +197,9 @@ fun NightModeSettings(viewModel: SettingsViewModel) {
             },
             modifier = Modifier.clickable { showStartPicker = true }
         )
-        
+
         AdminDivider() // Divider between start and end
-        
+
         ListItem(
             colors = ListItemDefaults.colors(containerColor = Color.Transparent),
             headlineContent = { Text(stringResource(id = R.string.night_end_label)) },
@@ -228,23 +228,30 @@ fun NightModeSettings(viewModel: SettingsViewModel) {
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = Spacing.listItemHorizontal, vertical = Spacing.sm)
-                .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f), RoundedCornerShape(8.dp))
+                .background(
+                    MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+                    RoundedCornerShape(8.dp)
+                )
                 .padding(12.dp),
-             verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically
         ) {
-              Icon(
-                  imageVector = Icons.Default.DateRange, // Reusing date range icon as clock/duration icon
-                  contentDescription = null,
-                  modifier = Modifier.size(16.dp),
-                  tint = MaterialTheme.colorScheme.onSurfaceVariant
-              )
-              androidx.compose.foundation.layout.Spacer(modifier = Modifier.size(8.dp))
-              Text(
+            Icon(
+                imageVector = Icons.Default.DateRange, // Reusing date range icon as clock/duration icon
+                contentDescription = null,
+                modifier = Modifier.size(16.dp),
+                tint = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            androidx.compose.foundation.layout.Spacer(modifier = Modifier.size(8.dp))
+            Text(
                 text = pluralStringResource(
                     id = R.plurals.night_mode_duration_desc,
                     count = durationHours,
                     durationHours,
-                    if (durationMinsOnly > 0) String.format(java.util.Locale.getDefault(), "%02d", durationMinsOnly) else "",
+                    if (durationMinsOnly > 0) String.format(
+                        java.util.Locale.getDefault(),
+                        "%02d",
+                        durationMinsOnly
+                    ) else "",
                     nextDay
                 ),
                 style = MaterialTheme.typography.bodySmall,
@@ -291,7 +298,7 @@ fun ClockColorSelector(viewModel: SettingsViewModel) {
         MaterialTheme.colorScheme.primary,
         MaterialTheme.colorScheme.secondary,
         MaterialTheme.colorScheme.tertiary,
-        
+
         // Vibrant, accessible Material 600 colors
         Color(0xFFE53935),  // Red 600
         Color(0xFFD81B60),  // Pink 600
@@ -304,7 +311,8 @@ fun ClockColorSelector(viewModel: SettingsViewModel) {
         Color.White         // Pure white
     )
     val storedColorValue by viewModel.clockColor.collectAsState()
-    val currentColor = if (storedColorValue != 0) Color(storedColorValue) else MaterialTheme.colorScheme.primary
+    val currentColor =
+        if (storedColorValue != 0) Color(storedColorValue) else MaterialTheme.colorScheme.primary
 
     ListItem(
         colors = ListItemDefaults.colors(containerColor = Color.Transparent),
@@ -340,7 +348,11 @@ fun ClockColorSelector(viewModel: SettingsViewModel) {
                         contentAlignment = Alignment.Center
                     ) {
                         if (isSelected) {
-                            Icon(Icons.Default.Check, contentDescription = null, tint = if (color == Color.White) Color.Black else Color.White)
+                            Icon(
+                                Icons.Default.Check,
+                                contentDescription = null,
+                                tint = if (color == Color.White) Color.Black else Color.White
+                            )
                         }
                     }
                 }

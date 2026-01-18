@@ -12,39 +12,39 @@ import java.util.Calendar
  * Schedules an alarm to wake up the screen when night mode ends.
  */
 object NightModeScheduler {
-    
+
     private const val REQUEST_CODE_NIGHT_MODE_END = 1001
-    
+
     /**
      * Schedule an alarm for when night mode ends.
      * Call this when night mode settings change or when the app starts.
      */
     fun scheduleNightModeEnd(context: Context) {
         val prefs = context.getSharedPreferences("incomingcallonly_prefs", Context.MODE_PRIVATE)
-        
+
         // Check if night mode is enabled
         val isNightModeEnabled = prefs.getBoolean("night_mode_enabled", true)
         if (!isNightModeEnabled) {
             cancelNightModeEndAlarm(context)
             return
         }
-        
+
         val endHour = prefs.getInt("night_mode_end", 7)
         val endMinute = prefs.getInt("night_mode_end_minute", 0)
-        
+
         // Calculate the next occurrence of the end time
         val calendar = Calendar.getInstance().apply {
             set(Calendar.HOUR_OF_DAY, endHour)
             set(Calendar.MINUTE, endMinute)
             set(Calendar.SECOND, 0)
             set(Calendar.MILLISECOND, 0)
-            
+
             // If this time has already passed today, schedule for tomorrow
             if (timeInMillis <= System.currentTimeMillis()) {
                 add(Calendar.DAY_OF_YEAR, 1)
             }
         }
-        
+
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val intent = Intent(context, NightModeEndReceiver::class.java).apply {
             action = NightModeEndReceiver.ACTION_NIGHT_MODE_END
@@ -55,7 +55,7 @@ object NightModeScheduler {
             intent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
-        
+
         try {
             // Use setExactAndAllowWhileIdle for reliable wake-up
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -90,7 +90,7 @@ object NightModeScheduler {
             )
         }
     }
-    
+
     /**
      * Cancel the night mode end alarm.
      */
