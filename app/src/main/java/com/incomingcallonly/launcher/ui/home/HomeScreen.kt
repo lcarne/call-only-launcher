@@ -86,6 +86,7 @@ fun HomeScreen(
     val nightEndMin by viewModel.nightModeEndMinute.collectAsState()
     val isNightModeEnabled by viewModel.isNightModeEnabled.collectAsState()
     val isRingerEnabled by viewModel.isRingerEnabled.collectAsState()
+    val ringerMode by viewModel.ringerMode.collectAsState()
 
     val savedClockColor by viewModel.clockColor.collectAsState()
     val clockColor =
@@ -173,6 +174,7 @@ fun HomeScreen(
                 clockColor = clockColor,
                 timeFormat = savedFormat,
                 isRingerEnabled = isRingerEnabled,
+                ringerMode = ringerMode,
                 onToggleRinger = { viewModel.setRingerEnabled(!isRingerEnabled) },
                 onAdminClick = onAdminClick,
                 nightStart = nightStart,
@@ -233,6 +235,7 @@ private fun HomeContentNormal(
     clockColor: Color,
     timeFormat: String,
     isRingerEnabled: Boolean,
+    ringerMode: Int,
     onToggleRinger: () -> Unit,
     onAdminClick: () -> Unit,
     nightStart: Int,
@@ -285,6 +288,7 @@ private fun HomeContentNormal(
             nightEndMin = nightEndMin,
             accentColor = clockColor,
             timeFormat = timeFormat,
+            ringerMode = ringerMode,
             onToggleRinger = onToggleRinger
         )
 

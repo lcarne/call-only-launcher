@@ -29,6 +29,7 @@ class HomeViewModel @Inject constructor(
     val nightModeEndMinute = settingsRepository.nightModeEndMinute
     val clockColor = settingsRepository.clockColor
     val isRingerEnabled = settingsRepository.isRingerEnabled
+    val ringerMode = settingsRepository.ringerMode
     val timeFormat = settingsRepository.timeFormat
     val isNightModeEnabled = settingsRepository.isNightModeEnabled
     val hasSeenOnboarding = settingsRepository.hasSeenOnboarding

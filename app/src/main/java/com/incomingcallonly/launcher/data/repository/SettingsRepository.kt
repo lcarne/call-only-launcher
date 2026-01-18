@@ -43,9 +43,17 @@ interface SettingsRepository {
     fun setLastSelectedCountryCode(code: String)
     fun resetToDefaults()
 
+    val ringerMode: StateFlow<Int>
+
+    fun setRingerMode(mode: Int)
+
     companion object {
         const val SCREEN_BEHAVIOR_OFF = 0
         const val SCREEN_BEHAVIOR_DIM = 1
         const val SCREEN_BEHAVIOR_AWAKE = 2
+
+        const val RINGER_MODE_SWITCHABLE = 0
+        const val RINGER_MODE_FORCED_ON = 1
+        const val RINGER_MODE_FORCED_OFF = 2
     }
 }

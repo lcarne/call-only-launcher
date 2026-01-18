@@ -77,6 +77,10 @@
     <string name="earpiece_setting">Phone</string>
     <string name="speaker_setting">Speaker</string>
     <string name="ringer_volume">Ringer volume</string>
+    <string name="ringer_mode_title">Ringer Mode</string>
+    <string name="ringer_mode_switch">Switch</string>
+    <string name="ringer_mode_forced_on">Forced ON</string>
+    <string name="ringer_mode_forced_off">Forced OFF</string>
     <string name="test_ringer">Test Ringer</string>
 
     <!-- Data -->

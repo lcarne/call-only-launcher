@@ -13,6 +13,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.VolumeOff
 import androidx.compose.material.icons.automirrored.filled.VolumeUp
+
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -40,6 +41,7 @@ fun RingerControl(
     nightEndMin: Int,
     accentColor: Color,
     timeFormat: String,
+    ringerMode: Int,
     onToggleRinger: () -> Unit
 ) {
     val is24Hour = timeFormat == "24"
@@ -91,13 +93,20 @@ fun RingerControl(
         // Day Mode - Interactive Ringer Toggle with Volume/Depth
         val backgroundColor = if (isRingerEnabled) accentColor else DarkGray
         val contentColor = if (backgroundColor.luminance() > 0.5f) Color.Black else Color.White
+        val isSwitchable = ringerMode == com.incomingcallonly.launcher.data.repository.SettingsRepository.RINGER_MODE_SWITCHABLE
 
         Surface(
             color = Color.Transparent,
             shape = RoundedCornerShape(24.dp),
             modifier = Modifier
                 .padding(horizontal = 32.dp)
-                .clickable { onToggleRinger() }
+                .then(
+                    if (isSwitchable) {
+                        Modifier.clickable { onToggleRinger() }
+                    } else {
+                        Modifier
+                    }
+                )
         ) {
             // Container with Volume Gradient
             Box(
@@ -126,6 +135,7 @@ fun RingerControl(
                         tint = contentColor,
                         modifier = Modifier.size(48.dp)
                     )
+
                     Spacer(modifier = Modifier.height(12.dp))
                     Text(
                         text = stringResource(

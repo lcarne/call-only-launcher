@@ -34,6 +34,7 @@ class SettingsViewModel @Inject constructor(
     val allowAllCalls = settingsRepository.allowAllCalls
     val ringerVolume = settingsRepository.ringerVolume
     val isRingerEnabled = settingsRepository.isRingerEnabled
+    val ringerMode = settingsRepository.ringerMode
     val language = settingsRepository.language
     val timeFormat = settingsRepository.timeFormat
     val isDefaultSpeakerEnabled = settingsRepository.isDefaultSpeakerEnabled
@@ -61,6 +62,7 @@ class SettingsViewModel @Inject constructor(
     fun setAllowAllCalls(enabled: Boolean) = settingsRepository.setAllowAllCalls(enabled)
     fun setRingerVolume(volume: Int) = settingsRepository.setRingerVolume(volume)
     fun setRingerEnabled(enabled: Boolean) = settingsRepository.setRingerEnabled(enabled)
+    fun setRingerMode(mode: Int) = settingsRepository.setRingerMode(mode)
     fun setLanguage(lang: String) = settingsRepository.setLanguage(lang)
     fun setTimeFormat(format: String) = settingsRepository.setTimeFormat(format)
     fun setDefaultSpeakerEnabled(enabled: Boolean) =

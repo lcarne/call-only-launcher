@@ -185,6 +185,59 @@ class SettingsRepositoryImpl @Inject constructor(
         prefs.edit { putInt(KEY_RINGER_VOLUME, volume) }
     }
 
+    private val _ringerMode = MutableStateFlow(prefs.getInt(KEY_RINGER_MODE, SettingsRepository.RINGER_MODE_SWITCHABLE))
+    override val ringerMode: StateFlow<Int> = _ringerMode.asStateFlow()
+
+    override fun setRingerMode(mode: Int) {
+        prefs.edit { putInt(KEY_RINGER_MODE, mode) }
+        _ringerMode.value = mode
+
+        // Enforce immediate effect
+        if (!_isNightModeEnabled.value) {
+            // If night mode is disabled, we just respect the forced setting
+            when (mode) {
+                SettingsRepository.RINGER_MODE_FORCED_ON -> setRingerEnabled(true)
+                SettingsRepository.RINGER_MODE_FORCED_OFF -> setRingerEnabled(false)
+            }
+        } else {
+            // Night mode is enabled, check if we are currently in night time
+            if (isCurrentlyNight()) {
+                // It is night. Ringer should be OFF.
+                // Even if Forced ON, Night Mode takes precedence (User Rule: night mode is more important)
+                setRingerEnabled(false)
+            } else {
+                // It is NOT night. Apply forced settings.
+                when (mode) {
+                    SettingsRepository.RINGER_MODE_FORCED_ON -> setRingerEnabled(true)
+                    SettingsRepository.RINGER_MODE_FORCED_OFF -> setRingerEnabled(false)
+                }
+            }
+        }
+    }
+
+    private fun isCurrentlyNight(): Boolean {
+        val startHour = _nightModeStartHour.value
+        val startMinute = _nightModeStartMinute.value
+        val endHour = _nightModeEndHour.value
+        val endMinute = _nightModeEndMinute.value
+
+        val now = java.util.Calendar.getInstance()
+        val currentHour = now.get(java.util.Calendar.HOUR_OF_DAY)
+        val currentMinute = now.get(java.util.Calendar.MINUTE)
+
+        val currentTimeVal = currentHour * 60 + currentMinute
+        val startTimeVal = startHour * 60 + startMinute
+        val endTimeVal = endHour * 60 + endMinute
+
+        return if (startTimeVal > endTimeVal) {
+            // Crosses midnight (e.g. 22:00 to 07:00)
+            currentTimeVal >= startTimeVal || currentTimeVal < endTimeVal
+        } else {
+            // Same day (e.g. 01:00 to 05:00)
+            currentTimeVal in startTimeVal until endTimeVal
+        }
+    }
+
     override fun saveRingerStatePreNight(enabled: Boolean) {
         prefs.edit { putBoolean(KEY_PRE_NIGHT_RINGER_ENABLED, enabled) }
         _preNightRingerEnabled.value = enabled
@@ -192,7 +245,14 @@ class SettingsRepositoryImpl @Inject constructor(
 
     override fun restoreRingerStatePreNight() {
         val restoredValue = prefs.getBoolean(KEY_PRE_NIGHT_RINGER_ENABLED, true)
-        setRingerEnabled(restoredValue)
+        val mode = _ringerMode.value
+        if (mode == SettingsRepository.RINGER_MODE_FORCED_ON) {
+            setRingerEnabled(true)
+        } else if (mode == SettingsRepository.RINGER_MODE_FORCED_OFF) {
+            setRingerEnabled(false)
+        } else {
+            setRingerEnabled(restoredValue)
+        }
     }
 
 
@@ -237,6 +297,7 @@ class SettingsRepositoryImpl @Inject constructor(
         setClockColor(0)
         setAllowAllCalls(false)
         setRingerEnabled(true)
+        setRingerMode(SettingsRepository.RINGER_MODE_SWITCHABLE)
         setRingerVolume(DEFAULT_RINGER_VOLUME)
         setDefaultSpeakerEnabled(true)
         setLanguage(defaultLang)
@@ -264,6 +325,7 @@ class SettingsRepositoryImpl @Inject constructor(
         private const val KEY_HAS_SEEN_ONBOARDING = "has_seen_onboarding"
         private const val KEY_ADMIN_PIN = "admin_pin"
         private const val KEY_LAST_COUNTRY_CODE = "last_country_code"
+        private const val KEY_RINGER_MODE = "ringer_mode"
 
         // Default Values
         private const val DEFAULT_NIGHT_START_HOUR = 22

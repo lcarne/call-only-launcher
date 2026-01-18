@@ -65,6 +65,35 @@ fun SettingsAudioSection(viewModel: SettingsViewModel) {
                 )
             }
 
+
+
+            AdminDivider()
+
+            // Ringer Mode
+            val ringerMode by viewModel.ringerMode.collectAsState()
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 12.dp)
+            ) {
+                Text(
+                    text = stringResource(id = R.string.ringer_mode_title),
+                    style = MaterialTheme.typography.titleMedium
+                )
+                Spacer(modifier = Modifier.height(12.dp))
+                ModernSegmentedButton(
+                    options = listOf(
+                        stringResource(id = R.string.ringer_mode_switch),
+                        stringResource(id = R.string.ringer_mode_forced_on),
+                        stringResource(id = R.string.ringer_mode_forced_off)
+                    ),
+                    selectedIndex = ringerMode,
+                    onOptionSelected = { index ->
+                        viewModel.setRingerMode(index)
+                    }
+                )
+            }
+
             AdminDivider()
 
             // Ringer Volume with Enhanced Display

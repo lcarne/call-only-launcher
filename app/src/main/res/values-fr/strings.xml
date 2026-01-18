@@ -78,6 +78,10 @@
     <string name="earpiece_setting">Téléphone</string>
     <string name="speaker_setting">Son fort</string>
     <string name="ringer_volume">Volume de la sonnerie</string>
+    <string name="ringer_mode_title">Mode de sonnerie</string>
+    <string name="ringer_mode_switch">Switch</string>
+    <string name="ringer_mode_forced_on">Sonnerie forcée</string>
+    <string name="ringer_mode_forced_off">Silencieux forcé</string>
     <string name="test_ringer">Tester la sonnerie</string>
 
     <!-- Data -->
