@@ -55,8 +55,6 @@ import com.incomingcallonly.launcher.R
 import com.incomingcallonly.launcher.data.model.Contact
 import com.incomingcallonly.launcher.ui.admin.ContactsViewModel
 
-import androidx.compose.foundation.layout.systemBarsPadding
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MultiContactImportDialog(
