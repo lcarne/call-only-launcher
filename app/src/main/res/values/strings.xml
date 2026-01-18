@@ -24,11 +24,11 @@
     <string name="press_again_to_confirm">Press again to confirm</string>
 
     <!-- ==================== HOME SCREEN ==================== -->
-    <string name="ringer_active">RINGER ON</string>
-    <string name="ringer_disabled">RINGER OFF</string>
-    <string name="activate_calls">ENABLE CALLS</string>
-    <string name="activate_launcher">MAKE DEFAULT LAUNCHER</string>
-    <string name="pin_app">PIN APP</string>
+    <string name="ringer_active">Ringer on</string>
+    <string name="ringer_disabled">Ringer off</string>
+    <string name="activate_calls">Enable calls</string>
+    <string name="activate_launcher">Make default launcher</string>
+    <string name="pin_app">Pin app</string>
 
     <!-- ==================== INCOMING CALL ==================== -->
     <string name="incoming_call">Incoming call</string>
@@ -37,7 +37,7 @@
     <string name="refuse">REFUSE</string>
     <string name="hang_up">HANG UP</string>
     <string name="speaker">SPEAKER</string>
-    <string name="earpiece">EARPIECE</string>
+    <string name="earpiece">PHONE</string>
     <plurals name="taps_remaining">
         <item quantity="one">%1$d more tap</item>
         <item quantity="other">%1$d more taps</item>

@@ -25,11 +25,11 @@
     <string name="press_again_to_confirm">Appuyez à nouveau pour confirmer</string>
 
     <!-- ==================== HOME SCREEN ==================== -->
-    <string name="ringer_active">SONNERIE ACTIVE</string>
-    <string name="ringer_disabled">SONNERIE DÉSACTIVÉE</string>
-    <string name="activate_calls">ACTIVER LES APPELS</string>
-    <string name="activate_launcher">DÉFINIR EN LAUNCHER</string>
-    <string name="pin_app">ÉPINGLER L\'APPLICATION</string>
+    <string name="ringer_active">Sonnerie active</string>
+    <string name="ringer_disabled">Sonnerie désactivée</string>
+    <string name="activate_calls">Activer les appels</string>
+    <string name="activate_launcher">Définir en launcher</string>
+    <string name="pin_app">Épingler l\'application</string>
 
     <!-- ==================== INCOMING CALL ==================== -->
     <string name="incoming_call">Appel entrant</string>
@@ -37,8 +37,8 @@
     <string name="answer">RÉPONDRE</string>
     <string name="refuse">REFUSER</string>
     <string name="hang_up">RACCROCHER</string>
-    <string name="speaker">HAUT\nPARLEUR</string>
-    <string name="earpiece">À\nL\'OREILLE</string>
+    <string name="speaker">SON FORT</string>
+    <string name="earpiece">TÉLÉPHONE</string>
     <plurals name="taps_remaining">
         <item quantity="one">Encore %1$d appui</item>
         <item quantity="other">Encore %1$d appuis</item>
