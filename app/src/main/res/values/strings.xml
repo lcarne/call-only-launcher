@@ -26,9 +26,9 @@
     <!-- ==================== HOME SCREEN ==================== -->
     <string name="ringer_active">Ringer on</string>
     <string name="ringer_disabled">Ringer off</string>
-    <string name="activate_calls">Enable calls</string>
-    <string name="activate_launcher">Make default launcher</string>
-    <string name="pin_app">Pin app</string>
+    <string name="activate_calls">ENABLE CALLS</string>
+    <string name="activate_launcher">MAKE DEFAULT LAUNCHER</string>
+    <string name="pin_app">PIN APP</string>
 
     <!-- ==================== INCOMING CALL ==================== -->
     <string name="incoming_call">Incoming call</string>
