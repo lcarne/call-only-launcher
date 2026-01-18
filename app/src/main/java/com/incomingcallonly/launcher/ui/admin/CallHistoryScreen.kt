@@ -15,8 +15,10 @@ import androidx.compose.material.icons.automirrored.filled.CallMissed
 import androidx.compose.material.icons.filled.Block
 import androidx.compose.material.icons.filled.Call
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.PersonAdd
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
@@ -61,7 +63,8 @@ private val COLOR_BLOCKED = Color.Gray
 @Composable
 fun CallHistoryScreen(
     viewModel: SettingsViewModel,
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    onAddContact: (String) -> Unit
 ) {
     val callLogs by viewModel.callLogs.collectAsState()
     BackHandler(onBack = onBack)
@@ -125,7 +128,7 @@ fun CallHistoryScreen(
                     .fillMaxSize()
             ) {
                 items(callLogs) { log ->
-                    CallLogItem(log)
+                    CallLogItem(log, onAddContact)
                 }
             }
         }
@@ -160,7 +163,7 @@ fun CallHistoryScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CallLogItem(log: CallLog) {
+fun CallLogItem(log: CallLog, onAddContact: (String) -> Unit) {
     val sdf = SimpleDateFormat(DATE_FORMAT_HISTORY, Locale.getDefault())
     val dateStr = sdf.format(Date(log.timestamp))
 
@@ -230,11 +233,25 @@ fun CallLogItem(log: CallLog) {
             }
         },
         trailingContent = {
-            Text(
-                text = dateStr,
-                style = MaterialTheme.typography.bodySmall,
-                color = Color.Gray
-            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                if (log.name == null) {
+                    IconButton(onClick = { onAddContact(log.number) }) {
+                        Icon(
+                            Icons.Default.PersonAdd,
+                            contentDescription = stringResource(id = com.incomingcallonly.launcher.R.string.add_contact),
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                }
+                Text(
+                    text = dateStr,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = Color.Gray
+                )
+            }
         }
     )
 }

@@ -35,6 +35,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -65,7 +66,8 @@ import com.incomingcallonly.launcher.ui.theme.SystemBarsColor
 fun ContactManagementScreen(
     viewModel: ContactsViewModel,
     onBack: () -> Unit,
-    onOpenCamera: ((android.net.Uri) -> Unit) -> Unit
+    onOpenCamera: ((android.net.Uri) -> Unit) -> Unit,
+    initialNumber: String? = null
 ) {
     val contacts by viewModel.contacts.collectAsState()
     val lastCountryCode by viewModel.lastSelectedCountryCode.collectAsState()
@@ -73,6 +75,14 @@ fun ContactManagementScreen(
     BackHandler(onBack = onBack)
 
     var showAddDialog by remember { mutableStateOf(false) }
+    var effectiveInitialNumber by remember(initialNumber) { mutableStateOf(initialNumber) }
+
+    LaunchedEffect(initialNumber) {
+        if (initialNumber != null) {
+            showAddDialog = true
+            effectiveInitialNumber = initialNumber
+        }
+    }
     var showMultiImportDialog by remember { mutableStateOf(false) }
     var showContactPermissionRationale by remember { mutableStateOf(false) }
     var contactToEdit by remember { mutableStateOf<Contact?>(null) }
@@ -145,7 +155,10 @@ fun ContactManagementScreen(
             AdminLargeButton(
                 text = stringResource(R.string.add_contact),
                 icon = Icons.Default.Add,
-                onClick = { showAddDialog = true },
+                onClick = {
+                    effectiveInitialNumber = null
+                    showAddDialog = true
+                },
                 containerColor = MaterialTheme.colorScheme.primaryContainer,
                 contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
                 modifier = Modifier.padding(bottom = Spacing.xs)
@@ -206,6 +219,7 @@ fun ContactManagementScreen(
                 defaultCountryCode = lastCountryCode,
                 onDismiss = { showAddDialog = false },
                 onOpenCamera = onOpenCamera,
+                initialNumber = effectiveInitialNumber,
                 onConfirm = { name, number, photoUri, countryCode ->
                     viewModel.addContact(name, number, photoUri)
                     viewModel.setLastSelectedCountryCode(countryCode)

@@ -75,6 +75,7 @@ fun ContactDialog(
     defaultCountryCode: String,
     onDismiss: () -> Unit,
     onOpenCamera: ((android.net.Uri) -> Unit) -> Unit,
+    initialNumber: String? = null,
     onConfirm: (String, String, String?, String) -> Unit
 ) {
     var firstName by remember { mutableStateOf("") }
@@ -83,7 +84,7 @@ fun ContactDialog(
     var photoUri by remember { mutableStateOf<android.net.Uri?>(null) }
     var selectedCountryCode by remember { mutableStateOf(defaultCountryCode) }
     var errorMessage by remember { mutableStateOf<String?>(null) }
-    var importedFullNumber by remember { mutableStateOf<String?>(null) }
+    var importedFullNumber by remember { mutableStateOf<String?>(initialNumber) }
 
     // Pre-fill if editing
     LaunchedEffect(contactToEdit) {

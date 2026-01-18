@@ -64,6 +64,7 @@ fun AdminContent(
     var currentView by remember { mutableStateOf("SETTINGS") } // SETTINGS, CONTACTS, or HISTORY
     var pendingPhotoCaptured: ((android.net.Uri) -> Unit)? by remember { mutableStateOf(null) }
     var isCameraOpen by remember { mutableStateOf(false) }
+    var initialNumberForContact by remember { mutableStateOf<String?>(null) }
 
     Box(
         modifier = Modifier
@@ -74,18 +75,26 @@ fun AdminContent(
             "CONTACTS" -> {
                 ContactManagementScreen(
                     viewModel = contactsViewModel,
-                    onBack = { currentView = "SETTINGS" },
+                    onBack = {
+                        currentView = "SETTINGS"
+                        initialNumberForContact = null
+                    },
                     onOpenCamera = { onCaptured ->
                         pendingPhotoCaptured = onCaptured
                         isCameraOpen = true
-                    }
+                    },
+                    initialNumber = initialNumberForContact
                 )
             }
 
             "HISTORY" -> {
                 CallHistoryScreen(
                     viewModel = settingsViewModel,
-                    onBack = { currentView = "SETTINGS" }
+                    onBack = { currentView = "SETTINGS" },
+                    onAddContact = { number ->
+                        initialNumberForContact = number
+                        currentView = "CONTACTS"
+                    }
                 )
             }
 
@@ -97,7 +106,10 @@ fun AdminContent(
                     onExit = onExit,
                     onLogout = onLogout,
                     onUnpin = onUnpin,
-                    onManageContacts = { currentView = "CONTACTS" },
+                    onManageContacts = {
+                        initialNumberForContact = null
+                        currentView = "CONTACTS"
+                    },
                     onShowHistory = { currentView = "HISTORY" }
                 )
             }
