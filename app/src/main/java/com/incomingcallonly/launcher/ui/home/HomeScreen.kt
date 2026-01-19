@@ -286,7 +286,7 @@ private fun HomeContentNormal(
             nightStartMin = nightStartMin,
             nightEnd = nightEnd,
             nightEndMin = nightEndMin,
-            accentColor = clockColor,
+            accentColor = MaterialTheme.colorScheme.primary,
             timeFormat = timeFormat,
             ringerMode = ringerMode,
             onToggleRinger = onToggleRinger
