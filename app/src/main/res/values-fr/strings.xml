@@ -110,11 +110,9 @@
     <string name="night_mode_active_ringer_off">Sonnerie désactivée\n(Mode Nuit de %1$s à %2$s)</string>
     <string name="night_start_label">Début de nuit</string>
     <string name="night_end_label">Fin de nuit</string>
-    <plurals name="night_mode_duration_desc">
-        <item quantity="one">Durée : %1$d heure %2$s</item>
-        <item quantity="other">Durée : %1$d heures %2$s</item>
-        <item quantity="many">Durée : %1$d heures %2$s</item>
-    </plurals>
+    <string name="duration_label">Durée : %1$s</string>
+    <string name="duration_hour_unit">h</string>
+    <string name="duration_minute_unit">min</string>
     <string name="next_day">(jusqu\'au lendemain)</string>
     <string name="select_hour">Choisir l\'heure</string>
 

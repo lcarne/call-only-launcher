@@ -190,6 +190,8 @@ fun AdminSettingsScreen(
         }
     }
 
+    val isKioskActive by settingsViewModel.isKioskActive.collectAsState()
+
     Scaffold(
         contentWindowInsets = androidx.compose.foundation.layout.WindowInsets(0, 0, 0, 0),
         containerColor = MaterialTheme.colorScheme.background,
@@ -227,29 +229,31 @@ fun AdminSettingsScreen(
         ) {
             // Quick Actions - Now more prominent
             AdminSettingsCard {
-                ListItem(
-                    colors = ListItemDefaults.colors(containerColor = Color.Transparent),
-                    headlineContent = {
-                        Text(
-                            stringResource(id = R.string.unpin),
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold
-                        )
-                    },
-                    leadingContent = {
-                        AdminIcon(
-                            imageVector = Icons.Default.LockOpen,
-                            tint = MaterialTheme.colorScheme.error,
-                            containerColor = MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.3f)
-                        )
-                    },
-                    modifier = Modifier.clickable {
-                        onUnpin()
-                        onLogout()
-                        onExit()
-                    }
-                )
-                AdminDivider()
+                if (isKioskActive) {
+                    ListItem(
+                        colors = ListItemDefaults.colors(containerColor = Color.Transparent),
+                        headlineContent = {
+                            Text(
+                                stringResource(id = R.string.unpin),
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.Bold
+                            )
+                        },
+                        leadingContent = {
+                            AdminIcon(
+                                imageVector = Icons.Default.LockOpen,
+                                tint = MaterialTheme.colorScheme.error,
+                                containerColor = MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.3f)
+                            )
+                        },
+                        modifier = Modifier.clickable {
+                            onUnpin()
+                            onLogout()
+                            onExit()
+                        }
+                    )
+                    AdminDivider()
+                }
                 ListItem(
                     colors = ListItemDefaults.colors(containerColor = Color.Transparent),
                     headlineContent = {

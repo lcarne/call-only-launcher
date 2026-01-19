@@ -6,10 +6,12 @@ import androidx.lifecycle.viewModelScope
 import com.incomingcallonly.launcher.data.repository.CallLogRepository
 import com.incomingcallonly.launcher.data.repository.ContactRepository
 import com.incomingcallonly.launcher.data.repository.SettingsRepository
+import com.incomingcallonly.launcher.manager.KioskManager
 import com.incomingcallonly.launcher.util.ImageStorageManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -20,8 +22,11 @@ class SettingsViewModel @Inject constructor(
     private val callLogRepository: CallLogRepository,
     private val contactRepository: ContactRepository,
     private val imageStorageManager: ImageStorageManager,
+    private val kioskManager: KioskManager,
     @ApplicationContext private val context: Context
 ) : ViewModel() {
+
+    val isKioskActive: StateFlow<Boolean> = kioskManager.isKioskActive
 
     val isNightModeEnabled = settingsRepository.isNightModeEnabled
     val screenBehaviorPlugged = settingsRepository.screenBehaviorPlugged
