@@ -303,8 +303,8 @@ fun AdminSettingsScreen(
                     leadingContent = {
                         AdminIcon(
                             imageVector = Icons.Default.Call,
-                            tint = if (!isDefaultDialer) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary,
-                            containerColor = if (!isDefaultDialer) MaterialTheme.colorScheme.errorContainer else MaterialTheme.colorScheme.primaryContainer
+                            tint = if (!isDefaultDialer) MaterialTheme.colorScheme.error else com.incomingcallonly.launcher.ui.theme.ConfirmGreen,
+                            containerColor = if (!isDefaultDialer) MaterialTheme.colorScheme.errorContainer else com.incomingcallonly.launcher.ui.theme.ConfirmGreen.copy(alpha = 0.2f)
                         )
                     },
                     modifier = Modifier.clickable {
@@ -334,8 +334,8 @@ fun AdminSettingsScreen(
                     leadingContent = {
                         AdminIcon(
                             imageVector = Icons.Default.Home,
-                            tint = if (!isDefaultLauncher) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary,
-                            containerColor = if (!isDefaultLauncher) MaterialTheme.colorScheme.errorContainer else MaterialTheme.colorScheme.primaryContainer
+                            tint = if (!isDefaultLauncher) MaterialTheme.colorScheme.error else com.incomingcallonly.launcher.ui.theme.ConfirmGreen,
+                            containerColor = if (!isDefaultLauncher) MaterialTheme.colorScheme.errorContainer else com.incomingcallonly.launcher.ui.theme.ConfirmGreen.copy(alpha = 0.2f)
                         )
                     },
                     modifier = Modifier.clickable {
@@ -366,8 +366,8 @@ fun AdminSettingsScreen(
                         leadingContent = {
                             AdminIcon(
                                 imageVector = Icons.Default.LockOpen,
-                                tint = MaterialTheme.colorScheme.primary,
-                                containerColor = MaterialTheme.colorScheme.primaryContainer
+                                tint = com.incomingcallonly.launcher.ui.theme.ConfirmGreen,
+                                containerColor = com.incomingcallonly.launcher.ui.theme.ConfirmGreen.copy(alpha = 0.2f)
                             )
                         },
                         modifier = Modifier.clickable {
@@ -682,6 +682,19 @@ fun AdminSettingsScreen(
 
             Text(
                 text = stringResource(id = R.string.settings_footer_message),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = Spacing.xl),
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
+                textAlign = TextAlign.Center
+            )
+
+            val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
+            val versionName = packageInfo.versionName
+            Spacer(modifier = Modifier.height(Spacing.xs))
+            Text(
+                text = "v$versionName",
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = Spacing.xl),
