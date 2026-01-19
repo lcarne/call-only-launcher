@@ -15,21 +15,23 @@
     <string name="next">Suivant</string>
     <string name="not_now">Plus tard</string>
     <string name="understood">Compris</string>
-    <string name="unpin">Désépingler l\'application</string>
+    <string name="pin">Épingler l\'app</string>
+    <string name="unpin">Désépingler l\'app</string>
+    <string name="change_default_phone_app">Changer l\'app par défaut</string>
+    <string name="change_default_launcher">Changer le launcher par défaut</string>
     <string name="validate">Valider</string>
     <plurals name="press_again">
         <item quantity="one">Appuyez encore %1$d fois</item>
         <item quantity="other">Appuyez encore %1$d fois</item>
-        <item quantity="many">Appuyez encore %1$d fois</item>
     </plurals>
     <string name="press_again_to_confirm">Appuyez à nouveau pour confirmer</string>
 
     <!-- ==================== HOME SCREEN ==================== -->
     <string name="ringer_active">Sonnerie active</string>
-    <string name="ringer_disabled">Sonnerie désactivée</string>
+    <string name="ringer_disabled">Silencieux</string>
     <string name="activate_calls">ACTIVER LES APPELS</string>
     <string name="activate_launcher">DÉFINIR EN LAUNCHER</string>
-    <string name="pin_app">ÉPINGLER L\'APPLICATION</string>
+    <string name="pin_app">ÉPINGLER L\'APP</string>
 
     <!-- ==================== INCOMING CALL ==================== -->
     <string name="incoming_call">Appel entrant</string>
@@ -42,12 +44,11 @@
     <plurals name="taps_remaining">
         <item quantity="one">Encore %1$d appui</item>
         <item quantity="other">Encore %1$d appuis</item>
-        <item quantity="many">Encore %1$d appuis</item>
     </plurals>
 
     <!-- ==================== SIM LOCK ==================== -->
     <string name="sim_locked_title">SIM VERROUILLÉE</string>
-    <string name="sim_locked_message">Veuillez saisir le code PIN de la carte SIM pour continuer.</string>
+    <string name="sim_locked_message">Veuillez saisir le code PIN.</string>
     <string name="sim_unlock_button">DÉVERROUILLER</string>
 
     <!-- ==================== ADMIN: AUTHENTICATION ==================== -->
@@ -56,60 +57,62 @@
 
     <!-- ==================== ADMIN: MAIN SETTINGS ==================== -->
     <string name="settings">Paramètres</string>
+    <string name="settings_section_configuration">Configuration</string>
     <string name="settings_section_content">Contenu</string>
     <string name="settings_section_system">Système</string>
-    <string name="settings_section_display_power">Affichage \&amp; Alimentation</string>
+    <string name="settings_section_display_power">Écran &amp; Alimentation</string>
     <string name="settings_section_localization">Localisation</string>
     <string name="settings_section_audio">Audio</string>
 
     <!-- ==================== ADMIN: SYSTEM SETTINGS ==================== -->
     <!-- Call Security -->
-    <string name="accept_all_calls">Restreindre aux contacts uniquement</string>
+    <string name="accept_all_calls">Appels restreints aux contacts</string>
     <string name="accept_all_calls_desc">Si désactivé, tous les appels sont autorisés</string>
     <string name="change_pin">Modifier le code PIN</string>
-    <string name="new_pin">Nouveau code PIN</string>
-    <string name="previous_pin">Code PIN actuel</string>
-    <string name="confirm_new_pin">Confirmer le nouveau code PIN</string>
-    <string name="pins_do_not_match">Les codes PIN ne correspondent pas</string>
-    <string name="incorrect_previous_pin">Code PIN actuel incorrect</string>
+
+    <string name="new_pin">Nouveau code</string>
+    <string name="previous_pin">Code actuel</string>
+    <string name="confirm_new_pin">Confirmer le nouveau code</string>
+    <string name="pins_do_not_match">Les codes ne correspondent pas</string>
+    <string name="incorrect_previous_pin">Code actuel incorrect</string>
 
     <!-- Audio -->
-    <string name="default_audio_output">Sortie son par défaut</string>
+    <string name="default_audio_output">Sortie audio par défaut</string>
     <string name="earpiece_setting">Téléphone</string>
     <string name="speaker_setting">Son fort</string>
-    <string name="ringer_volume">Volume de la sonnerie</string>
-    <string name="ringer_mode_title">Mode de sonnerie</string>
+    <string name="ringer_volume">Volume sonnerie</string>
+    <string name="ringer_mode_title">Mode Sonnerie</string>
     <string name="ringer_mode_switch">Switch</string>
-    <string name="ringer_mode_forced_on">Sonnerie forcée</string>
-    <string name="ringer_mode_forced_off">Silencieux forcé</string>
+    <string name="ringer_mode_forced_on">Sonnerie</string>
+    <string name="ringer_mode_forced_off">Silencieux</string>
     <string name="test_ringer">Tester la sonnerie</string>
 
     <!-- Data -->
     <string name="data_management">Gestion des données</string>
     <string name="reset_all_data">Supprimer toutes les données</string>
-    <string name="confirm_reset_all_data">Êtes-vous sûr de vouloir supprimer toutes les données (contacts, historique) ?\nCette action est irréversible.</string>
-    <string name="reset_settings">Réinitialiser les réglages</string>
-    <string name="confirm_reset_settings">Êtes-vous sûr de vouloir réinitialiser tous les réglages par défaut ?\nCette action est irréversible.</string>
+    <string name="confirm_reset_all_data">Êtes-vous sûr de vouloir supprimer toutes les données (contacts, historique d\'appels) ?\nCette action est irréversible.</string>
+    <string name="reset_settings">Réinitialiser les paramètres</string>
+    <string name="confirm_reset_settings">Êtes-vous sûr de vouloir réinitialiser tous les paramètres ?\nCette action est irréversible.</string>
 
     <!-- Support-->
     <string name="support">Soutien</string>
     <string name="buy_me_coffee">M\'offrir un café</string>
-    <string name="settings_footer_message" formatted="false">100% gratuit, 100% open source,\ndéveloppé avec ❤️ pour ma grand mère</string>
+    <string name="settings_footer_message" formatted="false">100% gratuit, 100% open source,\nfait avec ❤️ pour ma grand-mère</string>
 
     <!-- ==================== ADMIN: DISPLAY & POWER ==================== -->
     <!-- Screen Behavior -->
-    <string name="screen_behavior_battery">Batterie</string>
-    <string name="screen_behavior_plugged">Branché</string>
+    <string name="screen_behavior_battery">Comportement écran sur batterie</string>
+    <string name="screen_behavior_plugged">Comportement écran en charge</string>
     <string name="mode_off">Éteint</string>
-    <string name="mode_dim">Veille (Dim)</string>
-    <string name="mode_awake">Éveillé</string>
+    <string name="mode_dim">En veille (Dim)</string>
+    <string name="mode_awake">Toujours allumé</string>
 
     <!-- Night Mode -->
-    <string name="night_mode">Mode Nuit</string>
-    <string name="night_mode_desc">Couper la sonnerie et éteindre l\'écran durant une plage horaire</string>
-    <string name="night_mode_active_ringer_off">Sonnerie désactivée\n(Mode Nuit de %1$s à %2$s)</string>
-    <string name="night_start_label">Début de nuit</string>
-    <string name="night_end_label">Fin de nuit</string>
+    <string name="night_mode">Mode nuit</string>
+    <string name="night_mode_desc">Coupe la sonnerie et l\'écran sur une plage horaire</string>
+    <string name="night_mode_active_ringer_off">Silencieux\n(Mode Nuit activé\nde %1$s à %2$s)</string>
+    <string name="night_start_label">Début nuit</string>
+    <string name="night_end_label">Fin nuit</string>
     <string name="duration_label">Durée : %1$s</string>
     <string name="duration_hour_unit">h</string>
     <string name="duration_minute_unit">min</string>
@@ -117,11 +120,11 @@
     <string name="select_hour">Choisir l\'heure</string>
 
     <!-- Clock -->
-    <string name="clock_color">Couleur de l\'horloge</string>
+    <string name="clock_color">Couleur de l\'heure</string>
 
     <!-- ==================== ADMIN: LOCALIZATION ==================== -->
     <string name="time_format_title">Format de l\'heure</string>
-    <string name="time_format_12">AM/PM</string>
+    <string name="time_format_12">12h (AM/PM)</string>
     <string name="time_format_24">24h</string>
     <string name="language">Langue</string>
     <string name="language_french">Français</string>
@@ -130,9 +133,9 @@
     <!-- ==================== ADMIN: CONTACTS ==================== -->
     <string name="manage_contacts">Gérer les contacts</string>
     <string name="contacts">Contacts</string>
-    <string name="new_contact">Nouveau Contact</string>
+    <string name="new_contact">Nouveau contact</string>
     <string name="add_contact">Ajouter un contact</string>
-    <string name="edit_contact">Modifier Contact</string>
+    <string name="edit_contact">Modifier le contact</string>
     <string name="delete_contact">Supprimer le contact</string>
     <string name="confirm_delete_contact">Êtes-vous sûr de vouloir supprimer le contact %1$s ?</string>
     <string name="first_name">Prénom</string>
@@ -144,11 +147,11 @@
     <string name="take_photo">Prendre une photo</string>
     <string name="gallery">Galerie</string>
     <string name="camera">Appareil photo</string>
-    <string name="import_contacts">Importer les contacts (.vcf)</string>
-    <string name="export_contacts">Exporter les contacts (.vcf)</string>
+    <string name="import_contacts">Importer Contacts (.vcf)</string>
+    <string name="export_contacts">Exporter Contacts (.vcf)</string>
     <string name="import_from_directory">Importer du répertoire</string>
     <string name="discard_changes_title">Modifications non enregistrées</string>
-    <string name="discard_changes_message">Voulez-vous vraiment quitter sans enregistrer vos modifications ?</string>
+    <string name="discard_changes_message">Voulez-vous ignorer les modifications non enregistrées ?</string>
     <string name="import_multiple_contacts">Importer plusieurs contacts</string>
     <string name="select_all">Tout sélectionner</string>
     <string name="deselect_all">Tout désélectionner</string>
@@ -161,35 +164,36 @@
     <string name="already_in_directory">Déjà présent</string>
 
     <!-- ==================== ADMIN: CALL HISTORY ==================== -->
-    <string name="call_history">Historique des appels</string>
+    <string name="call_history">Historique d\'appels</string>
     <string name="no_call_history">Aucun appel dans l\'historique</string>
-    <string name="clear_history_title">Supprimer l\'historique</string>
-    <string name="clear_history_confirm">Êtes-vous sûr de vouloir supprimer tout l\'historique des appels ?\nCette action est irréversible.</string>
+    <string name="clear_history_title">Effacer l\'historique</string>
+    <string name="clear_history_confirm">Êtes-vous sûr de vouloir effacer tout l\'historique d\'appels ? Cette action est irréversible.</string>
     <string name="call_received_label">Reçu</string>
     <string name="call_missed_label">Manqué</string>
     <string name="call_rejected_label">Refusé</string>
-    <string name="call_rejected_auto_label">Refusé (auto)</string>
+    <string name="call_rejected_auto_label">Rejeté (auto)</string>
 
     <!-- ==================== ONBOARDING ==================== -->
-    <string name="onboarding_important">Important : Ce message ne s\'affichera plus.</string>
+    <string name="onboarding_important">Important : Ce message ne sera plus affiché.</string>
+    <string name="config_incomplete_warning">Configuration incomplète. Veuillez terminer la configuration ci-dessous.</string>
 
     <!-- Slides -->
     <string name="onboarding_presentation_title">Présentation</string>
-    <string name="onboarding_presentation_message">Ce launcher est conçu pour simplifier l\'usage du téléphone. Il permet de recevoir des appels uniquement. Avant de commencer, nous allons configurer l\'application ensemble.</string>
+    <string name="onboarding_presentation_message">Ce launcher est conçu pour simplifier l\'usage du téléphone. Il permet uniquement de recevoir des appels. Avant de démarrer, nous allons configurer l\'application ensemble.</string>
     <string name="onboarding_admin_intro_title">Mode Administrateur</string>
-    <string name="onboarding_admin_intro_message">Pour accéder aux réglages ou quitter l\'application, il existe un menu caché :\n\nTapez *15 fois sur la date*, puis le code *1234*.</string>
+    <string name="onboarding_admin_intro_message">Pour accéder aux réglages ou quitter l\'application, il existe un menu caché :\n\nAppuyez *15 fois sur la date*, puis saisisez le code *1234*.</string>
 
     <!-- Permissions -->
 
     <string name="onboarding_auth_contacts_title">Accès aux Contacts</string>
-    <string name="onboarding_auth_contacts_message">Veuillez autoriser l\'accès à vos contacts pour les importer dans la liste de contacts.</string>
+    <string name="onboarding_auth_contacts_message">Merci d\'autoriser l\'accès à vos contacts pour les importer dans la liste de contacts.</string>
 
     <string name="onboarding_auth_location_intro_title">Localisation et Réseau</string>
-    <string name="onboarding_auth_location_intro_message">Android exige l\'autorisation de localisation pour lire la puissance du signal réseau (les barres). L\'application *ne suit pas* votre position GPS.</string>
+    <string name="onboarding_auth_location_intro_message">Android nécessite la permission de localisation pour lire la puissance du signal réseau (les barres). L\'application *ne suit pas* votre position GPS.</string>
 
-    <string name="onboarding_default_dialer_title">Activer les appels</string>
+    <string name="onboarding_default_dialer_title">Activer les Appels</string>
     <string name="onboarding_default_dialer_message">Pour gérer les appels entrants, cette application doit être définie comme votre *application par défaut*.</string>
-    <string name="onboarding_default_launcher_title">Définir en launcher</string>
+    <string name="onboarding_default_launcher_title">Définir en Launcher</string>
     <string name="onboarding_default_launcher_message">Pour que l\'application démarre automatiquement, définissez-la comme votre *launcher*.</string>
     <string name="onboarding_pinned_mode_title">Épingler l\'application</string>
     <string name="onboarding_pinned_mode_message">Si l\'application est épinglée, maintenez ◄ + ■ (navigation classique) ou maintenez le bas de l\'écran (navigation gestuelle) pour désépingler.</string>

@@ -19,6 +19,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 fun AdminScreen(
     onExit: () -> Unit,
     onUnpin: () -> Unit,
+    onPin: () -> Unit,
     onShowSystemUI: () -> Unit = {},
     onHideSystemUI: () -> Unit = {},
     authViewModel: AuthViewModel = hiltViewModel(),
@@ -47,7 +48,8 @@ fun AdminScreen(
             authViewModel = authViewModel,
             onLogout = { authViewModel.logout() },
             onExit = onExit,
-            onUnpin = onUnpin
+            onUnpin = onUnpin,
+            onPin = onPin
         )
     }
 }
@@ -59,7 +61,8 @@ fun AdminContent(
     authViewModel: AuthViewModel,
     onLogout: () -> Unit,
     onExit: () -> Unit,
-    onUnpin: () -> Unit
+    onUnpin: () -> Unit,
+    onPin: () -> Unit
 ) {
     var currentView by remember { mutableStateOf("SETTINGS") } // SETTINGS, CONTACTS, or HISTORY
     var pendingPhotoCaptured: ((android.net.Uri) -> Unit)? by remember { mutableStateOf(null) }
@@ -106,6 +109,7 @@ fun AdminContent(
                     onExit = onExit,
                     onLogout = onLogout,
                     onUnpin = onUnpin,
+                    onPin = onPin,
                     onManageContacts = {
                         initialNumberForContact = null
                         currentView = "CONTACTS"

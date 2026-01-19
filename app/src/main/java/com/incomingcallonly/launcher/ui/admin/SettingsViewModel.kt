@@ -1,6 +1,9 @@
 package com.incomingcallonly.launcher.ui.admin
 
 import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.telecom.TelecomManager
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.incomingcallonly.launcher.data.repository.CallLogRepository
@@ -10,8 +13,10 @@ import com.incomingcallonly.launcher.manager.KioskManager
 import com.incomingcallonly.launcher.util.ImageStorageManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -27,6 +32,12 @@ class SettingsViewModel @Inject constructor(
 ) : ViewModel() {
 
     val isKioskActive: StateFlow<Boolean> = kioskManager.isKioskActive
+
+    private val _isDefaultDialer = MutableStateFlow(false)
+    val isDefaultDialer: StateFlow<Boolean> = _isDefaultDialer.asStateFlow()
+
+    private val _isDefaultLauncher = MutableStateFlow(false)
+    val isDefaultLauncher: StateFlow<Boolean> = _isDefaultLauncher.asStateFlow()
 
     val isNightModeEnabled = settingsRepository.isNightModeEnabled
     val screenBehaviorPlugged = settingsRepository.screenBehaviorPlugged
@@ -121,6 +132,30 @@ class SettingsViewModel @Inject constructor(
 
     fun resetSettings() {
         settingsRepository.resetToDefaults()
+    }
+
+    fun checkDefaultApps() {
+        try {
+            // Check Dialer
+            val telecomManager = context.getSystemService(Context.TELECOM_SERVICE) as TelecomManager
+            val defaultDialerPackage = telecomManager.defaultDialerPackage
+            _isDefaultDialer.value = defaultDialerPackage == context.packageName
+
+            // Check Launcher
+            // Check Launcher
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+                val roleManager = context.getSystemService(Context.ROLE_SERVICE) as android.app.role.RoleManager
+                _isDefaultLauncher.value = roleManager.isRoleHeld(android.app.role.RoleManager.ROLE_HOME)
+            } else {
+                val intent = Intent(Intent.ACTION_MAIN).apply {
+                    addCategory(Intent.CATEGORY_HOME)
+                }
+                val resolveInfo = context.packageManager.resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY)
+                _isDefaultLauncher.value = resolveInfo?.activityInfo?.packageName == context.packageName
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     override fun onCleared() {

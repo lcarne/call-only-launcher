@@ -11,8 +11,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Notifications
-import androidx.compose.material.icons.rounded.NotificationsOff
+import androidx.compose.material.icons.automirrored.rounded.VolumeUp
+import androidx.compose.material.icons.automirrored.rounded.VolumeOff
 
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -62,7 +62,7 @@ fun RingerControl(
                 modifier = Modifier.padding(16.dp)
             ) {
                 DepthIcon(
-                    imageVector = Icons.Rounded.NotificationsOff,
+                    imageVector = Icons.AutoMirrored.Rounded.VolumeOff,
                     contentDescription = null,
                     tint = White,
                     modifier = Modifier.size(32.dp)
@@ -128,9 +128,9 @@ fun RingerControl(
                 ) {
                     DepthIcon(
                         painter = if (isRingerEnabled) {
-                            rememberVectorPainter(Icons.Rounded.Notifications)
+                            rememberVectorPainter(Icons.AutoMirrored.Rounded.VolumeUp)
                         } else {
-                            rememberVectorPainter(Icons.Rounded.NotificationsOff)
+                            rememberVectorPainter(Icons.AutoMirrored.Rounded.VolumeOff)
                         },
                         contentDescription = "Toggle Ringer",
                         tint = contentColor,

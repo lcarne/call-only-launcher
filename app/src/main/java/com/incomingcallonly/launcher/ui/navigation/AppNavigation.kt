@@ -31,7 +31,8 @@ fun IncomingCallOnlyNavGraph(
                 onExit = { navController.popBackStack() },
                 onUnpin = onUnpin,
                 onShowSystemUI = onShowSystemUI,
-                onHideSystemUI = onHideSystemUI
+                onHideSystemUI = onHideSystemUI,
+                onPin = onPin
             )
         }
     }

@@ -1,5 +1,8 @@
 package com.incomingcallonly.launcher.ui.admin
 
+import android.content.Intent
+import android.provider.Settings
+import android.telecom.TelecomManager
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
@@ -20,6 +23,8 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Call
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.LockOpen
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Share
@@ -34,6 +39,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -44,10 +50,14 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
 import com.incomingcallonly.launcher.R
 import com.incomingcallonly.launcher.ui.admin.components.AdminDangerButton
 import com.incomingcallonly.launcher.ui.admin.components.AdminDialog
@@ -60,6 +70,7 @@ import com.incomingcallonly.launcher.ui.admin.components.SettingsAudioSection
 import com.incomingcallonly.launcher.ui.admin.components.SettingsDisplaySection
 import com.incomingcallonly.launcher.ui.admin.components.SettingsLocalizationSection
 import com.incomingcallonly.launcher.ui.admin.components.SettingsSystemSection
+import com.incomingcallonly.launcher.ui.components.AppDialog
 import com.incomingcallonly.launcher.ui.components.DepthIcon
 import com.incomingcallonly.launcher.ui.theme.Spacing
 import com.incomingcallonly.launcher.ui.theme.SystemBarsColor
@@ -74,6 +85,7 @@ fun AdminSettingsScreen(
     onExit: () -> Unit,
     onLogout: () -> Unit,
     onUnpin: () -> Unit,
+    onPin: () -> Unit,
     onManageContacts: () -> Unit,
     onShowHistory: () -> Unit
 ) {
@@ -81,6 +93,9 @@ fun AdminSettingsScreen(
     val uriHandler = androidx.compose.ui.platform.LocalUriHandler.current
     var showResetDataDialog by remember { androidx.compose.runtime.mutableStateOf(false) }
     var showResetSettingsDialog by remember { androidx.compose.runtime.mutableStateOf(false) }
+    var showDialerExplanation by remember { androidx.compose.runtime.mutableStateOf(false) }
+    var showLauncherExplanation by remember { androidx.compose.runtime.mutableStateOf(false) }
+    var showPinExplanation by remember { androidx.compose.runtime.mutableStateOf(false) }
 
     // System Bars Configuration
     val isDarkTheme = isSystemInDarkTheme()
@@ -191,6 +206,50 @@ fun AdminSettingsScreen(
     }
 
     val isKioskActive by settingsViewModel.isKioskActive.collectAsState()
+    val isDefaultDialer by settingsViewModel.isDefaultDialer.collectAsState()
+    val isDefaultLauncher by settingsViewModel.isDefaultLauncher.collectAsState()
+
+    val context = LocalContext.current
+    val lifecycleOwner = LocalLifecycleOwner.current
+
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME) {
+                settingsViewModel.checkDefaultApps()
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
+    }
+
+    val startForResult = androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult()
+    val dialerLauncher = androidx.activity.compose.rememberLauncherForActivityResult(startForResult) { 
+        settingsViewModel.checkDefaultApps()
+    }
+
+    val requestDefaultDialer = {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+            val roleManager = context.getSystemService(android.app.role.RoleManager::class.java)
+            if (roleManager?.isRoleAvailable(android.app.role.RoleManager.ROLE_DIALER) == true) {
+                // Always request the role to show the popup, even if we already hold it
+                // This allows the user to re-confirm or potentially see the dialog (depending on OS behavior)
+                // as requested by the user to avoid the generic settings screen.
+                val intent = roleManager.createRequestRoleIntent(android.app.role.RoleManager.ROLE_DIALER)
+                dialerLauncher.launch(intent)
+            }
+        } else {
+            // Pre-Android Q
+            try {
+                val intent = Intent(TelecomManager.ACTION_CHANGE_DEFAULT_DIALER)
+                intent.putExtra(TelecomManager.EXTRA_CHANGE_DEFAULT_DIALER_PACKAGE_NAME, context.packageName)
+                dialerLauncher.launch(intent)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
 
     Scaffold(
         contentWindowInsets = androidx.compose.foundation.layout.WindowInsets(0, 0, 0, 0),
@@ -217,7 +276,7 @@ fun AdminSettingsScreen(
                 modifier = Modifier.shadow(
                     elevation = 4.dp,
                     spotColor = Color.Black.copy(alpha = 0.15f)
-                )
+                ),
             )
         }
     ) { padding ->
@@ -227,8 +286,73 @@ fun AdminSettingsScreen(
                 .fillMaxSize()
                 .verticalScroll(scrollState)
         ) {
+            // Configuration Section
+            AdminSectionHeader(text = stringResource(id = R.string.settings_section_configuration))
+
             // Quick Actions - Now more prominent
             AdminSettingsCard {
+                ListItem(
+                    colors = ListItemDefaults.colors(containerColor = Color.Transparent),
+                    headlineContent = {
+                        Text(
+                            stringResource(id = R.string.change_default_phone_app),
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold
+                        )
+                    },
+                    leadingContent = {
+                        AdminIcon(
+                            imageVector = Icons.Default.Call,
+                            tint = if (!isDefaultDialer) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary,
+                            containerColor = if (!isDefaultDialer) MaterialTheme.colorScheme.errorContainer else MaterialTheme.colorScheme.primaryContainer
+                        )
+                    },
+                    modifier = Modifier.clickable {
+                        if (!isDefaultDialer) {
+                            showDialerExplanation = true
+                        } else {
+                            try {
+                                val intent = Intent(Settings.ACTION_MANAGE_DEFAULT_APPS_SETTINGS)
+                                context.startActivity(intent)
+                            } catch (e: Exception) {
+                                requestDefaultDialer()
+                            }
+                        }
+                    }
+                )
+                AdminDivider()
+
+                ListItem(
+                    colors = ListItemDefaults.colors(containerColor = Color.Transparent),
+                    headlineContent = {
+                        Text(
+                            stringResource(id = R.string.change_default_launcher),
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold
+                        )
+                    },
+                    leadingContent = {
+                        AdminIcon(
+                            imageVector = Icons.Default.Home,
+                            tint = if (!isDefaultLauncher) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary,
+                            containerColor = if (!isDefaultLauncher) MaterialTheme.colorScheme.errorContainer else MaterialTheme.colorScheme.primaryContainer
+                        )
+                    },
+                    modifier = Modifier.clickable {
+                        if (!isDefaultLauncher) {
+                            showLauncherExplanation = true
+                        } else {
+                            try {
+                                val intent = Intent(Settings.ACTION_HOME_SETTINGS)
+                                context.startActivity(intent)
+                            } catch (e: Exception) {
+                                e.printStackTrace()
+                            }
+                        }
+                    }
+                )
+                AdminDivider()
+
                 if (isKioskActive) {
                     ListItem(
                         colors = ListItemDefaults.colors(containerColor = Color.Transparent),
@@ -242,8 +366,8 @@ fun AdminSettingsScreen(
                         leadingContent = {
                             AdminIcon(
                                 imageVector = Icons.Default.LockOpen,
-                                tint = MaterialTheme.colorScheme.error,
-                                containerColor = MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.3f)
+                                tint = MaterialTheme.colorScheme.primary,
+                                containerColor = MaterialTheme.colorScheme.primaryContainer
                             )
                         },
                         modifier = Modifier.clickable {
@@ -252,8 +376,29 @@ fun AdminSettingsScreen(
                             onExit()
                         }
                     )
-                    AdminDivider()
+                } else {
+                    ListItem(
+                        colors = ListItemDefaults.colors(containerColor = Color.Transparent),
+                        headlineContent = {
+                            Text(
+                                stringResource(id = R.string.pin),
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.Bold
+                            )
+                        },
+                        leadingContent = {
+                            AdminIcon(
+                                imageVector = Icons.Default.Lock,
+                                tint = MaterialTheme.colorScheme.error,
+                                containerColor = MaterialTheme.colorScheme.errorContainer
+                            )
+                        },
+                        modifier = Modifier.clickable {
+                            showPinExplanation = true
+                        }
+                    )
                 }
+                AdminDivider()
                 ListItem(
                     colors = ListItemDefaults.colors(containerColor = Color.Transparent),
                     headlineContent = {
@@ -270,6 +415,108 @@ fun AdminSettingsScreen(
                     modifier = Modifier.clickable {
                         onLogout()
                         onExit()
+                    }
+                )
+            }
+
+            // Modals for Onboarding
+            if (showDialerExplanation) {
+                AppDialog(
+                    onDismissRequest = { showDialerExplanation = false },
+                    title = stringResource(id = R.string.onboarding_default_dialer_title),
+                    message = stringResource(id = R.string.onboarding_default_dialer_message),
+                    buttons = {
+                        androidx.compose.foundation.layout.Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = androidx.compose.foundation.layout.Arrangement.Center
+                        ) {
+                            androidx.compose.material3.Button(
+                                onClick = { showDialerExplanation = false },
+                                colors = androidx.compose.material3.ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary),
+                                modifier = Modifier.padding(end = 8.dp)
+                            ) {
+                                Text(stringResource(id = R.string.not_now))
+                            }
+                            androidx.compose.material3.Button(
+                                onClick = {
+                                    showDialerExplanation = false
+                                    requestDefaultDialer()
+                                },
+                                colors = androidx.compose.material3.ButtonDefaults.buttonColors(containerColor = com.incomingcallonly.launcher.ui.theme.ConfirmGreen),
+                                modifier = Modifier.padding(start = 8.dp)
+                            ) {
+                                Text(stringResource(id = R.string.understood))
+                            }
+                        }
+                    }
+                )
+            }
+
+            if (showLauncherExplanation) {
+                AppDialog(
+                    onDismissRequest = { showLauncherExplanation = false },
+                    title = stringResource(id = R.string.onboarding_default_launcher_title),
+                    message = stringResource(id = R.string.onboarding_default_launcher_message),
+                    buttons = {
+                        androidx.compose.foundation.layout.Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = androidx.compose.foundation.layout.Arrangement.Center
+                        ) {
+                            androidx.compose.material3.Button(
+                                onClick = { showLauncherExplanation = false },
+                                colors = androidx.compose.material3.ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary),
+                                modifier = Modifier.padding(end = 8.dp)
+                            ) {
+                                Text(stringResource(id = R.string.not_now))
+                            }
+                            androidx.compose.material3.Button(
+                                onClick = {
+                                    showLauncherExplanation = false
+                                    try {
+                                        val intent = Intent(Settings.ACTION_HOME_SETTINGS)
+                                        context.startActivity(intent)
+                                    } catch (e: Exception) {
+                                        e.printStackTrace()
+                                    }
+                                },
+                                colors = androidx.compose.material3.ButtonDefaults.buttonColors(containerColor = com.incomingcallonly.launcher.ui.theme.ConfirmGreen),
+                                modifier = Modifier.padding(start = 8.dp)
+                            ) {
+                                Text(stringResource(id = R.string.configure))
+                            }
+                        }
+                    }
+                )
+            }
+
+            if (showPinExplanation) {
+                AppDialog(
+                    onDismissRequest = { showPinExplanation = false },
+                    title = stringResource(id = R.string.onboarding_pinned_mode_title),
+                    message = stringResource(id = R.string.onboarding_pinned_mode_message),
+                    buttons = {
+                        androidx.compose.foundation.layout.Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = androidx.compose.foundation.layout.Arrangement.Center
+                        ) {
+                            androidx.compose.material3.Button(
+                                onClick = { showPinExplanation = false },
+                                colors = androidx.compose.material3.ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary),
+                                modifier = Modifier.padding(end = 8.dp)
+                            ) {
+                                Text(stringResource(id = R.string.not_now))
+                            }
+                            androidx.compose.material3.Button(
+                                onClick = {
+                                    showPinExplanation = false
+                                    onPin()
+                                },
+                                colors = androidx.compose.material3.ButtonDefaults.buttonColors(containerColor = com.incomingcallonly.launcher.ui.theme.ConfirmGreen),
+                                modifier = Modifier.padding(start = 8.dp)
+                            ) {
+                                Text(stringResource(id = R.string.understood))
+                            }
+                        }
                     }
                 )
             }

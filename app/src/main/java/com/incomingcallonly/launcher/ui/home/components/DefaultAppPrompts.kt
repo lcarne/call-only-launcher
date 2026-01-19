@@ -92,6 +92,16 @@ fun DefaultAppPrompts(
             .fillMaxWidth()
             .padding(horizontal = 32.dp)
     ) {
+        if (!isDefaultDialer || !isDefaultLauncher || !isPinned) {
+            Text(
+                text = stringResource(R.string.config_incomplete_warning),
+                color = MaterialTheme.colorScheme.error,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(bottom = 8.dp),
+                style = MaterialTheme.typography.bodyMedium
+            )
+        }
+
         if (!isDefaultDialer) {
             Button(
                 onClick = { showDialerModal = true },

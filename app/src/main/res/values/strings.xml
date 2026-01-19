@@ -15,7 +15,10 @@
     <string name="next">Next</string>
     <string name="not_now">Not now</string>
     <string name="understood">Understood</string>
+    <string name="pin">Pin the app</string>
     <string name="unpin">Unpin the app</string>
+    <string name="change_default_phone_app">Change default phone app</string>
+    <string name="change_default_launcher">Change default home app</string>
     <string name="validate">Validate</string>
     <plurals name="press_again">
         <item quantity="one">%1$d more tap</item>
@@ -54,6 +57,7 @@
 
     <!-- ==================== ADMIN: MAIN SETTINGS ==================== -->
     <string name="settings">Settings</string>
+    <string name="settings_section_configuration">Configuration</string>
     <string name="settings_section_content">Content</string>
     <string name="settings_section_system">System</string>
     <string name="settings_section_display_power">Display &amp; Power</string>
@@ -62,7 +66,7 @@
 
     <!-- ==================== ADMIN: SYSTEM SETTINGS ==================== -->
     <!-- Call Security -->
-    <string name="accept_all_calls">Restrict to contacts only</string>
+    <string name="accept_all_calls">Restrict calls to contacts only</string>
     <string name="accept_all_calls_desc">If disabled, all calls are allowed</string>
     <string name="change_pin">Change PIN</string>
 
@@ -97,11 +101,11 @@
 
     <!-- ==================== ADMIN: DISPLAY & POWER ==================== -->
     <!-- Screen Behavior -->
-    <string name="screen_behavior_battery">On Battery</string>
-    <string name="screen_behavior_plugged">Plugged In</string>
+    <string name="screen_behavior_battery">Screen behavior on battery</string>
+    <string name="screen_behavior_plugged">Screen behavior on charge</string>
     <string name="mode_off">Off</string>
-    <string name="mode_dim">Dim</string>
-    <string name="mode_awake">Awake</string>
+    <string name="mode_dim">Dimmed screen</string>
+    <string name="mode_awake">Always awake</string>
 
     <!-- Night Mode -->
     <string name="night_mode">Night mode</string>
@@ -171,6 +175,7 @@
 
     <!-- ==================== ONBOARDING ==================== -->
     <string name="onboarding_important">Important: This message will not be shown again.</string>
+    <string name="config_incomplete_warning">App setup incomplete. Please complete configuration below.</string>
 
     <!-- Slides -->
     <string name="onboarding_presentation_title">Presentation</string>
