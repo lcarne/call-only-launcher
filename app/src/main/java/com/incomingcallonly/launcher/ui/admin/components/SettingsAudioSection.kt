@@ -18,7 +18,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
-
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Text
@@ -54,18 +53,17 @@ fun SettingsAudioSection(viewModel: SettingsViewModel) {
                 )
                 Spacer(modifier = Modifier.height(12.dp))
                 ModernSegmentedButton(
-                    options = listOf(
-                        stringResource(id = R.string.earpiece_setting),
-                        stringResource(id = R.string.speaker_setting)
-                    ),
+                    options =
+                        listOf(
+                            stringResource(id = R.string.earpiece_setting),
+                            stringResource(id = R.string.speaker_setting)
+                        ),
                     selectedIndex = if (isDefaultSpeakerEnabled) 1 else 0,
                     onOptionSelected = { index ->
                         viewModel.setDefaultSpeakerEnabled(index == 1)
                     }
                 )
             }
-
-
 
             AdminDivider()
 
@@ -82,15 +80,14 @@ fun SettingsAudioSection(viewModel: SettingsViewModel) {
                 )
                 Spacer(modifier = Modifier.height(12.dp))
                 ModernSegmentedButton(
-                    options = listOf(
-                        stringResource(id = R.string.ringer_mode_switch),
-                        stringResource(id = R.string.ringer_mode_forced_on),
-                        stringResource(id = R.string.ringer_mode_forced_off)
-                    ),
+                    options =
+                        listOf(
+                            stringResource(id = R.string.ringer_mode_switch),
+                            stringResource(id = R.string.ringer_mode_forced_on),
+                            stringResource(id = R.string.ringer_mode_forced_off)
+                        ),
                     selectedIndex = ringerMode,
-                    onOptionSelected = { index ->
-                        viewModel.setRingerMode(index)
-                    }
+                    onOptionSelected = { index -> viewModel.setRingerMode(index) }
                 )
             }
 
@@ -112,12 +109,14 @@ fun SettingsAudioSection(viewModel: SettingsViewModel) {
                             text = "$ringerVolume%",
                             style = MaterialTheme.typography.labelLarge,
                             color = MaterialTheme.colorScheme.primary,
-                            modifier = Modifier
-                                .background(
-                                    MaterialTheme.colorScheme.primaryContainer,
-                                    shape = RoundedCornerShape(8.dp)
-                                )
-                                .padding(horizontal = 8.dp, vertical = 4.dp)
+                            modifier =
+                                Modifier
+                                    .background(
+                                        MaterialTheme.colorScheme
+                                            .primaryContainer,
+                                        shape = RoundedCornerShape(8.dp)
+                                    )
+                                    .padding(horizontal = 8.dp, vertical = 4.dp)
                         )
                     }
                 },
@@ -127,12 +126,15 @@ fun SettingsAudioSection(viewModel: SettingsViewModel) {
                             value = ringerVolume.toFloat(),
                             onValueChange = { viewModel.setRingerVolume(it.toInt()) },
                             valueRange = 0f..100f,
-                            steps = 9,  // 10% increments for easier control
-                            colors = SliderDefaults.colors(
-                                thumbColor = MaterialTheme.colorScheme.primary,
-                                activeTrackColor = MaterialTheme.colorScheme.primary,
-                                inactiveTrackColor = MaterialTheme.colorScheme.surfaceVariant
-                            ),
+                            steps = 9,
+                            colors =
+                                SliderDefaults.colors(
+                                    thumbColor = MaterialTheme.colorScheme.primary,
+                                    activeTrackColor =
+                                        MaterialTheme.colorScheme.primary,
+                                    inactiveTrackColor =
+                                        MaterialTheme.colorScheme.surfaceVariant
+                                ),
                             modifier = Modifier.padding(top = 8.dp)
                         )
                         // Min/max labels for context

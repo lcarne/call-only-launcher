@@ -9,5 +9,5 @@ data class Contact(
     val id: Int = 0,
     val name: String,
     val phoneNumber: String,
-    val photoUri: String? = null // Path to local storage or content URI
+    val photoUri: String? = null
 )

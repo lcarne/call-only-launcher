@@ -52,6 +52,7 @@ import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -74,7 +75,6 @@ import com.incomingcallonly.launcher.ui.components.AppDialog
 import com.incomingcallonly.launcher.ui.components.DepthIcon
 import com.incomingcallonly.launcher.ui.theme.Spacing
 import com.incomingcallonly.launcher.ui.theme.SystemBarsColor
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -99,9 +99,7 @@ fun AdminSettingsScreen(
 
     // System Bars Configuration
     val isDarkTheme = isSystemInDarkTheme()
-    SystemBarsColor(
-        darkIcons = !isDarkTheme
-    )
+    SystemBarsColor(darkIcons = !isDarkTheme)
 
     // Modern Dialogs
     if (showResetDataDialog) {
@@ -152,7 +150,7 @@ fun AdminSettingsScreen(
                 )
             },
             confirmButton = {
-                AdminDangerButton( // Changed to DangerButton as requested
+                AdminDangerButton(
                     text = stringResource(R.string.confirm),
                     onClick = {
                         settingsViewModel.resetSettings()
@@ -168,19 +166,21 @@ fun AdminSettingsScreen(
         )
     }
 
-    val exportLauncher = androidx.activity.compose.rememberLauncherForActivityResult(
-        contract = androidx.activity.result.contract.ActivityResultContracts.CreateDocument("text/x-vcard"),
-        onResult = { uri ->
-            uri?.let { contactsViewModel.exportContacts(it) }
-        }
-    )
+    val exportLauncher =
+        androidx.activity.compose.rememberLauncherForActivityResult(
+            contract =
+                androidx.activity.result.contract.ActivityResultContracts
+                    .CreateDocument("text/x-vcard"),
+            onResult = { uri -> uri?.let { contactsViewModel.exportContacts(it) } }
+        )
 
-    val importLauncher = androidx.activity.compose.rememberLauncherForActivityResult(
-        contract = androidx.activity.result.contract.ActivityResultContracts.OpenDocument(),
-        onResult = { uri ->
-            uri?.let { contactsViewModel.importContacts(it) }
-        }
-    )
+    val importLauncher =
+        androidx.activity.compose.rememberLauncherForActivityResult(
+            contract =
+                androidx.activity.result.contract.ActivityResultContracts
+                    .OpenDocument(),
+            onResult = { uri -> uri?.let { contactsViewModel.importContacts(it) } }
+        )
 
     val snackbarHostState = remember { androidx.compose.material3.SnackbarHostState() }
     val importExportState by contactsViewModel.importExportState.collectAsState()
@@ -219,31 +219,33 @@ fun AdminSettingsScreen(
             }
         }
         lifecycleOwner.lifecycle.addObserver(observer)
-        onDispose {
-            lifecycleOwner.lifecycle.removeObserver(observer)
-        }
+        onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
     }
 
-    val startForResult = androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult()
-    val dialerLauncher = androidx.activity.compose.rememberLauncherForActivityResult(startForResult) { 
-        settingsViewModel.checkDefaultApps()
-    }
+    val startForResult =
+        androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult()
+    val dialerLauncher =
+        androidx.activity.compose.rememberLauncherForActivityResult(startForResult) {
+            settingsViewModel.checkDefaultApps()
+        }
 
     val requestDefaultDialer = {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
             val roleManager = context.getSystemService(android.app.role.RoleManager::class.java)
             if (roleManager?.isRoleAvailable(android.app.role.RoleManager.ROLE_DIALER) == true) {
-                // Always request the role to show the popup, even if we already hold it
-                // This allows the user to re-confirm or potentially see the dialog (depending on OS behavior)
-                // as requested by the user to avoid the generic settings screen.
-                val intent = roleManager.createRequestRoleIntent(android.app.role.RoleManager.ROLE_DIALER)
+                val intent =
+                    roleManager.createRequestRoleIntent(
+                        android.app.role.RoleManager.ROLE_DIALER
+                    )
                 dialerLauncher.launch(intent)
             }
         } else {
-            // Pre-Android Q
             try {
                 val intent = Intent(TelecomManager.ACTION_CHANGE_DEFAULT_DIALER)
-                intent.putExtra(TelecomManager.EXTRA_CHANGE_DEFAULT_DIALER_PACKAGE_NAME, context.packageName)
+                intent.putExtra(
+                    TelecomManager.EXTRA_CHANGE_DEFAULT_DIALER_PACKAGE_NAME,
+                    context.packageName
+                )
                 dialerLauncher.launch(intent)
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -260,32 +262,37 @@ fun AdminSettingsScreen(
                 title = {
                     Text(
                         stringResource(id = R.string.settings),
-                        style = MaterialTheme.typography.headlineMedium.copy(
-                            shadow = Shadow(
-                                color = Color.Black.copy(alpha = 0.25f),
-                                offset = Offset(2f, 2f),
-                                blurRadius = 4f
+                        style =
+                            MaterialTheme.typography.headlineMedium.copy(
+                                shadow =
+                                    Shadow(
+                                        color =
+                                            Color.Black.copy(
+                                                alpha = 0.25f
+                                            ),
+                                        offset = Offset(2f, 2f),
+                                        blurRadius = 4f
+                                    )
                             )
-                        )
                     )
                 },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surface,
-                    scrolledContainerColor = MaterialTheme.colorScheme.surface
-                ),
-                modifier = Modifier.shadow(
-                    elevation = 4.dp,
-                    spotColor = Color.Black.copy(alpha = 0.15f)
-                ),
+                colors =
+                    TopAppBarDefaults.topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.surface,
+                        scrolledContainerColor = MaterialTheme.colorScheme.surface
+                    ),
+                modifier =
+                    Modifier.shadow(
+                        elevation = 4.dp,
+                        spotColor = Color.Black.copy(alpha = 0.15f)
+                    ),
             )
         }
     ) { padding ->
-        Column(
-            modifier = Modifier
-                .padding(padding)
-                .fillMaxSize()
-                .verticalScroll(scrollState)
-        ) {
+        Column(modifier = Modifier
+            .padding(padding)
+            .fillMaxSize()
+            .verticalScroll(scrollState)) {
             // Configuration Section
             AdminSectionHeader(text = stringResource(id = R.string.settings_section_configuration))
 
@@ -303,22 +310,35 @@ fun AdminSettingsScreen(
                     leadingContent = {
                         AdminIcon(
                             imageVector = Icons.Default.Call,
-                            tint = if (!isDefaultDialer) MaterialTheme.colorScheme.error else com.incomingcallonly.launcher.ui.theme.ConfirmGreen,
-                            containerColor = if (!isDefaultDialer) MaterialTheme.colorScheme.errorContainer else com.incomingcallonly.launcher.ui.theme.ConfirmGreen.copy(alpha = 0.2f)
+                            tint =
+                                if (!isDefaultDialer) MaterialTheme.colorScheme.error
+                                else
+                                    com.incomingcallonly.launcher.ui.theme
+                                        .ConfirmGreen,
+                            containerColor =
+                                if (!isDefaultDialer)
+                                    MaterialTheme.colorScheme.errorContainer
+                                else
+                                    com.incomingcallonly.launcher.ui.theme
+                                        .ConfirmGreen.copy(alpha = 0.2f)
                         )
                     },
-                    modifier = Modifier.clickable {
-                        if (!isDefaultDialer) {
-                            showDialerExplanation = true
-                        } else {
-                            try {
-                                val intent = Intent(Settings.ACTION_MANAGE_DEFAULT_APPS_SETTINGS)
-                                context.startActivity(intent)
-                            } catch (e: Exception) {
-                                requestDefaultDialer()
+                    modifier =
+                        Modifier.clickable {
+                            if (!isDefaultDialer) {
+                                showDialerExplanation = true
+                            } else {
+                                try {
+                                    val intent =
+                                        Intent(
+                                            Settings.ACTION_MANAGE_DEFAULT_APPS_SETTINGS
+                                        )
+                                    context.startActivity(intent)
+                                } catch (e: Exception) {
+                                    requestDefaultDialer()
+                                }
                             }
                         }
-                    }
                 )
                 AdminDivider()
 
@@ -334,22 +354,32 @@ fun AdminSettingsScreen(
                     leadingContent = {
                         AdminIcon(
                             imageVector = Icons.Default.Home,
-                            tint = if (!isDefaultLauncher) MaterialTheme.colorScheme.error else com.incomingcallonly.launcher.ui.theme.ConfirmGreen,
-                            containerColor = if (!isDefaultLauncher) MaterialTheme.colorScheme.errorContainer else com.incomingcallonly.launcher.ui.theme.ConfirmGreen.copy(alpha = 0.2f)
+                            tint =
+                                if (!isDefaultLauncher) MaterialTheme.colorScheme.error
+                                else
+                                    com.incomingcallonly.launcher.ui.theme
+                                        .ConfirmGreen,
+                            containerColor =
+                                if (!isDefaultLauncher)
+                                    MaterialTheme.colorScheme.errorContainer
+                                else
+                                    com.incomingcallonly.launcher.ui.theme
+                                        .ConfirmGreen.copy(alpha = 0.2f)
                         )
                     },
-                    modifier = Modifier.clickable {
-                        if (!isDefaultLauncher) {
-                            showLauncherExplanation = true
-                        } else {
-                            try {
-                                val intent = Intent(Settings.ACTION_HOME_SETTINGS)
-                                context.startActivity(intent)
-                            } catch (e: Exception) {
-                                e.printStackTrace()
+                    modifier =
+                        Modifier.clickable {
+                            if (!isDefaultLauncher) {
+                                showLauncherExplanation = true
+                            } else {
+                                try {
+                                    val intent = Intent(Settings.ACTION_HOME_SETTINGS)
+                                    context.startActivity(intent)
+                                } catch (e: Exception) {
+                                    e.printStackTrace()
+                                }
                             }
                         }
-                    }
                 )
                 AdminDivider()
 
@@ -367,14 +397,17 @@ fun AdminSettingsScreen(
                             AdminIcon(
                                 imageVector = Icons.Default.LockOpen,
                                 tint = com.incomingcallonly.launcher.ui.theme.ConfirmGreen,
-                                containerColor = com.incomingcallonly.launcher.ui.theme.ConfirmGreen.copy(alpha = 0.2f)
+                                containerColor =
+                                    com.incomingcallonly.launcher.ui.theme.ConfirmGreen
+                                        .copy(alpha = 0.2f)
                             )
                         },
-                        modifier = Modifier.clickable {
-                            onUnpin()
-                            onLogout()
-                            onExit()
-                        }
+                        modifier =
+                            Modifier.clickable {
+                                onUnpin()
+                                onLogout()
+                                onExit()
+                            }
                     )
                 } else {
                     ListItem(
@@ -393,9 +426,7 @@ fun AdminSettingsScreen(
                                 containerColor = MaterialTheme.colorScheme.errorContainer
                             )
                         },
-                        modifier = Modifier.clickable {
-                            showPinExplanation = true
-                        }
+                        modifier = Modifier.clickable { showPinExplanation = true }
                     )
                 }
                 AdminDivider()
@@ -409,13 +440,17 @@ fun AdminSettingsScreen(
                     },
                     leadingContent = {
                         AdminIcon(
-                            painter = rememberVectorPainter(Icons.AutoMirrored.Filled.ArrowBack)
+                            painter =
+                                rememberVectorPainter(
+                                    Icons.AutoMirrored.Filled.ArrowBack
+                                )
                         )
                     },
-                    modifier = Modifier.clickable {
-                        onLogout()
-                        onExit()
-                    }
+                    modifier =
+                        Modifier.clickable {
+                            onLogout()
+                            onExit()
+                        }
                 )
             }
 
@@ -428,25 +463,35 @@ fun AdminSettingsScreen(
                     buttons = {
                         androidx.compose.foundation.layout.Row(
                             modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = androidx.compose.foundation.layout.Arrangement.Center
+                            horizontalArrangement =
+                                androidx.compose.foundation.layout.Arrangement.Center
                         ) {
                             androidx.compose.material3.Button(
                                 onClick = { showDialerExplanation = false },
-                                colors = androidx.compose.material3.ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary),
+                                colors =
+                                    androidx.compose.material3.ButtonDefaults
+                                        .buttonColors(
+                                            containerColor =
+                                                MaterialTheme.colorScheme
+                                                    .secondary
+                                        ),
                                 modifier = Modifier.padding(end = 8.dp)
-                            ) {
-                                Text(stringResource(id = R.string.not_now))
-                            }
+                            ) { Text(stringResource(id = R.string.not_now)) }
                             androidx.compose.material3.Button(
                                 onClick = {
                                     showDialerExplanation = false
                                     requestDefaultDialer()
                                 },
-                                colors = androidx.compose.material3.ButtonDefaults.buttonColors(containerColor = com.incomingcallonly.launcher.ui.theme.ConfirmGreen),
+                                colors =
+                                    androidx.compose.material3.ButtonDefaults
+                                        .buttonColors(
+                                            containerColor =
+                                                com.incomingcallonly
+                                                    .launcher.ui.theme
+                                                    .ConfirmGreen
+                                        ),
                                 modifier = Modifier.padding(start = 8.dp)
-                            ) {
-                                Text(stringResource(id = R.string.understood))
-                            }
+                            ) { Text(stringResource(id = R.string.understood)) }
                         }
                     }
                 )
@@ -460,15 +505,20 @@ fun AdminSettingsScreen(
                     buttons = {
                         androidx.compose.foundation.layout.Row(
                             modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = androidx.compose.foundation.layout.Arrangement.Center
+                            horizontalArrangement =
+                                androidx.compose.foundation.layout.Arrangement.Center
                         ) {
                             androidx.compose.material3.Button(
                                 onClick = { showLauncherExplanation = false },
-                                colors = androidx.compose.material3.ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary),
+                                colors =
+                                    androidx.compose.material3.ButtonDefaults
+                                        .buttonColors(
+                                            containerColor =
+                                                MaterialTheme.colorScheme
+                                                    .secondary
+                                        ),
                                 modifier = Modifier.padding(end = 8.dp)
-                            ) {
-                                Text(stringResource(id = R.string.not_now))
-                            }
+                            ) { Text(stringResource(id = R.string.not_now)) }
                             androidx.compose.material3.Button(
                                 onClick = {
                                     showLauncherExplanation = false
@@ -479,11 +529,16 @@ fun AdminSettingsScreen(
                                         e.printStackTrace()
                                     }
                                 },
-                                colors = androidx.compose.material3.ButtonDefaults.buttonColors(containerColor = com.incomingcallonly.launcher.ui.theme.ConfirmGreen),
+                                colors =
+                                    androidx.compose.material3.ButtonDefaults
+                                        .buttonColors(
+                                            containerColor =
+                                                com.incomingcallonly
+                                                    .launcher.ui.theme
+                                                    .ConfirmGreen
+                                        ),
                                 modifier = Modifier.padding(start = 8.dp)
-                            ) {
-                                Text(stringResource(id = R.string.configure))
-                            }
+                            ) { Text(stringResource(id = R.string.configure)) }
                         }
                     }
                 )
@@ -497,25 +552,35 @@ fun AdminSettingsScreen(
                     buttons = {
                         androidx.compose.foundation.layout.Row(
                             modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = androidx.compose.foundation.layout.Arrangement.Center
+                            horizontalArrangement =
+                                androidx.compose.foundation.layout.Arrangement.Center
                         ) {
                             androidx.compose.material3.Button(
                                 onClick = { showPinExplanation = false },
-                                colors = androidx.compose.material3.ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary),
+                                colors =
+                                    androidx.compose.material3.ButtonDefaults
+                                        .buttonColors(
+                                            containerColor =
+                                                MaterialTheme.colorScheme
+                                                    .secondary
+                                        ),
                                 modifier = Modifier.padding(end = 8.dp)
-                            ) {
-                                Text(stringResource(id = R.string.not_now))
-                            }
+                            ) { Text(stringResource(id = R.string.not_now)) }
                             androidx.compose.material3.Button(
                                 onClick = {
                                     showPinExplanation = false
                                     onPin()
                                 },
-                                colors = androidx.compose.material3.ButtonDefaults.buttonColors(containerColor = com.incomingcallonly.launcher.ui.theme.ConfirmGreen),
+                                colors =
+                                    androidx.compose.material3.ButtonDefaults
+                                        .buttonColors(
+                                            containerColor =
+                                                com.incomingcallonly
+                                                    .launcher.ui.theme
+                                                    .ConfirmGreen
+                                        ),
                                 modifier = Modifier.padding(start = 8.dp)
-                            ) {
-                                Text(stringResource(id = R.string.understood))
-                            }
+                            ) { Text(stringResource(id = R.string.understood)) }
                         }
                     }
                 )
@@ -524,7 +589,7 @@ fun AdminSettingsScreen(
             // Content Management
             AdminSectionHeader(text = stringResource(id = R.string.settings_section_content))
 
-            // Standalone buttons for Content Management (as requested)
+            // Standalone buttons for Content Management
             AdminNavigationItem(
                 headlineText = stringResource(id = R.string.manage_contacts),
                 leadingIcon = {
@@ -585,7 +650,8 @@ fun AdminSettingsScreen(
                             tint = MaterialTheme.colorScheme.primary
                         )
                     },
-                    modifier = Modifier.clickable { exportLauncher.launch("contacts_backup.vcf") }
+                    modifier =
+                        Modifier.clickable { exportLauncher.launch("contacts_backup.vcf") }
                 )
 
                 HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp))
@@ -599,20 +665,16 @@ fun AdminSettingsScreen(
                             tint = MaterialTheme.colorScheme.primary
                         )
                     },
-                    modifier = Modifier.clickable {
-                        importLauncher.launch(
-                            arrayOf(
-                                "text/x-vcard",
-                                "text/vcard"
-                            )
-                        )
-                    }
+                    modifier =
+                        Modifier.clickable {
+                            importLauncher.launch(arrayOf("text/x-vcard", "text/vcard"))
+                        }
                 )
             }
 
             Spacer(modifier = Modifier.height(Spacing.md))
 
-            // Dangerous Zone - Same style as export/import section
+            // Dangerous Zone
             AdminSettingsCard {
                 ListItem(
                     colors = ListItemDefaults.colors(containerColor = Color.Transparent),
@@ -650,9 +712,41 @@ fun AdminSettingsScreen(
             }
 
             // Support Section
-            AdminSectionHeader(text = stringResource(id = R.string.support))
+            AdminSectionHeader(text = stringResource(id = R.string.about))
 
             AdminSettingsCard {
+                ListItem(
+                    colors = ListItemDefaults.colors(containerColor = Color.Transparent),
+                    headlineContent = { Text(stringResource(id = R.string.project_github)) },
+                    leadingContent = {
+                        AdminIcon(
+                            painter = painterResource(id = R.drawable.ic_github),
+                            tint = MaterialTheme.colorScheme.onSurface,
+                            containerColor = MaterialTheme.colorScheme.surfaceVariant
+                        )
+                    },
+                    trailingContent = {
+                        DepthIcon(
+                            imageVector = Icons.AutoMirrored.Filled.OpenInNew,
+                            contentDescription = null,
+                            modifier = Modifier.size(Spacing.iconLarge),
+                            tint =
+                                MaterialTheme.colorScheme.onSurfaceVariant.copy(
+                                    alpha = 0.5f
+                                )
+                        )
+                    },
+                    modifier =
+                        Modifier.clickable {
+                            onUnpin()
+                            uriHandler.openUri(
+                                "https://github.com/lcarne/incoming-call-only-launcher"
+                            )
+                        }
+                )
+
+                HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp))
+
                 ListItem(
                     colors = ListItemDefaults.colors(containerColor = Color.Transparent),
                     headlineContent = { Text(stringResource(id = R.string.buy_me_coffee)) },
@@ -668,13 +762,17 @@ fun AdminSettingsScreen(
                             imageVector = Icons.AutoMirrored.Filled.OpenInNew,
                             contentDescription = null,
                             modifier = Modifier.size(Spacing.iconLarge),
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+                            tint =
+                                MaterialTheme.colorScheme.onSurfaceVariant.copy(
+                                    alpha = 0.5f
+                                )
                         )
                     },
-                    modifier = Modifier.clickable {
-                        onUnpin()
-                        uriHandler.openUri("https://buymeacoffee.com/leocarne")
-                    }
+                    modifier =
+                        Modifier.clickable {
+                            onUnpin()
+                            uriHandler.openUri("https://buymeacoffee.com/leocarne")
+                        }
                 )
             }
 

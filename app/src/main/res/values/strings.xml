@@ -94,9 +94,10 @@
     <string name="reset_settings">Reset settings</string>
     <string name="confirm_reset_settings">Are you sure you want to reset all settings to default?\nThis action is irreversible.</string>
 
-    <!-- Support -->
-    <string name="support">Support</string>
+    <!-- About -->
+    <string name="about">About</string>
     <string name="buy_me_coffee">Buy me a coffee</string>
+    <string name="project_github">Source code on GitHub</string>
     <string name="settings_footer_message" formatted="false">100% free, 100% open source,\nmade with ❤️ for my grandmother</string>
 
     <!-- ==================== ADMIN: DISPLAY & POWER ==================== -->

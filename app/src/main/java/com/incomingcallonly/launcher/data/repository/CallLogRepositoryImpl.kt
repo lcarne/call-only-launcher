@@ -21,7 +21,11 @@ class CallLogRepositoryImpl @Inject constructor(
                     normalizedContactNumber == normalizedLogNumber ||
                             (normalizedLogNumber.length >= 9 && normalizedContactNumber.length >= 9 &&
                                     (normalizedLogNumber.endsWith(normalizedContactNumber.takeLast(9)) ||
-                                            normalizedContactNumber.endsWith(normalizedLogNumber.takeLast(9))))
+                                            normalizedContactNumber.endsWith(
+                                                normalizedLogNumber.takeLast(
+                                                    9
+                                                )
+                                            )))
                 }
 
                 if (contact != null) {

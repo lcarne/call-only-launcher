@@ -13,16 +13,18 @@ import com.incomingcallonly.launcher.manager.KioskManager
 import com.incomingcallonly.launcher.util.ImageStorageManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @HiltViewModel
-class SettingsViewModel @Inject constructor(
+class SettingsViewModel
+@Inject
+constructor(
     private val settingsRepository: SettingsRepository,
     private val callLogRepository: CallLogRepository,
     private val contactRepository: ContactRepository,
@@ -56,13 +58,14 @@ class SettingsViewModel @Inject constructor(
     val isDefaultSpeakerEnabled = settingsRepository.isDefaultSpeakerEnabled
     val clockColor = settingsRepository.clockColor
 
-    // Call History Logic (Can be separated if needed, but fits in 'System' management)
-    val callLogs = callLogRepository.getAllCallLogs()
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
-            initialValue = emptyList()
-        )
+    val callLogs =
+        callLogRepository
+            .getAllCallLogs()
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5000),
+                initialValue = emptyList()
+            )
 
     fun setScreenBehaviorPlugged(behavior: Int) =
         settingsRepository.setScreenBehaviorPlugged(behavior)
@@ -87,9 +90,7 @@ class SettingsViewModel @Inject constructor(
     fun setClockColor(color: Int) = settingsRepository.setClockColor(color)
 
     fun clearCallHistory() {
-        viewModelScope.launch {
-            callLogRepository.clearHistory()
-        }
+        viewModelScope.launch { callLogRepository.clearHistory() }
     }
 
     private var currentRingtone: android.media.Ringtone? = null
@@ -101,30 +102,30 @@ class SettingsViewModel @Inject constructor(
             currentRingtone?.stop()
         }
 
-        ringtoneJob = viewModelScope.launch {
-            try {
-                val uri = android.media.RingtoneManager.getActualDefaultRingtoneUri(
-                    context,
-                    android.media.RingtoneManager.TYPE_RINGTONE
-                )
-                currentRingtone = android.media.RingtoneManager.getRingtone(context, uri)
-                currentRingtone?.play()
-                kotlinx.coroutines.delay(3000)
-                if (currentRingtone?.isPlaying == true) {
-                    currentRingtone?.stop()
+        ringtoneJob =
+            viewModelScope.launch {
+                try {
+                    val uri =
+                        android.media.RingtoneManager.getActualDefaultRingtoneUri(
+                            context,
+                            android.media.RingtoneManager.TYPE_RINGTONE
+                        )
+                    currentRingtone = android.media.RingtoneManager.getRingtone(context, uri)
+                    currentRingtone?.play()
+                    kotlinx.coroutines.delay(3000)
+                    if (currentRingtone?.isPlaying == true) {
+                        currentRingtone?.stop()
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
             }
-        }
     }
 
     fun deleteAllData() {
         viewModelScope.launch {
             val currentContacts = contactRepository.getContactsList()
-            currentContacts.forEach { contact ->
-                imageStorageManager.deleteImage(contact.photoUri)
-            }
+            currentContacts.forEach { contact -> imageStorageManager.deleteImage(contact.photoUri) }
             contactRepository.deleteAllContacts()
             callLogRepository.clearHistory()
         }
@@ -144,14 +145,20 @@ class SettingsViewModel @Inject constructor(
             // Check Launcher
             // Check Launcher
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
-                val roleManager = context.getSystemService(Context.ROLE_SERVICE) as android.app.role.RoleManager
-                _isDefaultLauncher.value = roleManager.isRoleHeld(android.app.role.RoleManager.ROLE_HOME)
+                val roleManager =
+                    context.getSystemService(Context.ROLE_SERVICE) as
+                            android.app.role.RoleManager
+                _isDefaultLauncher.value =
+                    roleManager.isRoleHeld(android.app.role.RoleManager.ROLE_HOME)
             } else {
-                val intent = Intent(Intent.ACTION_MAIN).apply {
-                    addCategory(Intent.CATEGORY_HOME)
-                }
-                val resolveInfo = context.packageManager.resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY)
-                _isDefaultLauncher.value = resolveInfo?.activityInfo?.packageName == context.packageName
+                val intent = Intent(Intent.ACTION_MAIN).apply { addCategory(Intent.CATEGORY_HOME) }
+                val resolveInfo =
+                    context.packageManager.resolveActivity(
+                        intent,
+                        PackageManager.MATCH_DEFAULT_ONLY
+                    )
+                _isDefaultLauncher.value =
+                    resolveInfo?.activityInfo?.packageName == context.packageName
             }
         } catch (e: Exception) {
             e.printStackTrace()

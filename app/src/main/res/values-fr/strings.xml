@@ -94,9 +94,10 @@
     <string name="reset_settings">Réinitialiser les paramètres</string>
     <string name="confirm_reset_settings">Êtes-vous sûr de vouloir réinitialiser tous les paramètres ?\nCette action est irréversible.</string>
 
-    <!-- Support-->
-    <string name="support">Soutien</string>
+    <!-- About-->
+    <string name="about">À propos</string>
     <string name="buy_me_coffee">M\'offrir un café</string>
+    <string name="project_github">Code source sur GitHub</string>
     <string name="settings_footer_message" formatted="false">100% gratuit, 100% open source,\nfait avec ❤️ pour ma grand-mère</string>
 
     <!-- ==================== ADMIN: DISPLAY & POWER ==================== -->
