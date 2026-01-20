@@ -10,6 +10,7 @@ import javax.crypto.SecretKey
 import javax.crypto.spec.GCMParameterSpec
 import javax.inject.Inject
 import javax.inject.Singleton
+import android.util.Log
 
 @Singleton
 class EncryptionManager @Inject constructor() {
@@ -57,7 +58,7 @@ class EncryptionManager @Inject constructor() {
             System.arraycopy(iv, 0, combined, 0, iv.size)
             System.arraycopy(encryptedBytes, 0, combined, iv.size, encryptedBytes.size)
             
-            Base64.encodeToString(combined, Base64.NO_WRAP)
+            DATA_PREFIX + Base64.encodeToString(combined, Base64.NO_WRAP)
         } catch (e: Exception) {
             e.printStackTrace()
             data // Fallback to original if encryption fails
@@ -65,9 +66,41 @@ class EncryptionManager @Inject constructor() {
     }
 
     fun decrypt(encryptedData: String): String {
+        if (encryptedData.isBlank()) return encryptedData
+
+        // Check for version prefix
+        if (encryptedData.startsWith(DATA_PREFIX)) {
+            return try {
+                val rawData = encryptedData.substring(DATA_PREFIX.length)
+                
+                // Attempt to decode Base64
+                val combined = try {
+                    Base64.decode(rawData, Base64.NO_WRAP)
+                } catch (e: IllegalArgumentException) {
+                   Log.e("EncryptionManager", "Decryption failed: Invalid Base64", e)
+                   return "[Decryption Error]"
+                }
+
+                if (combined.size < GCM_IV_LENGTH) {
+                    Log.e("EncryptionManager", "Decryption failed: Data too short")
+                    return "[Decryption Error]"
+                }
+
+                val cipher = Cipher.getInstance(TRANSFORMATION)
+                val spec = GCMParameterSpec(128, combined, 0, GCM_IV_LENGTH)
+                cipher.init(Cipher.DECRYPT_MODE, getSecretKey(), spec)
+
+                val decoded = cipher.doFinal(combined, GCM_IV_LENGTH, combined.size - GCM_IV_LENGTH)
+                String(decoded, Charsets.UTF_8)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                Log.e("EncryptionManager", "Decryption failed", e)
+                "[Decryption Error]" // Explicit error indicator
+            }
+        }
+
+        // Legacy Fallback (No Prefix)
         return try {
-            if (encryptedData.isBlank()) return encryptedData
-            
             // Attempt to decode Base64
             val combined = try {
                 Base64.decode(encryptedData, Base64.NO_WRAP)
@@ -76,18 +109,16 @@ class EncryptionManager @Inject constructor() {
                 return encryptedData
             }
 
-            // GCM IV length is 12 bytes
-            val ivLength = 12
-            if (combined.size < ivLength) {
+            if (combined.size < GCM_IV_LENGTH) {
                 // Too short to be valid encrypted data
                 return encryptedData
             }
 
             val cipher = Cipher.getInstance(TRANSFORMATION)
-            val spec = GCMParameterSpec(128, combined, 0, ivLength)
+            val spec = GCMParameterSpec(128, combined, 0, GCM_IV_LENGTH)
             cipher.init(Cipher.DECRYPT_MODE, getSecretKey(), spec)
 
-            val decoded = cipher.doFinal(combined, ivLength, combined.size - ivLength)
+            val decoded = cipher.doFinal(combined, GCM_IV_LENGTH, combined.size - GCM_IV_LENGTH)
             String(decoded, Charsets.UTF_8)
         } catch (e: Exception) {
             // Decryption failed (wrong key, bad data, or plain text that accidentally looked like Base64)
@@ -100,5 +131,7 @@ class EncryptionManager @Inject constructor() {
         private const val ANDROID_KEY_STORE = "AndroidKeyStore"
         private const val KEY_ALIAS = "IncomingCallOnlyKey"
         private const val TRANSFORMATION = "AES/GCM/NoPadding"
+        private const val GCM_IV_LENGTH = 12
+        private const val DATA_PREFIX = "v1|"
     }
 }
