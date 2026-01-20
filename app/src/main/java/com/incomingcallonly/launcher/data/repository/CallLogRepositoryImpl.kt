@@ -7,12 +7,25 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import javax.inject.Inject
 
+import com.incomingcallonly.launcher.manager.EncryptionManager
+import kotlinx.coroutines.flow.map
+
 class CallLogRepositoryImpl @Inject constructor(
     private val callLogDao: CallLogDao,
-    private val contactDao: ContactDao
+    private val contactRepository: ContactRepository,
+    private val encryptionManager: EncryptionManager
 ) : CallLogRepository {
     override fun getAllCallLogs(): Flow<List<CallLog>> =
-        callLogDao.getAllCallLogs().combine(contactDao.getAllContacts()) { logs, contacts ->
+        callLogDao.getAllCallLogs()
+            .map { logs ->
+                logs.map { log ->
+                    log.copy(
+                        name = log.name?.let { encryptionManager.decrypt(it) },
+                        number = encryptionManager.decrypt(log.number)
+                    )
+                }
+            }
+            .combine(contactRepository.getAllContacts()) { logs, contacts ->
             logs.map { log ->
                 val normalizedLogNumber = normalizeNumber(log.number)
                 val contact = contacts.find { contact ->
@@ -41,7 +54,11 @@ class CallLogRepositoryImpl @Inject constructor(
     }
 
     override suspend fun insertCallLog(callLog: CallLog) {
-        callLogDao.insert(callLog)
+        val encryptedLog = callLog.copy(
+            name = callLog.name?.let { encryptionManager.encrypt(it) },
+            number = encryptionManager.encrypt(callLog.number)
+        )
+        callLogDao.insert(encryptedLog)
     }
 
     override suspend fun clearHistory() {

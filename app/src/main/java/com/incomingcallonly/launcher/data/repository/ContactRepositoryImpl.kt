@@ -7,32 +7,67 @@ import com.incomingcallonly.launcher.data.local.ContactDao
 import com.incomingcallonly.launcher.data.model.Contact
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
 import java.io.OutputStream
+import com.incomingcallonly.launcher.manager.EncryptionManager
 import javax.inject.Inject
 
 class ContactRepositoryImpl @Inject constructor(
     private val contactDao: ContactDao,
-    @ApplicationContext private val context: Context
+    @ApplicationContext private val context: Context,
+    private val encryptionManager: EncryptionManager
 ) : ContactRepository {
     override fun getAllContacts(): Flow<List<Contact>> = contactDao.getAllContacts()
+        .map { contacts ->
+            contacts.map { contact ->
+                contact.copy(
+                    name = encryptionManager.decrypt(contact.name),
+                    phoneNumber = encryptionManager.decrypt(contact.phoneNumber)
+                )
+            }.sortedBy { it.name }
+        }
 
     override suspend fun getContactsList(): List<Contact> = contactDao.getContactsList()
+        .map { contact ->
+            contact.copy(
+                name = encryptionManager.decrypt(contact.name),
+                phoneNumber = encryptionManager.decrypt(contact.phoneNumber)
+            )
+        }.sortedBy { it.name }
 
-    override suspend fun getContactById(id: Int): Contact? = contactDao.getContactById(id)
+    override suspend fun getContactById(id: Int): Contact? {
+        val contact = contactDao.getContactById(id) ?: return null
+        return contact.copy(
+            name = encryptionManager.decrypt(contact.name),
+            phoneNumber = encryptionManager.decrypt(contact.phoneNumber)
+        )
+    }
 
-    override suspend fun insertContact(contact: Contact) = contactDao.insertContact(contact)
+    override suspend fun insertContact(contact: Contact) {
+        val encryptedContact = contact.copy(
+            name = encryptionManager.encrypt(contact.name),
+            phoneNumber = encryptionManager.encrypt(contact.phoneNumber)
+        )
+        contactDao.insertContact(encryptedContact)
+    }
 
-    override suspend fun updateContact(contact: Contact) = contactDao.updateContact(contact)
+    override suspend fun updateContact(contact: Contact) {
+        val encryptedContact = contact.copy(
+            name = encryptionManager.encrypt(contact.name),
+            phoneNumber = encryptionManager.encrypt(contact.phoneNumber)
+        )
+        contactDao.updateContact(encryptedContact)
+    }
 
     override suspend fun deleteContact(contact: Contact) = contactDao.deleteContact(contact)
 
     override suspend fun deleteAllContacts() = contactDao.deleteAllContacts()
 
     override suspend fun exportContacts(outputStream: OutputStream) {
-        val contacts = contactDao.getContactsList()
+        val contacts = getContactsList() // Uses decrypting getter
         outputStream.bufferedWriter(Charsets.UTF_8).use { writer ->
             contacts.forEach { contact ->
                 writer.write("BEGIN:VCARD\n")
@@ -192,7 +227,8 @@ class ContactRepositoryImpl @Inject constructor(
 
                 trimmed.startsWith("END:VCARD", ignoreCase = true) -> {
                     currentPhones.forEach { (phone, type) ->
-                        val existing = contactDao.getContactsList().find { it.phoneNumber == phone }
+                        // We need to check against decrypted contacts to find duplicates
+                        val existing = getContactsList().find { it.phoneNumber == phone }
                         if (existing == null) {
                             var contactPhotoUri: String? = null
                             photoBase64?.let { base64 ->
@@ -218,8 +254,8 @@ class ContactRepositoryImpl @Inject constructor(
                             }
 
                             val newContact = Contact(
-                                name = finalName,
-                                phoneNumber = phone,
+                                name = encryptionManager.encrypt(finalName),
+                                phoneNumber = encryptionManager.encrypt(phone),
                                 photoUri = contactPhotoUri
                             )
                             contactDao.insertContact(newContact)
