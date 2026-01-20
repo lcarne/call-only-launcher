@@ -97,9 +97,13 @@
 
     <!-- About-->
     <string name="about">À propos</string>
-    <string name="buy_me_coffee">M\'offrir un café</string>
+    <string name="privacy_policy">Politique de confidentialité</string>
     <string name="project_github">Code source sur GitHub</string>
-    <string name="settings_footer_message" formatted="false">100% gratuit, 100% open source,\nfait avec ❤️ pour ma grand-mère</string>
+    <string name="buy_me_coffee">M\'offrir un café</string>
+    <string name="privacy_description">Les données restent stockées sur votre appareil et ne sont jamais partagées avec des tiers.</string>
+    <string name="security_description">Les données sensibles sont chiffrées via Android Keystore (AES-GCM).</string>
+    <string name="settings_footer_message" formatted="false">100% gratuit, 100% open source, fait avec ❤️ pour ma grand-mère</string>
+    <string name="copyright">© 2026 Léo Carné - v%1$s</string>
 
     <!-- ==================== ADMIN: DISPLAY & POWER ==================== -->
     <!-- Screen Behavior -->

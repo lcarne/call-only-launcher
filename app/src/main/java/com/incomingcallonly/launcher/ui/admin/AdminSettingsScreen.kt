@@ -24,6 +24,7 @@ import androidx.compose.material.icons.filled.Call
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.LockOpen
 import androidx.compose.material.icons.filled.Refresh
@@ -54,6 +55,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -289,10 +291,12 @@ fun AdminSettingsScreen(
             )
         }
     ) { padding ->
-        Column(modifier = Modifier
-            .padding(padding)
-            .fillMaxSize()
-            .verticalScroll(scrollState)) {
+        Column(
+            modifier = Modifier
+                .padding(padding)
+                .fillMaxSize()
+                .verticalScroll(scrollState)
+        ) {
             // Configuration Section
             AdminSectionHeader(text = stringResource(id = R.string.settings_section_configuration))
 
@@ -717,6 +721,38 @@ fun AdminSettingsScreen(
             AdminSettingsCard {
                 ListItem(
                     colors = ListItemDefaults.colors(containerColor = Color.Transparent),
+                    headlineContent = { Text(stringResource(id = R.string.privacy_policy)) },
+                    leadingContent = {
+                        AdminIcon(
+                            imageVector = Icons.Default.Info,
+                            tint = MaterialTheme.colorScheme.primary,
+                            containerColor = MaterialTheme.colorScheme.primaryContainer
+                        )
+                    },
+                    trailingContent = {
+                        DepthIcon(
+                            imageVector = Icons.AutoMirrored.Filled.OpenInNew,
+                            contentDescription = null,
+                            modifier = Modifier.size(Spacing.iconLarge),
+                            tint =
+                                MaterialTheme.colorScheme.onSurfaceVariant.copy(
+                                    alpha = 0.5f
+                                )
+                        )
+                    },
+                    modifier =
+                        Modifier.clickable {
+                            onUnpin()
+                            uriHandler.openUri(
+                                "https://github.com/lcarne/incoming-call-only-launcher/blob/main/docs/privacy-and-terms.html"
+                            )
+                        }
+                )
+
+                HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp))
+
+                ListItem(
+                    colors = ListItemDefaults.colors(containerColor = Color.Transparent),
                     headlineContent = { Text(stringResource(id = R.string.project_github)) },
                     leadingContent = {
                         AdminIcon(
@@ -776,23 +812,45 @@ fun AdminSettingsScreen(
                 )
             }
 
-            Spacer(modifier = Modifier.height(Spacing.xl))
+            Spacer(modifier = Modifier.height(Spacing.xs))
 
-            Text(
-                text = stringResource(id = R.string.settings_footer_message),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = Spacing.xl),
-                style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
-                textAlign = TextAlign.Center
-            )
+            AdminSettingsCard {
+                Text(
+                    text = stringResource(id = R.string.privacy_description),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
+                    modifier = Modifier
+                        .padding(horizontal = Spacing.xl)
+                        .padding(vertical = Spacing.sm),
+                    textAlign = TextAlign.Center
+                )
+
+                Text(
+                    text = stringResource(id = R.string.security_description),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
+                    modifier = Modifier.padding(horizontal = Spacing.xl),
+                    textAlign = TextAlign.Center
+                )
+
+                Text(
+                    text = stringResource(id = R.string.settings_footer_message),
+                    style = MaterialTheme.typography.labelSmall,
+                    fontStyle = FontStyle.Italic,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
+                    modifier = Modifier
+                        .padding(horizontal = Spacing.xl)
+                        .padding(vertical = Spacing.sm),
+                    textAlign = TextAlign.Center
+                )
+            }
+
+            Spacer(modifier = Modifier.height(Spacing.sm))
 
             val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
-            val versionName = packageInfo.versionName
-            Spacer(modifier = Modifier.height(Spacing.xs))
+            val versionName = packageInfo.versionName ?: "1.0.0"
             Text(
-                text = "v$versionName",
+                text = stringResource(id = R.string.copyright, versionName),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = Spacing.xl),
