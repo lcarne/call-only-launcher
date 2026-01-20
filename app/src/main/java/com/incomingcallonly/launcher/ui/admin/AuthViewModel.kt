@@ -20,12 +20,26 @@ class AuthViewModel @Inject constructor(
 
     val adminPin = settingsRepository.adminPin
 
+    val lockoutEndTime = settingsRepository.lockoutEndTime
+    val failedAttempts = settingsRepository.failedAttempts
+
     fun verifyPin(pin: String) {
+        val currentTime = System.currentTimeMillis()
+        if (currentTime < lockoutEndTime.value) {
+            return
+        }
+
         if (pin == adminPin.value) { // Use PIN from settings
             _isAuthenticated.value = true
             _pinError.value = false
+            settingsRepository.resetFailedAttempts()
+            settingsRepository.setLockoutEndTime(0)
         } else {
             _pinError.value = true
+            settingsRepository.incrementFailedAttempts()
+            if (settingsRepository.failedAttempts.value >= 5) {
+                settingsRepository.setLockoutEndTime(currentTime + 30_000)
+            }
         }
     }
 

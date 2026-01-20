@@ -54,6 +54,7 @@
     <!-- ==================== ADMIN: AUTHENTICATION ==================== -->
     <string name="admin_mode">Administrator Mode</string>
     <string name="incorrect_pin">Incorrect code</string>
+    <string name="too_many_attempts">Too many attempts. Try again in %d s.</string>
 
     <!-- ==================== ADMIN: MAIN SETTINGS ==================== -->
     <string name="settings">Settings</string>

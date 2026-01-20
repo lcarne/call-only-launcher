@@ -21,6 +21,8 @@ interface SettingsRepository {
     val hasSeenOnboarding: StateFlow<Boolean>
     val adminPin: StateFlow<String>
     val lastSelectedCountryCode: StateFlow<String>
+    val failedAttempts: StateFlow<Int>
+    val lockoutEndTime: StateFlow<Long>
 
     fun setScreenBehaviorPlugged(behavior: Int)
     fun setScreenBehaviorBattery(behavior: Int)
@@ -41,6 +43,9 @@ interface SettingsRepository {
     fun setHasSeenOnboarding(hasSeen: Boolean)
     fun setAdminPin(pin: String)
     fun setLastSelectedCountryCode(code: String)
+    fun incrementFailedAttempts()
+    fun resetFailedAttempts()
+    fun setLockoutEndTime(timestamp: Long)
     fun resetToDefaults()
 
     val ringerMode: StateFlow<Int>

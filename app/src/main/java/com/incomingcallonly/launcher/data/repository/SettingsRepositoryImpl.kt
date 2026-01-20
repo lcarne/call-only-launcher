@@ -123,6 +123,14 @@ class SettingsRepositoryImpl @Inject constructor(
         )
     override val lastSelectedCountryCode: StateFlow<String> = _lastSelectedCountryCode.asStateFlow()
 
+    private val _failedAttempts =
+        MutableStateFlow(prefs.getInt(KEY_FAILED_ATTEMPTS, 0))
+    override val failedAttempts: StateFlow<Int> = _failedAttempts.asStateFlow()
+
+    private val _lockoutEndTime =
+        MutableStateFlow(prefs.getLong(KEY_LOCKOUT_END_TIME, 0L))
+    override val lockoutEndTime: StateFlow<Long> = _lockoutEndTime.asStateFlow()
+
 
     override fun setScreenBehaviorPlugged(behavior: Int) {
         prefs.edit { putInt(KEY_SCREEN_BEHAVIOR_PLUGGED, behavior) }
@@ -287,6 +295,23 @@ class SettingsRepositoryImpl @Inject constructor(
         _lastSelectedCountryCode.value = code
     }
 
+    override fun incrementFailedAttempts() {
+        val current = _failedAttempts.value
+        val newCount = current + 1
+        prefs.edit { putInt(KEY_FAILED_ATTEMPTS, newCount) }
+        _failedAttempts.value = newCount
+    }
+
+    override fun resetFailedAttempts() {
+        prefs.edit { putInt(KEY_FAILED_ATTEMPTS, 0) }
+        _failedAttempts.value = 0
+    }
+
+    override fun setLockoutEndTime(timestamp: Long) {
+        prefs.edit { putLong(KEY_LOCKOUT_END_TIME, timestamp) }
+        _lockoutEndTime.value = timestamp
+    }
+
     override fun resetToDefaults() {
         setScreenBehaviorPlugged(SettingsRepository.SCREEN_BEHAVIOR_AWAKE)
         setScreenBehaviorBattery(SettingsRepository.SCREEN_BEHAVIOR_OFF)
@@ -327,6 +352,8 @@ class SettingsRepositoryImpl @Inject constructor(
         private const val KEY_ADMIN_PIN = "admin_pin"
         private const val KEY_LAST_COUNTRY_CODE = "last_country_code"
         private const val KEY_RINGER_MODE = "ringer_mode"
+        private const val KEY_FAILED_ATTEMPTS = "failed_attempts"
+        private const val KEY_LOCKOUT_END_TIME = "lockout_end_time"
 
         // Default Values
         private const val DEFAULT_NIGHT_START_HOUR = 22

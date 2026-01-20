@@ -55,6 +55,27 @@ fun PinEntryScreen(
 ) {
     var pin by remember { mutableStateOf("") }
     val isError by viewModel.pinError.collectAsState()
+    val lockoutEndTime by viewModel.lockoutEndTime.collectAsState()
+
+    var remainingTimeSeconds by remember { mutableStateOf(0L) }
+
+    LaunchedEffect(lockoutEndTime) {
+        if (lockoutEndTime > System.currentTimeMillis()) {
+            while (true) {
+                val timeLeft = lockoutEndTime - System.currentTimeMillis()
+                if (timeLeft <= 0) {
+                    remainingTimeSeconds = 0
+                    break
+                }
+                remainingTimeSeconds = (timeLeft / 1000) + 1
+                kotlinx.coroutines.delay(1000)
+            }
+        } else {
+            remainingTimeSeconds = 0
+        }
+    }
+
+    val isLockedOut = remainingTimeSeconds > 0
 
     val isDarkTheme = isSystemInDarkTheme()
 
@@ -140,13 +161,20 @@ fun PinEntryScreen(
                 }
             }
 
-            Box(modifier = Modifier.height(40.dp)) {
+            Box(modifier = Modifier.height(40.dp), contentAlignment = Alignment.Center) {
                 if (isError) {
                     Text(
                         stringResource(id = R.string.incorrect_pin),
                         color = MaterialTheme.colorScheme.error,
                         style = MaterialTheme.typography.bodyMedium,
                         fontWeight = FontWeight.Medium
+                    )
+                } else if (isLockedOut) {
+                    Text(
+                        text = stringResource(id = R.string.too_many_attempts, remainingTimeSeconds),
+                        color = MaterialTheme.colorScheme.error,
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontWeight = FontWeight.Bold
                     )
                 }
             }
@@ -196,13 +224,14 @@ fun PinEntryScreen(
                                 else -> {
                                     PinKeyButton(
                                         onClick = {
-                                            if (pin.length < 4) {
+                                            if (!isLockedOut && pin.length < 4) {
                                                 pin += key
                                                 if (pin.length == 4) {
                                                     viewModel.verifyPin(pin)
                                                 }
                                             }
                                         },
+                                        enabled = !isLockedOut,
                                         content = {
                                             Text(
                                                 text = key,
@@ -251,6 +280,7 @@ private fun PinKeyButton(
     onClick: () -> Unit,
     content: @Composable () -> Unit,
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
     backgroundColor: Color = MaterialTheme.colorScheme.surface
 ) {
     val interactionSource = remember { MutableInteractionSource() }
@@ -284,7 +314,7 @@ private fun PinKeyButton(
                         bounded = true,
                         color = MaterialTheme.colorScheme.primary
                     ),
-                    onClick = onClick
+                    onClick = if (enabled) onClick else {{}}
                 ),
             contentAlignment = Alignment.Center
         ) {
