@@ -13,8 +13,8 @@ android {
         applicationId = "com.incomingcallonly.launcher"
         minSdk = 26 // Android 8.0
         targetSdk = 35
-        versionCode = 17
-        versionName = "1.5.1"
+        versionCode = 18
+        versionName = "1.5.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {

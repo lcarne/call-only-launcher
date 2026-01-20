@@ -4,7 +4,6 @@ import android.content.Context
 import android.os.Bundle
 import android.view.KeyEvent
 import androidx.activity.ComponentActivity
-import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Box
@@ -47,12 +46,6 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         ringerManager.startObserving(lifecycleScope)
-
-        // Block back button
-        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-            }
-        })
 
         // Initial UI hide
         kioskManager.hideSystemUI(this)

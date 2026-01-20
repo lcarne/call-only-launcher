@@ -1,5 +1,6 @@
 package com.incomingcallonly.launcher.ui.components
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -34,6 +35,7 @@ import com.incomingcallonly.launcher.ui.theme.White
 
 @Composable
 fun SimLockOverlay(onUnlockClick: () -> Unit) {
+    BackHandler(enabled = true) { /* Block back button */ }
     Box(
         modifier = Modifier
             .fillMaxSize()

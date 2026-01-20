@@ -1,5 +1,6 @@
 package com.incomingcallonly.launcher.ui.call
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -89,23 +90,25 @@ fun IncomingCallScreen(
                 // Idle state
             }
 
-            is IncomingCallUiState.Ringing -> {
-                CallLayout(
-                    number = state.number,
-                    contact = state.contact,
-                    state = state,
-                    isSpeakerOn = false,
-                    viewModel = viewModel,
-                    onCallRejected = onCallRejected
-                )
-            }
-
             is IncomingCallUiState.Active -> {
+                BackHandler(enabled = true) { /* Block back button */ }
                 CallLayout(
                     number = state.number,
                     contact = state.contact,
                     state = state,
                     isSpeakerOn = isSpeakerOn,
+                    viewModel = viewModel,
+                    onCallRejected = onCallRejected
+                )
+            }
+
+            is IncomingCallUiState.Ringing -> {
+                BackHandler(enabled = true) { /* Block back button */ }
+                CallLayout(
+                    number = state.number,
+                    contact = state.contact,
+                    state = state,
+                    isSpeakerOn = false,
                     viewModel = viewModel,
                     onCallRejected = onCallRejected
                 )
