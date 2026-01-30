@@ -1,22 +1,45 @@
-# Incoming Call Only Launcher – Launcher Android Minimaliste & Sécurisé
+# Incoming Call Only Launcher – Launcher Android Minimaliste et Sécurisé
 
 [![en](https://img.shields.io/badge/lang-en-red.svg)](README.md)
 [![fr](https://img.shields.io/badge/lang-fr-blue.svg)](README.fr.md)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Android](https://img.shields.io/badge/platform-Android%206.0+-green.svg)](#prérequis)
+[![Version](https://img.shields.io/badge/version-1.5.2-blue.svg)](https://github.com/lcarne/call-only-launcher/releases)
 
-<p>
-  <img src="images/app_icon.svg" alt="Icône de l'application" width="160"/>
-</p>
+<img src="images/app_icon.svg" alt="Icône de l'application" width="160"/>
 
-Incoming Call Only Launcher est un **launcher Android open-source et minimaliste conçu pour les seniors et les personnes vulnérables**.
+**Incoming Call Only Launcher** est un launcher Android (ou lanceur Android) minimaliste et open-source conçu pour les personnes âgées et les utilisateurs vulnérables. Il transforme un appareil Android en **téléphone en réception uniquement**, permettant les appels entrants exclusivement de contacts de confiance, tout en désactivant complètement les appels sortants et toutes les fonctionnalités système non essentielles.
 
-Il transforme un appareil Android en un **téléphone de réception uniquement**, permettant les appels entrants exclusivement de contacts de confiance tout en désactivant complètement les appels sortants et toutes les fonctionnalités système non essentielles.
+> **Objectif :** Offrir une expérience calme, sûre et sans confusion, tout en donnant aux soignants, aidants et aux membres de la famille un contrôle total sur l'appareil.
 
-L'objectif est d'offrir une **expérience calme, sûre et sans confusion**, tout en donnant aux aidants et aux membres de la famille un contrôle total sur l'appareil.
+**Conçu pour :** Personnes âgées • Établissements de soins • Hôpitaux • Soignants • Personnes atteintes de troubles cognitifs • Appareils kiosque
 
-**Conçu pour :** Seniors • Établissements de soins • Hôpitaux • Aidants • Appareils Kiosque
+---
 
-![License](https://img.shields.io/badge/license-MIT-blue.svg)
-![Android](https://img.shields.io/badge/platform-Android-green.svg)
+## 📱 Télécharger depuis Play Store
+
+<a href="https://play.google.com/store/apps/details?id=com.incomingcallonly.launcher" target="_blank">
+  <img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" alt="Disponible sur Google Play" width="200" />
+</a>
+
+Ou téléchargez l'APK le plus récent depuis [GitHub Releases](https://github.com/lcarne/call-only-launcher/releases)
+
+---
+
+## Table des matières
+
+- [Objectif](#objectif)
+- [Fonctionnalités principales](#fonctionnalités-principales)
+- [Prérequis](#prérequis)
+- [Installation et configuration](#installation-et-configuration)
+- [Configuration initiale](#configuration-initiale-onboarding)
+- [Accès administrateur](#accès-administrateur-comment-ouvrir-lécran-administrateur)
+- [Stack technique](#stack-technique)
+- [Captures d'écran](#captures-décran)
+- [Confidentialité et données](#confidentialité-et-données)
+- [Contribution](#contribution)
+- [Licence](#licence)
+- [Avis juridique](#avis-juridique)
 
 ---
 
@@ -25,24 +48,27 @@ L'objectif est d'offrir une **expérience calme, sûre et sans confusion**, tout
 Incoming Call Only Launcher verrouille l'utilisateur dans une **interface à usage unique** axée sur la sécurité et la clarté.
 
 L'utilisateur peut :
-- Voir la date et l'heure actuelles avec un **affichage large et à fort contraste**
-- Recevoir **uniquement des appels entrants** d'une liste de contacts de confiance
+
+- Voir la date et l'heure actuelles avec un **affichage grand et à fort contraste**
+- Recevoir **des appels entrants uniquement** d'une liste organisée de contacts de confiance
 
 Tout le reste est intentionnellement caché ou restreint :
+
 - Pas d'appels sortants
 - Pas de notifications
 - Pas d'applications de messagerie
 - Pas de paramètres système ou de navigation
 - Pas d'interactions accidentelles
 
-Cette conception minimise la confusion et empêche une mauvaise utilisation.
+Cette conception minimise la confusion et prévient les abus.
 
-**Les cas d'utilisation typiques incluent :**
-- Les utilisateurs âgés qui ne devraient pas passer d'appels accidentels ou d'urgence
+**Les cas d'usage typiques incluent:**
+
+- Les utilisateurs âgés qui ne doivent pas effectuer d'appels accidentels ou d'urgence
 - Les personnes atteintes de la maladie d'Alzheimer ou de troubles cognitifs
-- Les patients dans des établissements de soins ou des hôpitaux
+- Les patients dans les établissements de soins ou les hôpitaux
 - Les enfants ou les personnes vulnérables utilisant un appareil dédié
-- Les situations où les aidants ont besoin d'un contrôle total sur qui peut appeler l'appareil
+- Les situations où les soignants ont besoin d'un contrôle total sur qui peut appeler l'appareil
 
 ---
 
@@ -51,52 +77,54 @@ Cette conception minimise la confusion et empêche une mauvaise utilisation.
 **Incoming Call Only Launcher est intentionnellement limité par conception.**
 
 ✔ C'est :
-- Une interface de téléphone en réception uniquement
+
+- Une interface téléphonique en réception uniquement
 - Un launcher Android axé sur la sécurité
-- Un environnement contrôlé pour les aidants
+- Un environnement contrôlé pour les soignants
 
 ✖ Ce n'est PAS :
+
 - Une application téléphonique standard
-- Un composeur (dialer)
+- Un composeur
 - Une application de messagerie
-- Un launcher généraliste
+- Un launcher polyvalent
 
 ---
 
-## Fonctionnalités Clés
+## Fonctionnalités principales
 
-- **Interface Utilisateur Centrée sur les Seniors**
-  Grande horloge numérique, date complète et thème à fort contraste. Écrans d'appel repensés avec un texte extra-large, des boutons d'action vibrants et un style visuel rassurant.
+- **Interface axée sur les personnes âgées**  
+  Grande horloge numérique, date complète et thème à fort contraste. Écrans d'appel redessinés avec un texte très grand, des boutons d'action vibrants et un style rassurant.
 
-- **Routage Audio Intelligent**
-  Les appels entrants commencent par défaut sur **haut-parleur**, aidant les utilisateurs ayant des problèmes d'audition ou de dextérité. Basculez entre le haut-parleur et l'écouteur à l'aide de gros boutons clairs.
+- **Routage audio intelligent**  
+  Les appels entrants commencent par **le haut-parleur par défaut**, aidant les utilisateurs ayant des problèmes d'audition ou de dextérité. Basculez entre le haut-parleur et l'écouteur à l'aide de grands boutons clairs.
 
-- **Gestion des Appels Sécurisée**
-  - Les appels entrants ne sonnent que pour les contacts.
-  - Les appelants inconnus sont **automatiquement réduits au silence ou rejetés**.
-  - **Sécurité à 2 Tapes** : Les actions Raccrocher et Refuser nécessitent deux tapes pour éviter la fin accidentelle de l'appel.
+- **Gestion sécurisée des appels**  
+  - Les appels entrants sonnent uniquement pour les contacts.
+  - Les appelants inconnus sont **automatiquement silencieux ou rejetés**.
+  - **Sécurité 2-Tap**: Les actions de raccrocher et refuser nécessitent deux appuis pour éviter une fermeture accidentelle d'appel.
 
-- **Modes Kiosque & Épinglage**
-  - **Épinglage d'écran** : Verrouillez facilement l'application à l'écran depuis le menu Admin (sans ADB).
-  - **Propriétaire de l'Appareil** : Pour un verrouillage complet (barre d'état désactivée, navigation bloquée), définissez comme Propriétaire via ADB.
+- **Modes kiosque et épinglage**
+  - **Épinglage d'écran**: Verrouillez facilement l'application à l'écran depuis le menu Administrateur (aucun ADB requis).
+  - **Propriétaire d'appareil**: Pour un verrouillage complet (barre d'état désactivée, navigation bloquée), définissez comme propriétaire d'appareil via ADB.
 
-- **Interface Administrateur Protégée**
-  Un écran d'administration caché permet aux aidants de gérer les contacts et le comportement de l'appareil sans risque d'accès accidentel.
+- **Interface administrateur protégée**  
+  Un écran administrateur caché permet aux soignants de gérer les contacts et le comportement de l'appareil sans risque d'accès accidentel.
 
-- **Accès PIN Simple**
-  L'accès administrateur est protégé par un code PIN (par défaut : `1234`) pour un accès rapide et contrôlé par l'aidant.
+- **Accès PIN simple**  
+  L'accès administrateur est protégé par un code PIN (par défaut: `1234`) pour un accès rapide et contrôlé au soignant.
 
-- **Historique des Appels**
-  Voir un journal détaillé des appels entrants, manqués et rejetés avec la durée et l'horodatage.
+- **Historique des appels**
+  Consultez un journal détaillé des appels entrants, manqués et rejetés avec durée et horodatage.
 
-- **Sauvegarde et Restauration Locale**
+- **Sauvegarde et restauration locales**
   Exportez facilement votre liste de contacts vers un fichier JSON et restaurez-la sur un autre appareil ou après une réinitialisation.
 
 ---
 
-## Confidentialité et Données
+## Confidentialité et données
 
-Incoming Call Only Launcher ne **collecte, ne stocke ni ne transmet aucune donnée personnelle**.
+Incoming Call Only Launcher ne collecte, n'enregistre ni ne transmet **aucune donnée personnelle**.
 
 - Pas d'analytique
 - Pas de suivi
@@ -107,16 +135,16 @@ Tous les contacts, paramètres et historiques d'appels sont stockés **localemen
 
 ---
 
-## Stack Technique
+## Stack technique
 
-- **Langage** : Kotlin
-- **UI** : Jetpack Compose (Material 3)
-- **Typographie** : [Famille de polices Inter](https://rsms.me/inter/) (Licence SIL Open Font)
-- **Architecture** : MVVM + Hilt
-- **Stockage** : Base de données Room
-- **Sécurité** :
-  - `DevicePolicyManager` (Mode Propriétaire de l'Appareil / Kiosque)
-  - `CallScreeningService` (filtrage des appels entrants)
+- **Langage**: Kotlin  
+- **Interface utilisateur**: Jetpack Compose (Material 3)  
+- **Typographie**: [Famille de polices Inter](https://rsms.me/inter/) (Licence SIL Open Font)  
+- **Architecture**: MVVM + Hilt  
+- **Stockage**: Base de données Room  
+- **Sécurité**:
+  - `DevicePolicyManager` (Propriétaire d'appareil / Mode kiosque)
+  - `CallScreeningService` (Filtrage des appels entrants)
 
 Voir [ATTRIBUTIONS.md](ATTRIBUTIONS.md) pour les licences tierces.
 
@@ -124,9 +152,9 @@ Voir [ATTRIBUTIONS.md](ATTRIBUTIONS.md) pour les licences tierces.
 
 ## Captures d'écran
 
-> Interface propre et à fort contraste conçue pour les personnes âgées et vulnérables.
+> Interface propre et à fort contraste conçue pour les utilisateurs âgés et vulnérables.
 
-### Accueil et Appel Entrant
+### Accueil et appel entrant
 
 <table>
   <tr>
@@ -147,13 +175,13 @@ Voir [ATTRIBUTIONS.md](ATTRIBUTIONS.md) pour les licences tierces.
 
 ---
 
-### Administration et Gestion des Contacts
+### Administrateur et gestion des contacts
 
 <table>
   <tr>
     <td align="center">
-      <img src="images/admin.png" width="320" alt="Entrée PIN Admin"/><br/>
-      <strong>Admin / Entrée PIN</strong>
+      <img src="images/admin.png" width="320" alt="PIN Administrateur"/><br/>
+      <strong>Administrateur / Entrée PIN</strong>
     </td>
     <td align="center">
       <img src="images/contacts.png" width="320" alt="Contacts"/><br/>
@@ -173,27 +201,27 @@ Voir [ATTRIBUTIONS.md](ATTRIBUTIONS.md) pour les licences tierces.
 <table>
   <tr>
     <td align="center">
-      <img src="images/settings_1.png" width="320" alt="Déverrouillage, Contenu et Système"/><br/>
-      <strong>Déverrouillage, Contenu et Système</strong>
+      <img src="images/settings_1.png" width="320" alt="Déverrouiller, contenu et système"/><br/>
+      <strong>Déverrouiller, contenu et système</strong>
     </td>
     <td align="center">
-      <img src="images/settings_2.png" width="320" alt="Audio, Affichage et Alimentation"/><br/>
-      <strong>Audio, Affichage et Alimentation</strong>
+      <img src="images/settings_2.png" width="320" alt="Audio, affichage et alimentation"/><br/>
+      <strong>Audio, affichage et alimentation</strong>
+    </td> 
+    <td align="center">
+      <img src="images/settings_3.png" width="320" alt="Affichage et localisation"/><br/>
+      <strong>Affichage et localisation</strong>
     </td>
     <td align="center">
-      <img src="images/settings_3.png" width="320" alt="Affichage et Localisation"/><br/>
-      <strong>Affichage et Localisation</strong>
-    </td>
-    <td align="center">
-      <img src="images/settings_4.png" width="320" alt="Gestion des Données et Support"/><br/>
-      <strong>Gestion des Données et Support</strong>
+      <img src="images/settings_4.png" width="320" alt="Gestion des données et support"/><br/>
+      <strong>Gestion des données et support</strong>
     </td>
   </tr>
 </table>
 
 ---
 
-### États Supplémentaires
+### États supplémentaires
 
 <table>
   <tr>
@@ -206,120 +234,168 @@ Voir [ATTRIBUTIONS.md](ATTRIBUTIONS.md) pour les licences tierces.
       <strong>Mode nuit</strong>
     </td>
     <td align="center">
-      <img src="images/dim_mode.png" width="280" alt="Mode sombre"/><br/>
-      <strong>Mode sombre</strong>
+      <img src="images/dim_mode.png" width="280" alt="Mode assombri"/><br/>
+      <strong>Mode assombri</strong>
     </td>
   </tr>
 </table>
 
 ---
 
-## Installation et Configuration
+## Prérequis
 
-### Option 1 – Télécharger l'APK pré-construit (recommandé)
+- **Android 6.0** (niveau API 23) ou supérieur
+- Minimum **50 MB** d'espace de stockage libre
+- Ligne téléphonique active avec capacité d'appel entrant
+- Pour le mode propriétaire d'appareil: Débogage USB activé et accès ADB
 
-Vous pouvez télécharger un APK prêt à installer depuis les Releases GitHub :
+---
 
-➡️ https://github.com/lcarne/call-only-launcher/releases
+## Installation et configuration
+
+### Option 1 – Télécharger depuis Google Play Store (Recommandé)
+
+Le moyen le plus facile d'installer est via le Play Store officiel:
+
+📲 [Disponible sur Google Play Store](https://play.google.com/store/apps/details?id=com.incomingcallonly.launcher)
+
+Cela garantit que vous disposez toujours de la dernière version avec des mises à jour automatiques.
+
+### Option 2 – Télécharger l'APK pré-compilé
+
+Vous pouvez télécharger un APK prêt à installer à partir de GitHub Releases:
+
+➡️ [GitHub Releases](https://github.com/lcarne/call-only-launcher/releases)
 
 Chaque version inclut :
-- Un APK signé
-- Les notes de version
 
-**Étapes :**
-1. Téléchargez le fichier `.apk` depuis la page des Releases.
+- Un APK signé
+- Notes de version
+
+**Étapes:**
+
+1. Téléchargez le fichier `.apk` à partir de la page Releases.
 2. Copiez-le sur l'appareil Android cible.
-3. Autorisez l'installation depuis des sources inconnues si on vous le demande.
+3. Autorisez l'installation à partir de sources inconnues si vous y êtes invité.
 4. Installez l'APK.
 
----
+### Option 3 – Construire à partir du code source
 
-### Option 2 – Appuyer depuis la source
+Pour les développeurs qui souhaitent construire à partir du code source:
 
-1. Clonez ce dépôt.
+1. Clonez ce référentiel :
+
+   ```bash
+   git clone https://github.com/lcarne/call-only-launcher.git
+   cd call-only-launcher
+   ```
+
 2. Ouvrez le projet dans Android Studio.
-3. Construisez et installez l'APK sur l'appareil cible.
+3. Compilez et installez l'APK sur l'appareil cible :
+
+   ```bash
+   ./gradlew assembleDebug
+   ```
 
 ---
 
-## Configuration Initiale (Onboarding)
+## Configuration initiale (Onboarding)
 
-Au premier lancement, un **assistant de configuration** vous guidera pour demander l'accès à la localisation (permet d'afficher la qualité du réseau).
-Sur la page d'accueil, vous pouvez définir :
-- l'application de téléphone par défaut
-- le launcher par défaut
-- le vérouillage de l'application
+Au premier lancement, un **flux d'intégration** vous guidera à travers :
+
+- Demande d'accès à la localisation (utilisée pour afficher la qualité du réseau)
+- Configuration de l'application téléphonique par défaut
+- Configuration du launcher par défaut
+- Activation du verrouillage d'application pour la sécurité
 
 ---
 
-## Activer le Vrai Mode Kiosque (Propriétaire de l'Appareil)
+## Accès administrateur (Comment ouvrir l'écran administrateur)
 
-Pour un verrouillage complet (désactiver la barre d'état, la navigation, les gestes système), définissez l'application comme **Propriétaire de l'Appareil**.
+L'interface administrateur est intentionnellement cachée pour éviter un accès accidentel par l'utilisateur final.
 
-⚠️ **Attention**
+- Sur l'écran d'accueil, **appuyez rapidement 15 fois sur la zone date/heure** pour ouvrir le point d'entrée administrateur.
+- Entrez le code PIN par défaut: `1234` (peut être modifié dans les paramètres d'administration)
+
+### Depuis l'interface administrateur, vous pouvez :
+
+- **Gérer les contacts**: Ajouter, modifier ou supprimer des contacts de confiance.
+- **Afficher l'historique des appels**: Vérifier l'activité récente, y compris les appels bloqués.
+- **Gestion des données**:
+  - **Exporter/Importer les contacts**: Sauvegardez votre liste de confiance dans un fichier JSON.
+  - **Réinitialiser les données**: Effacer l'historique des appels ou réinitialiser les paramètres de l'application.
+- **Écran et alimentation**: Configurez le comportement en fonction de l'état d'alimentation (branché vs sur batterie):
+  - **Arrêt**: Délai d'expiration standard d'Android.
+  - **Assombri**: L'écran reste allumé avec une luminosité réduite, affichant uniquement l'horloge.
+  - **Réveillé**: L'écran reste allumé à luminosité normale.
+- **Personnalisation**: Configurez le mode nuit, la couleur de l'horloge, le volume de la sonnerie.
+- **Contrôle du système**:
+  - **Épingler l'application**: Activez l'épinglage d'écran Android pour verrouiller l'utilisateur dans l'application (aucun ADB requis).
+  - **Dépingler / Déverrouiller**: Quittez temporairement le mode restreint.
+  - **Définir comme launcher par défaut**: Re-demandez de définir en tant qu'application d'accueil si nécessaire.
+
+### Activer le vrai mode kiosque (Propriétaire d'appareil)
+
+Pour un verrouillage complet (désactiver la barre d'état, la navigation, les gestes système), définissez l'application comme **propriétaire d'appareil**.
+
+⚠️ **Avertissement**  
 Cette action est irréversible sans accès ADB.
 
-### Prérequis
-- Supprimer les comptes Google de l'appareil (recommandé)
-- Activer le **débogage USB** dans les Options pour les développeurs
+#### Conditions préalables
 
-### Commande ADB
+- Supprimez les comptes Google de l'appareil (recommandé)
+- Activez **le débogage USB** dans les options pour développeurs
+
+#### Commande ADB
 
 ```bash
 adb shell dpm set-device-owner com.incomingcallonly.launcher/.receivers.IncomingCallOnlyAdminReceiver
 ```
 
-Si réussi, le launcher sera épinglé et la barre d'état/navigation seront désactivées selon la politique de l'appareil.
+Si réussi, le launcher sera épinglé et la barre d'état/navigation sera désactivée selon la politique d'appareil.
 
-## Accès Administrateur (Comment ouvrir l'écran Admin)
+### Déverrouillage d'urgence / Suppression du propriétaire d'appareil
 
-L'interface Admin est intentionnellement cachée pour éviter tout accès accidentel par l'utilisateur final.
-
-- Sur l'écran d'accueil, **appuyez rapidement 15 fois sur la zone date/heure** pour ouvrir le point d'entrée Admin.
-- Entrez le code PIN par défaut : `1234` (code PIN par défaut, peut être modifié dans les Paramètres Admin)
-
-Depuis l'interface Admin, vous pouvez :
-- **Gérer les Contacts** : Ajouter, modifier ou supprimer des contacts de confiance.
-- **Voir l'Historique des Appels** : Vérifier l'activité récente, y compris les appels bloqués.
-- **Gestion des Données** :
-  - **Exporter/Importer les Contacts** : Sauvegarder votre liste de confiance dans un fichier JSON.
-  - **Réinitialiser les Données** : Effacer l'historique des appels ou réinitialiser les paramètres de l'application.
-- **Écran et Alimentation** : Configurer le comportement en fonction de l'état de l'alimentation (Branché vs Sur Batterie) :
-  - **Éteint** : Délai d'attente standard d'Android.
-  - **Sombre** : L'écran reste allumé avec une luminosité réduite, n'affichant que l'horloge.
-  - **Éveillé** : L'écran reste allumé avec une luminosité normale.
-- **Personnalisation** : Configurer le mode Nuit, la couleur de l'Horloge, le volume de la Sonnerie.
-- **Contrôle Système** :
-  - **Épingler l'application** : Activer l'épinglage d'écran Android pour verrouiller l'utilisateur dans l'application (pas d'ADB requis).
-  - **Désépingler / Déverrouiller** : Quitter temporairement le mode restreint.
-  - **Définir comme Launcher** : Redemander de définir l'application comme accueil si nécessaire.
-
-## Déverrouillage d'Urgence / Supprimer le Propriétaire de l'Appareil
-
-Si vous ne pouvez pas accéder au bouton de déverrouillage Admin, supprimez le Propriétaire de l'Appareil via ADB :
+Si vous ne pouvez pas accéder au bouton de déverrouillage administrateur, supprimez le propriétaire d'appareil via ADB:
 
 ```bash
 adb shell dpm remove-active-admin com.incomingcallonly.launcher/.receivers.IncomingCallOnlyAdminReceiver
 ```
 
-## Notes et Détails d'Implémentation
+---
 
-- Le récepteur Admin est `com.incomingcallonly.launcher.receivers.IncomingCallOnlyAdminReceiver` et est déclaré dans le manifeste avec la permission `BIND_DEVICE_ADMIN`.
-- Le comportement Kiosque (verrouillage des tâches, désactivation de la barre d'état) est contrôlé via `DevicePolicyManager` dans `MainActivity`.
+## Notes et détails d'implémentation
 
-## Contribuer
+- Le récepteur d'administration est `com.incomingcallonly.launcher.receivers.IncomingCallOnlyAdminReceiver` et est déclaré dans le manifeste avec la permission `BIND_DEVICE_ADMIN`.
+- Le comportement du kiosque (verrouillage des packages de tâche, désactivation de la barre d'état) est contrôlé via `DevicePolicyManager` dans `MainActivity`.
 
-Les contributions et corrections sont les bienvenues. Veuillez ouvrir des problèmes (issues) ou des demandes de tirage (pull requests) pour des demandes de fonctionnalités, des corrections ou des mises à jour de documentation.
+## Contribution
+
+Les contributions et corrections sont bienvenues. Veuillez ouvrir des problèmes ou des demandes de fusion pour les demandes de fonctionnalités, les correctifs ou les mises à jour de documentation.
 
 ## Licence
 
-Ce projet est sous licence MIT, voir le fichier [LICENSE](LICENSE).
+Ce projet est sous licence MIT, consultez le fichier [LICENSE](LICENSE).
 
-## Crédits
+---
+
+## Avis juridique
+
+### Marques déposées et logos
+
+Ce projet fait référence et inclut des liens vers le **Google Play Store**. Le logo et la marque Google Play sont des marques déposées de Google LLC.
+
+- Nous ne sommes **pas affiliés** à Google LLC.
+- Le badge et le logo du Google Play Store sont utilisés en vertu d'une utilisation équitable à titre informatif uniquement pour diriger les utilisateurs vers notre canal officiel de distribution d'applications.
+- Cette application est distribuée sous la licence MIT et nous nous conformons à toutes les politiques et directives du Play Store.
+
+### Attribution
 
 - [Famille de polices Inter](https://rsms.me/inter/) (Licence SIL Open Font)
 - [Material You](https://material.io/you)
 
+Pour une liste complète des licences tierces et des attributions, veuillez consulter [ATTRIBUTIONS.md](ATTRIBUTIONS.md).
+
 ---
 
-*100% gratuit, 100% open source, fait avec ❤️ pour ma grand-mère*
+*100% gratuit, 100% open source, créé avec ❤️ pour ma grand-mère*

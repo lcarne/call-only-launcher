@@ -2,21 +2,44 @@
 
 [![en](https://img.shields.io/badge/lang-en-red.svg)](README.md)
 [![fr](https://img.shields.io/badge/lang-fr-blue.svg)](README.fr.md)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Android](https://img.shields.io/badge/platform-Android%206.0+-green.svg)](#requirements)
+[![Version](https://img.shields.io/badge/version-1.5.2-blue.svg)](https://github.com/lcarne/call-only-launcher/releases)
 
-<p>
-  <img src="images/app_icon.svg" alt="App icon" width="160"/>
-</p>
+<img src="images/app_icon.svg" alt="App icon" width="160"/>
 
-Incoming Call Only Launcher is a **minimalist, open-source Android launcher designed for seniors and vulnerable users**.
+**Incoming Call Only Launcher** is a minimalist, open-source Android launcher designed for seniors and vulnerable users. It transforms an Android device into a **receive-only phone**, allowing incoming calls exclusively from trusted contacts while completely disabling outgoing calls and all non-essential system features.
 
-It transforms an Android device into a **receive-only phone**, allowing incoming calls exclusively from trusted contacts while completely disabling outgoing calls and all non-essential system features.
+> **Goal:** Provide a calm, safe, and confusion-free experience while giving caregivers and family members full control over the device.
 
-The goal is to provide a **calm, safe, and confusion-free experience**, while giving caregivers and family members full control over the device.
+**Designed for:** Seniors • Care Facilities • Hospitals • Caregivers • People with Cognitive Impairment • Kiosk Devices
 
-**Designed for:** Seniors • Care Facilities • Hospitals • Caregivers • Kiosk Devices
+---
 
-![License](https://img.shields.io/badge/license-MIT-blue.svg)
-![Android](https://img.shields.io/badge/platform-Android-green.svg)
+## 📱 Download from Play Store
+
+<a href="https://play.google.com/store/apps/details?id=com.incomingcallonly.launcher" target="_blank">
+  <img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" alt="Get it on Google Play" width="200" />
+</a>
+
+Or download the latest APK from [GitHub Releases](https://github.com/lcarne/call-only-launcher/releases)
+
+---
+
+## Table of Contents
+
+- [Purpose](#purpose)
+- [Key Features](#key-features)
+- [Requirements](#requirements)
+- [Installation](#installation--setup)
+- [Initial Setup](#initial-setup-onboarding)
+- [Admin Access](#admin-access-how-to-open-admin-screen)
+- [Technical Stack](#technical-stack)
+- [Screenshots](#screenshots)
+- [Privacy & Data](#privacy--data)
+- [Contributing](#contributing)
+- [License](#license)
+- [Legal Notice](#legal-notice)
 
 ---
 
@@ -25,10 +48,12 @@ The goal is to provide a **calm, safe, and confusion-free experience**, while gi
 Incoming Call Only Launcher locks the user into a **single-purpose interface** focused on safety and clarity.
 
 The user can:
+
 - View the current date and time with a **large, high-contrast display**
 - Receive **incoming calls only** from a curated list of trusted contacts
 
 Everything else is intentionally hidden or restricted:
+
 - No outgoing calls
 - No notifications
 - No messaging apps
@@ -38,6 +63,7 @@ Everything else is intentionally hidden or restricted:
 This design minimizes confusion and prevents misuse.
 
 **Typical use cases include:**
+
 - Elderly users who should not place accidental or emergency calls
 - People with Alzheimer’s disease or cognitive impairment
 - Patients in care facilities or hospitals
@@ -51,11 +77,13 @@ This design minimizes confusion and prevents misuse.
 **Incoming Call Only Launcher is intentionally limited by design.**
 
 ✔ It is:
+
 - A receive-only phone interface
 - A safety-focused Android launcher
 - A controlled environment for caregivers
 
 ✖ It is NOT:
+
 - A standard phone app
 - A dialer
 - A messaging app
@@ -214,72 +242,83 @@ See [ATTRIBUTIONS.md](ATTRIBUTIONS.md) for third-party licenses.
 
 ---
 
+## Requirements
+
+- **Android 6.0** (API level 23) or higher
+- Minimum **50 MB** free storage
+- Active phone line with incoming call capability
+- For Device Owner mode: USB debugging enabled and ADB access
+
+---
+
 ## Installation & Setup
 
-### Option 1 – Download the pre-built APK (recommended)
+### Option 1 – Download from Google Play Store (Recommended)
+
+The easiest way to install is via the official Play Store:
+
+📲 [Get it on Google Play Store](https://play.google.com/store/apps/details?id=com.incomingcallonly.launcher)
+
+This ensures you always have the latest version with automatic updates.
+
+### Option 2 – Download the pre-built APK
 
 You can download a ready-to-install APK from GitHub Releases:
 
-➡️ https://github.com/lcarne/call-only-launcher/releases
+➡️ [GitHub Releases](https://github.com/lcarne/call-only-launcher/releases)
 
 Each release includes:
+
 - A signed APK
 - Release notes
 
 **Steps:**
+
 1. Download the `.apk` file from the Releases page.
 2. Copy it to the target Android device.
 3. Allow installation from unknown sources if prompted.
 4. Install the APK.
 
----
+### Option 3 – Build from source
 
-### Option 2 – Build from source
+For developers who want to build from source code:
 
-1. Clone this repository.
+1. Clone this repository:
+
+   ```bash
+   git clone https://github.com/lcarne/call-only-launcher.git
+   cd call-only-launcher
+   ```
+
 2. Open the project in Android Studio.
-3. Build and install the APK on the target device.
+3. Build and install the APK on the target device:
+
+   ```bash
+   ./gradlew assembleDebug
+   ```
 
 ---
 
 ## Initial Setup (Onboarding)
 
-Upon the first launch, an **onboarding flow* will guide you through requesting location access (used to display network quality).
-On the home page, you can set:
-- the default phone app
-- the default launcher
-- the app lock
+Upon the first launch, an **onboarding flow** will guide you through:
+
+- Requesting location access (used to display network quality)
+- Setting the default phone app
+- Setting the default launcher
+- Enabling app lock for security
 
 ---
-
-## Enable True Kiosk Mode (Device Owner)
-
-For full lockdown (disable status bar, navigation, system gestures), set the app as **Device Owner**.
-
-⚠️ **Warning**  
-This action is irreversible without ADB access.
-
-### Prerequisites
-- Remove Google accounts from the device (recommended)
-- Enable **USB debugging** in Developer Options
-
-### ADB command
-
-```bash
-adb shell dpm set-device-owner com.incomingcallonly.launcher/.receivers.IncomingCallOnlyAdminReceiver
-
-```
-
-If successful, the launcher will be pinned and the status bar/navigation will be disabled according to device policy.
 
 ## Admin Access (How to open Admin screen)
 
 The Admin interface is intentionally hidden to prevent accidental access by the end user.
 
 - On the home screen, **tap the date/time area 15 times rapidly** to open the Admin entry point.
-- Enter the default PIN: `1234` (default PIN, can be changed in Admin Settings)
+- Enter the default PIN: `1234` (can be changed in Admin Settings)
 
-From the Admin interface you can:
+### From the Admin interface you can:
+
 - **Manage Contacts**: Add, edit, or remove trusted contacts.
 - **View Call History**: Check recent activity including blocked calls.
 - **Data Management**:
@@ -295,13 +334,35 @@ From the Admin interface you can:
   - **Unpin / Unlock**: Temporarily exit restricted mode.
   - **Set as Default Launcher**: Re-prompt to set as home app if needed.
 
-## Emergency Unlock / Remove Device Owner
+### Enable True Kiosk Mode (Device Owner)
+
+For full lockdown (disable status bar, navigation, system gestures), set the app as **Device Owner**.
+
+⚠️ **Warning**  
+This action is irreversible without ADB access.
+
+#### Prerequisites
+
+- Remove Google accounts from the device (recommended)
+- Enable **USB debugging** in Developer Options
+
+#### ADB command
+
+```bash
+adb shell dpm set-device-owner com.incomingcallonly.launcher/.receivers.IncomingCallOnlyAdminReceiver
+```
+
+If successful, the launcher will be pinned and the status bar/navigation will be disabled according to device policy.
+
+### Emergency Unlock / Remove Device Owner
 
 If you cannot access the Admin unlock button, remove the Device Owner via ADB:
 
 ```bash
 adb shell dpm remove-active-admin com.incomingcallonly.launcher/.receivers.IncomingCallOnlyAdminReceiver
 ```
+
+---
 
 ## Notes & Implementation Details
 
@@ -316,11 +377,25 @@ Contributions and corrections are welcome. Please open issues or pull requests f
 
 This project is licensed under the MIT License, see the [LICENSE](LICENSE) file.
 
-## Credits
+---
+
+## Legal Notice
+
+### Trademarks & Logos
+
+This project references and includes links to the **Google Play Store**. The Google Play logo and branding are trademarks of Google LLC.
+
+- We are **not affiliated** with Google LLC.
+- The Google Play Store badge and logo are used under fair use for informational purposes only to direct users to our official app distribution channel.
+- This app is distributed under the MIT License, and we comply with all Play Store policies and guidelines.
+
+### Attribution
 
 - [Inter font family](https://rsms.me/inter/) (SIL Open Font License)
 - [Material You](https://material.io/you)
 
+For a complete list of third-party licenses and attributions, please see [ATTRIBUTIONS.md](ATTRIBUTIONS.md).
+
 ---
 
-*100% free, 100% open source, made with ❤️ for my grandmother*
+_100% free, 100% open source, made with ❤️ for my grandmother_
